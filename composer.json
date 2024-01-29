@@ -1,20 +1,20 @@
 {
-    "name": "illinoispublicmedia/npr_api_expressionengine",
-    "description": "An ExpressionEngine wrapper for NPR's Story API Wordpress plugin.",
+    "name": "illinoispublicmedia/npr_cds_expressionengine",
+    "description": "An ExpressionEngine wrapper for NPR's CDS Wordpress plugin.",
     "license": "GPL-2.0+",
     "type": "expressionengine-addon",
     "require": {
-        "openpublicmedia/npr-story-api": "v1.9.5.2"
+        "openpublicmedia/npr-cds-wordpress": "v1.0"
     },
     "autoload": {
         "classmap": [
-            "vendor/openpublicmedia/npr-story-api/classes/"
+            "vendor/openpublicmedia/npr-cds-wordpress/classes/"
         ]
     },
     "repositories": [
         {
             "type": "github",
-            "url": "https://github.com/openpublicmedia/nprapi-wordpress"
+            "url": "https://github.com/openpublicmedia/npr-cds-wordpress"
         }
     ],
     "minimum-stability": "dev"

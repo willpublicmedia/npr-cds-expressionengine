@@ -17,3 +17,6 @@ sized/
 thumbs/
 _thumbs/
 */expressionengine/cache/*
+
+# Composer files
+vendor/
