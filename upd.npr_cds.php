@@ -8,19 +8,17 @@ require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 // require_once __DIR__ . '/libraries/installation/status_installer.php';
 // require_once __DIR__ . '/libraries/installation/extension_installer.php';
-// require_once __DIR__ . '/libraries/configuration/tables/table_loader.php';
-// require_once __DIR__ . '/libraries/configuration/tables/itable.php';
-// require_once __DIR__ . '/libraries/installation/table_installer.php';
+require_once __DIR__ . '/libraries/configuration/tables/table_loader.php';
+require_once __DIR__ . '/libraries/configuration/tables/itable.php';
+require_once __DIR__ . '/libraries/installation/table_installer.php';
 use IllinoisPublicMedia\NprCds\Constants;
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Tables\ITable;
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Tables\Table_loader;
+use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
-use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Dependency_manager;
+use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Extension_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Field_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Status_installer;
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Table_installer;
 
 /**
  * NPR CDS updater.
@@ -173,7 +171,14 @@ class Npr_cds_upd
 
     private function migrate_story_api_settings(): void
     {
-        throw new \Exception('not implemented');
+        $legacy_settings = ee()->db->get('npr_story_api_settings');
+        $data = array(
+            'mapped_channels' => '',
+        );
+
+        ee()->db->insert('npr_cds_settings', $data);
+
+        return;
     }
 
     private function npr_story_api_installed(): bool
