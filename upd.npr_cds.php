@@ -3,7 +3,7 @@
 }
 
 require_once __DIR__ . '/constants.php';
-// require_once __DIR__ . '/libraries/installation/dependency_manager.php';
+require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 // require_once __DIR__ . '/libraries/installation/field_installer.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 // require_once __DIR__ . '/libraries/installation/status_installer.php';
@@ -15,7 +15,8 @@ use IllinoisPublicMedia\NprCds\Constants;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Tables\ITable;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Tables\Table_loader;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Dependency_manager;
+use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Dependency_manager;
+
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Extension_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Field_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Status_installer;
@@ -126,7 +127,7 @@ class Npr_cds_upd
         // $this->delete_channels();
         // $this->delete_statuses();
         // $this->delete_fields();
-        $this->delete_extensions();
+        // $this->delete_extensions();
         // $this->delete_tables($this->tables['story']);
         // $this->delete_tables($this->tables['config']);
 
@@ -164,9 +165,8 @@ class Npr_cds_upd
 
     private function check_dependencies(): bool
     {
-        $has_dependencies = false;
-        // $manager = new Dependency_manager();
-        // $has_dependencies = $manager->check_dependencies();
+        $manager = new Dependency_manager();
+        $has_dependencies = $manager->check_dependencies();
 
         return $has_dependencies;
     }
