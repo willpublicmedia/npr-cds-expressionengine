@@ -84,6 +84,10 @@ class Npr_cds_upd
             return false;
         }
 
+        if ($this->npr_story_api_installed() === true) {
+            // $this->migrate_story_api_settings();
+        }
+
         // $this->create_tables($this->tables['config']);
         // $this->create_tables($this->tables['story']);
         // $this->create_required_fields();
@@ -165,6 +169,16 @@ class Npr_cds_upd
         $has_dependencies = $manager->check_dependencies();
 
         return $has_dependencies;
+    }
+
+    private function migrate_story_api_settings(): void
+    {
+        throw new \Exception('not implemented');
+    }
+
+    private function npr_story_api_installed(): bool
+    {
+        return true;
     }
 
     // private function create_required_channels()
