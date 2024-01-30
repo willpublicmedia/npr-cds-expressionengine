@@ -23,7 +23,7 @@ use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Dependency_manager;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Table_installer;
 
 /**
- * NPR Story API updater.
+ * NPR CDS updater.
  */
 class Npr_cds_upd
 {
@@ -64,7 +64,7 @@ class Npr_cds_upd
     private $version = Constants::VERSION;
 
     /**
-     * NPR Story API updater constructor.
+     * NPR CDS updater constructor.
      *
      * @return void
      */
@@ -74,7 +74,7 @@ class Npr_cds_upd
     }
 
     /**
-     * Install NPR Story API module.
+     * Install NPR CDS module.
      *
      * @return bool
      */
@@ -91,20 +91,20 @@ class Npr_cds_upd
         // $this->create_required_channels();
         // $this->create_required_extensions();
 
-        // $data = array(
-        //     'module_name' => $this->module_name,
-        //     'module_version' => $this->version,
-        //     'has_cp_backend' => 'y',
-        //     'has_publish_fields' => 'n',
-        // );
+        $data = array(
+            'module_name' => $this->module_name,
+            'module_version' => $this->version,
+            'has_cp_backend' => 'y',
+            'has_publish_fields' => 'n',
+        );
 
-        // ee()->db->insert('modules', $data);
+        ee()->db->insert('modules', $data);
 
         return true;
     }
 
     /**
-     * Uninstall NPR Story API module.
+     * Uninstall NPR CDS module.
      *
      * @return bool
      */
@@ -115,11 +115,7 @@ class Npr_cds_upd
         ee()->db->where('module_name', $this->module_name);
         $query = ee()->db->get();
 
-        if (APP_VER < 6) {
-            ee()->db->delete('module_member_groups', array('module_id' => $query->row('module_id')));
-        } else {
-            ee()->db->delete('module_member_roles', array('module_id' => $query->row('module_id')));
-        }
+        ee()->db->delete('module_member_roles', array('module_id' => $query->row('module_id')));
 
         ee()->db->delete('modules', array('module_name' => $this->module_name));
         ee()->db->delete('actions', array('class' => $this->module_name));
@@ -135,7 +131,7 @@ class Npr_cds_upd
     }
 
     /**
-     * Update NPR Story API module.
+     * Update NPR CDS module.
      *
      * @param  mixed $current Current module version.
      *
