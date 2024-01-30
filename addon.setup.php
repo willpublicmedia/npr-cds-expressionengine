@@ -14,7 +14,7 @@ require_once __DIR__ . '/constants.php';
 // require_once __DIR__ . '/libraries/model/content/npr_story.php';
 // require_once __DIR__ . '/libraries/model/content/npr_text_paragraph.php';
 // require_once __DIR__ . '/libraries/model/content/npr_thumbnail.php';
-use IllinoisPublicMedia\NprStoryApi\Constants;
+use IllinoisPublicMedia\NprCds\Constants;
 
 return array(
     'author' => Constants::AUTHOR,

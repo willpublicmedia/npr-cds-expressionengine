@@ -11,7 +11,7 @@ require_once __DIR__ . '/constants.php';
 // require_once __DIR__ . '/libraries/configuration/tables/table_loader.php';
 // require_once __DIR__ . '/libraries/configuration/tables/itable.php';
 // require_once __DIR__ . '/libraries/installation/table_installer.php';
-use IllinoisPublicMedia\NprStoryApi\Constants;
+use IllinoisPublicMedia\NprCds\Constants;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Tables\ITable;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Tables\Table_loader;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
@@ -24,7 +24,7 @@ use IllinoisPublicMedia\NprStoryApi\Constants;
 /**
  * NPR Story API updater.
  */
-class Npr_story_api_upd
+class Npr_cds_upd
 {
     private $channels = array(
         'npr_stories',
