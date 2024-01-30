@@ -85,7 +85,7 @@ class Npr_cds_upd
         }
 
         if ($this->npr_story_api_installed() === true) {
-            // $this->migrate_story_api_settings();
+            $this->migrate_story_api_settings();
         }
 
         // $this->create_tables($this->tables['config']);
@@ -178,7 +178,9 @@ class Npr_cds_upd
 
     private function npr_story_api_installed(): bool
     {
-        return true;
+        $info = ee('Addon')->get('npr_story_api');
+        $installed = $info->isInstalled();
+        return $installed;
     }
 
     // private function create_required_channels()
