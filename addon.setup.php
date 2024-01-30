@@ -23,7 +23,7 @@ return array(
     'description' => Constants::DESCRIPTION,
     'namespace' => Constants::NAMESPACE,
     'version' => Constants::VERSION,
-    // 'settings_exist' => true,
+    'settings_exist' => true,
     // 'models' => array(
     //     'Npr_audio' => 'Libraries\Model\Content\Npr_audio',
     //     'Npr_audio_format' => 'Libraries\Model\Content\Npr_audio_format',
