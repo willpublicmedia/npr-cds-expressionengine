@@ -2,10 +2,8 @@
     exit('No direct script access allowed.');
 }
 
-require_once __DIR__ . '/libraries/security/permissions-checker.php';
 // require_once __DIR__ . '/libraries/configuration/config_form_builder.php';
 // require_once __DIR__ . '/libraries/validation/settings_validator.php';
-use IllinoisPublicMedia\NprCds\Libraries\Security\Permissions_checker;
 
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Config_form_builder;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Validation\Settings_validator;
@@ -26,7 +24,10 @@ class Npr_cds_mcp
      */
     public function __construct()
     {
-        Permissions_checker::can_admin_addons();
+        $has_permission = ee('Permission')->isSuperAdmin() || ee('Permission')->has('can_admin_addons');
+        if (!$has_permission) {
+            show_error(lang('unauthorized_access'), 403);
+        }
 
         // $this->load_settings();
         $this->base_url = ee('CP/URL')->make('addons/settings/npr_cds');
