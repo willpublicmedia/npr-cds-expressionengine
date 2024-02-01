@@ -13,15 +13,23 @@ class Config_form_builder
 {
     private $api_settings_form = array(
         array(
+            array(
+                'title' => 'CDS Token',
+                'fields' => array(
+                    'cds_token' => array(
+                        'type' => 'text',
+                        'value' => '',
+                        'required' => true,
+                    ),
+                ),
+            ),
             // array(
-            //     'title' => 'CDS Token',
+            //     'title' => 'Document Prefix',
             //     'fields' => array(
-            //         'cds_token' => array(
-            //             'type' => 'text',
-            //             'value' => '',
-            //             'required' => TRUE
-            //         )
-            //     )
+            //         'document_prefix' => 'text',
+            //         'value' => '',
+            //         'required' => true,
+            //     ),
             // ),
             array(
                 'title' => 'Org ID',
