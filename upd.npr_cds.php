@@ -12,11 +12,11 @@ require_once __DIR__ . '/libraries/configuration/tables/table_loader.php';
 require_once __DIR__ . '/libraries/configuration/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 use IllinoisPublicMedia\NprCds\Constants;
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
-use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
+use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
+// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
+use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Extension_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Field_installer;
@@ -91,8 +91,6 @@ class Npr_cds_upd
             $this->migrate_story_api_settings();
         }
 
-        // dev only: allow continuous install
-        return false;
         // $this->create_tables($this->tables['story']);
         // $this->create_required_fields();
         // $this->create_required_statuses();
@@ -189,7 +187,8 @@ class Npr_cds_upd
             'org_id' => $legacy_settings['org_id'],
         );
 
-        // ee()->db->insert('npr_cds_settings', $data);
+        ee()->db->where('id', 1);
+        ee()->db->update('npr_cds_settings', $data);
 
         return;
     }

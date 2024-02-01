@@ -12,12 +12,17 @@ use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table;
 class config_settings_table extends Table
 {
     protected $_defaults = array(
-        // 'api_key' => '',
-        'mapped_channels' => '',
-        // 'npr_permissions' => '',
-        // 'org_id' => null,
+        // 'cds_token' => '',
         // 'pull_url' => '',
         // 'push_url' => ''
+        'org_id' => null,
+        // 'document_prefix' => '',
+        // 'theme_uses_featured_image' => false,
+        // 'max_image_width' => 1200,
+        // 'image_quality' => 75,
+        // 'image_format' => 'jpeg',
+        'mapped_channels' => '',
+        // 'npr_permissions' => '',
     );
 
     protected $_fields = array(
@@ -42,11 +47,11 @@ class config_settings_table extends Table
         //     'type' => 'varchar',
         //     'constraint' => 64
         // ),
-        // 'org_id' => array(
-        //     'type' => 'int',
-        //     'null' => TRUE,
-        //     'constraint' => 10
-        // ),
+        'org_id' => array(
+            'type' => 'varchar',
+            'null' => TRUE,
+            'constraint' => 24
+        ),
         // 'pull_url' => array(
         //     'type' => 'varchar',
         //     'constraint' => 64,
