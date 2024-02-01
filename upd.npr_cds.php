@@ -86,6 +86,8 @@ class Npr_cds_upd
             $this->migrate_story_api_settings();
         }
 
+        // dev only: allow continuous install
+        return false;
         // $this->create_tables($this->tables['config']);
         // $this->create_tables($this->tables['story']);
         // $this->create_required_fields();
@@ -171,12 +173,19 @@ class Npr_cds_upd
 
     private function migrate_story_api_settings(): void
     {
-        $legacy_settings = ee()->db->get('npr_story_api_settings');
+        $legacy_settings = ee()->db->get('npr_story_api_settings')->result_array();
+
+        if (count($legacy_settings) <= 0) {
+            return;
+        }
+
+        $legacy_settings = $legacy_settings[0];
         $data = array(
-            'mapped_channels' => '',
+            'mapped_channels' => $legacy_settings['mapped_channels'],
+            'org_id' => $legacy_settings['org_id'],
         );
 
-        ee()->db->insert('npr_cds_settings', $data);
+        // ee()->db->insert('npr_cds_settings', $data);
 
         return;
     }
