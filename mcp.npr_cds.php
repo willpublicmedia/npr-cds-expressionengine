@@ -2,10 +2,11 @@
     exit('No direct script access allowed.');
 }
 
-// require_once __DIR__ . '/libraries/configuration/config_form_builder.php';
+require_once __DIR__ . '/libraries/configuration/config_form_builder.php';
 // require_once __DIR__ . '/libraries/validation/settings_validator.php';
 
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Config_form_builder;
+use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Config_form_builder;
+
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Validation\Settings_validator;
 
 /**
@@ -13,7 +14,7 @@
  */
 class Npr_cds_mcp
 {
-    private $api_settings = array();
+    private $settings = array();
 
     private $base_url;
 
@@ -29,7 +30,7 @@ class Npr_cds_mcp
             show_error(lang('unauthorized_access'), 403);
         }
 
-        // $this->load_settings();
+        $this->load_settings();
         $this->base_url = ee('CP/URL')->make('addons/settings/npr_cds');
         ee()->load->helper('form');
     }
@@ -51,34 +52,30 @@ class Npr_cds_mcp
         //     }
         // }
 
-        // $builder = new Config_form_builder();
-        // $form_fields = $builder->build_api_settings_form($this->api_settings);
+        $builder = new Config_form_builder();
+        $form_fields = $builder->build_api_settings_form($this->settings);
         $data = array(
             'base_url' => $this->base_url,
             'cp_page_title' => 'NPR Story API Settings',
             // 'errors' => $validation_results,
             'save_btn_text' => 'Save Settings',
             'save_btn_text_working' => 'Saving...',
-            // 'sections' => $form_fields
+            'sections' => $form_fields,
         );
 
         return ee('View')->make('ee:_shared/form')->render($data);
     }
 
-    // private function load_settings()
-    // {
-    //     $results = ee()->db->
-    //         select('*')->
-    //         from('npr_story_api_settings')->
-    //         get()->
-    //         result_array();
+    private function load_settings()
+    {
+        $results = ee()->db->get('npr_cds_settings')->result_array();
 
-    //     $raw = array_pop($results);
-    //     $raw['mapped_channels'] = explode("|", $raw['mapped_channels']);
-    //     $settings = $raw;
+        $raw = array_pop($results);
+        $raw['mapped_channels'] = explode("|", $raw['mapped_channels']);
+        $settings = $raw;
 
-    //     $this->api_settings = $settings;
-    // }
+        $this->settings = $settings;
+    }
 
     // private function process_form_data($form_data) {
     //     $rules = Settings_validator::API_SETTINGS_RULES;
