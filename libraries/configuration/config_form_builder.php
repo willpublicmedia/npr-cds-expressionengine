@@ -13,6 +13,8 @@ class Config_form_builder
 {
     private $api_settings_form = array(
         array(
+            // mapped_channels added dynamically
+            // npr_image_destination added dynamically
             array(
                 'title' => 'CDS Token',
                 'fields' => array(
@@ -23,14 +25,16 @@ class Config_form_builder
                     ),
                 ),
             ),
-            // array(
-            //     'title' => 'Document Prefix',
-            //     'fields' => array(
-            //         'document_prefix' => 'text',
-            //         'value' => '',
-            //         'required' => true,
-            //     ),
-            // ),
+            array(
+                'title' => 'Document Prefix',
+                'fields' => array(
+                    'document_prefix' => array(
+                        'type' => 'text',
+                        'value' => '',
+                        'required' => true,
+                    ),
+                ),
+            ),
             array(
                 'title' => 'Org ID',
                 'fields' => array(
@@ -58,8 +62,6 @@ class Config_form_builder
             //         )
             //     )
             // )
-            // npr_image_destination added dynamically
-            // mapped_channels added dynamically
         ),
     );
 

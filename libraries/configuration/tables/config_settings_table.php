@@ -13,7 +13,7 @@ class config_settings_table extends Table
 {
     protected $_defaults = array(
         'cds_token' => '',
-        // 'document_prefix' => '',
+        'document_prefix' => '',
         // 'pull_url' => '',
         // 'push_url' => ''
         'org_id' => null,
@@ -38,17 +38,13 @@ class config_settings_table extends Table
             'type' => 'varchar',
             'constraint' => 64,
         ),
-        // 'document_prefix' => array(
-        //     'type' => 'text',
-        //     'constraint' => 64,
-        // ),
+        'document_prefix' => array(
+            'type' => 'text',
+            'constraint' => 64,
+        ),
         'mapped_channels' => array(
             'type' => 'text',
         ),
-        // 'npr_permissions' => array(
-        //     'type' => 'varchar',
-        //     'constraint' => 256
-        // ),
         'npr_image_destination' => array(
             'type' => 'varchar',
             'constraint' => 64,
@@ -58,6 +54,10 @@ class config_settings_table extends Table
             'null' => true,
             'constraint' => 24,
         ),
+        // 'npr_permissions' => array(
+        //     'type' => 'varchar',
+        //     'constraint' => 256
+        // ),
         // 'pull_url' => array(
         //     'type' => 'varchar',
         //     'constraint' => 64,
