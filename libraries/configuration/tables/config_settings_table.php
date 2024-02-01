@@ -23,6 +23,7 @@ class config_settings_table extends Table
         // 'image_format' => 'jpeg',
         'mapped_channels' => '',
         // 'npr_permissions' => '',
+        'npr_image_destination' => '',
     );
 
     protected $_fields = array(
@@ -43,14 +44,14 @@ class config_settings_table extends Table
         //     'type' => 'varchar',
         //     'constraint' => 256
         // ),
-        // 'npr_image_destination' => array(
-        //     'type' => 'varchar',
-        //     'constraint' => 64
-        // ),
+        'npr_image_destination' => array(
+            'type' => 'varchar',
+            'constraint' => 64,
+        ),
         'org_id' => array(
             'type' => 'varchar',
-            'null' => TRUE,
-            'constraint' => 24
+            'null' => true,
+            'constraint' => 24,
         ),
         // 'pull_url' => array(
         //     'type' => 'varchar',

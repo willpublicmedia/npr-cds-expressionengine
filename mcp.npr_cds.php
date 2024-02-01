@@ -5,7 +5,7 @@
 require_once __DIR__ . '/libraries/configuration/config_form_builder.php';
 // require_once __DIR__ . '/libraries/validation/settings_validator.php';
 
-use IllinoisPublicMedia\NprStoryApi\Libraries\Configuration\Config_form_builder;
+use IllinoisPublicMedia\NprCds\Libraries\Configuration\Config_form_builder;
 
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Validation\Settings_validator;
 
@@ -56,7 +56,7 @@ class Npr_cds_mcp
         $form_fields = $builder->build_api_settings_form($this->settings);
         $data = array(
             'base_url' => $this->base_url,
-            'cp_page_title' => 'NPR Story API Settings',
+            'cp_page_title' => 'NPR CDS Settings',
             // 'errors' => $validation_results,
             'save_btn_text' => 'Save Settings',
             'save_btn_text_working' => 'Saving...',

@@ -184,6 +184,7 @@ class Npr_cds_upd
         $legacy_settings = $legacy_settings[0];
         $data = array(
             'mapped_channels' => $legacy_settings['mapped_channels'],
+            'npr_image_destination' => $legacy_settings['npr_image_destination'],
             'org_id' => $legacy_settings['org_id'],
         );
 
