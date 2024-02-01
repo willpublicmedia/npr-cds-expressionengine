@@ -4,19 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06f467aef43a930002cf474e38f41eeb",
+    "content-hash": "07f2499ca432d02508aec4f2c43df557",
     "packages": [
         {
             "name": "openpublicmedia/npr-cds-wordpress",
-            "version": "v1.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpenPublicMedia/npr-cds-wordpress.git",
-                "reference": "f47e35e880fac574bd8664d091f3a1494daed8b0"
+                "reference": "eb304dbe311fb6d0e438f0e1b3dcf6413ab4b416"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/OpenPublicMedia/npr-cds-wordpress/archive/refs/tags/v1.0.zip"
+                "url": "https://github.com/OpenPublicMedia/npr-cds-wordpress/archive/refs/tags/v1.0.1.zip"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9",
@@ -43,10 +43,10 @@
             "description": "Access the NPR CDS from within Wordpress",
             "homepage": "https://github.com/OpenPublicMedia/npr-cds-wordpress/",
             "support": {
-                "source": "https://github.com/OpenPublicMedia/npr-cds-wordpress/tree/v1.0",
+                "source": "https://github.com/OpenPublicMedia/npr-cds-wordpress/tree/v1.0.1",
                 "issues": "https://github.com/OpenPublicMedia/npr-cds-wordpress/issues"
             },
-            "time": "2024-01-16T18:20:56+00:00"
+            "time": "2024-01-31T16:07:03+00:00"
         }
     ],
     "packages-dev": [],
