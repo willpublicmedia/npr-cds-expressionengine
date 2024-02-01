@@ -13,6 +13,8 @@ require_once __DIR__ . '/libraries/configuration/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 use IllinoisPublicMedia\NprCds\Constants;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
+use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
+use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 
@@ -37,26 +39,26 @@ class Npr_cds_upd
         // table order matters for column relationships
         'config' => array(
             'config_settings',
-            'config_field_mappings',
+            // 'config_field_mappings',
         ),
-        'story' => array(
-            'npr_story',
-            'npr_organization',
-            'npr_audio',
-            'npr_audio_format',
-            'npr_byline',
-            'npr_html_asset',
-            'npr_image',
-            'npr_image_crop',
-            'npr_permalink',
-            'npr_pull_correction',
-            'npr_pull_quote',
-            // rewrite related link for push-only.
-            // 'npr_related_link',
-            'npr_text_paragraph',
-            'npr_thumbnail',
-            'pushed_stories',
-        ),
+        // 'story' => array(
+        //     'npr_story',
+        //     'npr_organization',
+        //     'npr_audio',
+        //     'npr_audio_format',
+        //     'npr_byline',
+        //     'npr_html_asset',
+        //     'npr_image',
+        //     'npr_image_crop',
+        //     'npr_permalink',
+        //     'npr_pull_correction',
+        //     'npr_pull_quote',
+        //     // rewrite related link for push-only.
+        //     // 'npr_related_link',
+        //     'npr_text_paragraph',
+        //     'npr_thumbnail',
+        //     'pushed_stories',
+        // ),
     );
 
     private $version = Constants::VERSION;
@@ -82,13 +84,15 @@ class Npr_cds_upd
             return false;
         }
 
+        // create and/or migrate settings
+        $this->create_tables($this->tables['config']);
+
         if ($this->npr_story_api_installed() === true) {
             $this->migrate_story_api_settings();
         }
 
         // dev only: allow continuous install
         return false;
-        // $this->create_tables($this->tables['config']);
         // $this->create_tables($this->tables['story']);
         // $this->create_required_fields();
         // $this->create_required_statuses();
@@ -225,17 +229,17 @@ class Npr_cds_upd
     //     $installer->install($statuses);
     // }
 
-    // private function create_tables(array $table_names)
-    // {
-    //     $tables = array();
-    //     foreach ($table_names as $name) {
-    //         $data = $this->load_table_config($name);
-    //         array_push($tables, $data);
-    //     }
+    private function create_tables(array $table_names)
+    {
+        $tables = array();
+        foreach ($table_names as $name) {
+            $data = $this->load_table_config($name);
+            array_push($tables, $data);
+        }
 
-    //     $installer = new Table_installer();
-    //     $installer->install($tables);
-    // }
+        $installer = new Table_installer();
+        $installer->install($tables);
+    }
 
     // private function delete_channels()
     // {
@@ -274,11 +278,11 @@ class Npr_cds_upd
     //     $uninstaller->uninstall($tables);
     // }
 
-    // private function load_table_config(string $table_name): ITable
-    // {
-    //     $loader = new Table_loader();
-    //     $data = $loader->load($table_name);
+    private function load_table_config(string $table_name): ITable
+    {
+        $loader = new Table_loader();
+        $data = $loader->load($table_name);
 
-    //     return $data;
-    // }
+        return $data;
+    }
 }
