@@ -15,7 +15,7 @@ class Settings_validator
      * Default validation rules for NPR CDS settings.
      */
     public const API_SETTINGS_RULES = array(
-        'cds_token' => 'required|maxLength[64]|alphaNumeric',
+        'cds_token' => 'required|maxLength[64]|regex[/[-\w]+/]',
         'document_prefix' => 'required|maxLength[64]|alphaNumeric',
         'org_id' => 'maxLength[10]|numeric',
         // 'api_key' => 'required|maxLength[64]|alphaNumeric',
