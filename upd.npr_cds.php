@@ -160,9 +160,7 @@ class Npr_cds_upd
             return false;
         }
 
-        $updated = true;
-
-        return $updated;
+        return true;
     }
 
     private function check_dependencies(): bool
