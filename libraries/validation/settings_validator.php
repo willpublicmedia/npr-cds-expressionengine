@@ -19,8 +19,8 @@ class Settings_validator
         'document_prefix' => 'required|maxLength[64]|alphaNumeric',
         'org_id' => 'maxLength[10]|numeric',
         // 'api_key' => 'required|maxLength[64]|alphaNumeric',
-        // 'pull_url' => 'url|maxLength[64]',
-        // 'push_url' => 'url|maxLength[64]',
+        'pull_url' => 'url|maxLength[128]',
+        'push_url' => 'url|maxLength[128]',
         // 'npr_permissions' => 'maxLength[256]|alphaNumeric',
     );
 

@@ -54,6 +54,14 @@ class config_settings_table extends Table
             'null' => true,
             'constraint' => 24,
         ),
+        'pull_url' => array(
+            'type' => 'text',
+            'constraint' => 128,
+        ),
+        'push_url' => array(
+            'type' => 'text',
+            'constraint' => 128,
+        ),
         // 'npr_permissions' => array(
         //     'type' => 'varchar',
         //     'constraint' => 256

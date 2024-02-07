@@ -6,6 +6,10 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
+require_once __DIR__ . '/npr_constants.php';
+
+use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
+
 /**
  * Tools for building NPR CDS control panel forms.
  */
@@ -44,24 +48,32 @@ class Config_form_builder
                     ),
                 ),
             ),
-            // array(
-            //     'title' => 'Pull URL',
-            //     'fields' => array(
-            //         'pull_url' => array(
-            //             'type' => 'text',
-            //             'value' => ''
-            //         )
-            //     )
-            // ),
-            // array(
-            //     'title' => 'Push URL',
-            //     'fields' => array(
-            //         'push_url' => array(
-            //             'type' => 'text',
-            //             'value' => ''
-            //         )
-            //     )
-            // )
+            array(
+                'title' => 'Pull URL',
+                'fields' => array(
+                    'pull_url' => array(
+                        'type' => 'radio',
+                        'choices' => array(
+                            Npr_constants::NPR_STAGING_URL => 'Staging',
+                            Npr_constants::NPR_PRODUCTION_URL => 'Production',
+                        ),
+                        'default_value' => 0,
+                    ),
+                ),
+            ),
+            array(
+                'title' => 'Push URL',
+                'fields' => array(
+                    'push_url' => array(
+                        'type' => 'radio',
+                        'choices' => array(
+                            Npr_constants::NPR_STAGING_URL => 'Staging',
+                            Npr_constants::NPR_PRODUCTION_URL => 'Production',
+                        ),
+                        'default_value' => 0,
+                    ),
+                ),
+            ),
         ),
     );
 
