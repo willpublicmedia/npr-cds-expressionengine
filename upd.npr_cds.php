@@ -92,8 +92,7 @@ class Npr_cds_upd extends Installer
 
         if ($this->npr_story_api_installed() === true) {
             $this->migrate_story_api_settings();
-
-            // to do: migrate story api tables
+            $this->migrate_story_api_stories();
 
             // to do: migrate story api fields
 
@@ -183,6 +182,17 @@ class Npr_cds_upd extends Installer
 
         ee()->db->where('id', 1);
         ee()->db->update('npr_cds_settings', $data);
+
+        return;
+    }
+
+    private function migrate_story_api_stories()
+    {
+        ee('CP/Alert')->makeBanner('story-api-story-migration')
+            ->asIssue()
+            ->withTitle('Legacy stories not migrated')
+            ->addToBody('to do: build models and migrate legacy api stories')
+            ->defer();
 
         return;
     }
