@@ -45,7 +45,7 @@ class Npr_cds_upd extends Installer
             // 'config_field_mappings',
         ),
         'story' => array(
-            //     'npr_story',
+            'npr_story',
             //     'npr_organization',
             //     'npr_audio',
             //     'npr_audio_format',
