@@ -44,24 +44,24 @@ class Npr_cds_upd extends Installer
             'config_settings',
             // 'config_field_mappings',
         ),
-        // 'story' => array(
-        //     'npr_story',
-        //     'npr_organization',
-        //     'npr_audio',
-        //     'npr_audio_format',
-        //     'npr_byline',
-        //     'npr_html_asset',
-        //     'npr_image',
-        //     'npr_image_crop',
-        //     'npr_permalink',
-        //     'npr_pull_correction',
-        //     'npr_pull_quote',
-        //     // rewrite related link for push-only.
-        //     // 'npr_related_link',
-        //     'npr_text_paragraph',
-        //     'npr_thumbnail',
-        //     'pushed_stories',
-        // ),
+        'story' => array(
+            //     'npr_story',
+            //     'npr_organization',
+            //     'npr_audio',
+            //     'npr_audio_format',
+            //     'npr_byline',
+            //     'npr_html_asset',
+            //     'npr_image',
+            //     'npr_image_crop',
+            //     'npr_permalink',
+            //     'npr_pull_correction',
+            //     'npr_pull_quote',
+            //     // rewrite related link for push-only.
+            //     // 'npr_related_link',
+            //     'npr_text_paragraph',
+            //     'npr_thumbnail',
+            //     'pushed_stories',
+        ),
     );
 
     /**
@@ -88,6 +88,7 @@ class Npr_cds_upd extends Installer
 
         // create and/or migrate settings
         $this->create_tables($this->tables['config']);
+        $this->create_tables($this->tables['story']);
 
         if ($this->npr_story_api_installed() === true) {
             $this->migrate_story_api_settings();
@@ -100,7 +101,6 @@ class Npr_cds_upd extends Installer
             $this->delete_extensions($legacy_extensions);
         }
 
-        // $this->create_tables($this->tables['story']);
         // $this->create_required_fields();
         // $this->create_required_statuses();
         // $this->create_required_channels();
