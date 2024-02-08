@@ -4,6 +4,8 @@
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/libraries/installation/dependency_manager.php';
+require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
+require_once __DIR__ . '/database/migrations/pre_install/story_api_content_migrator.php';
 // require_once __DIR__ . '/libraries/installation/field_installer.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 // require_once __DIR__ . '/libraries/installation/status_installer.php';
@@ -13,6 +15,8 @@ require_once __DIR__ . '/libraries/configuration/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 
 use ExpressionEngine\Service\Addon\Installer;
+use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_content_migrator;
+use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
@@ -92,7 +96,7 @@ class Npr_cds_upd extends Installer
 
         if ($this->npr_story_api_installed() === true) {
             $this->migrate_story_api_settings();
-            $this->migrate_story_api_stories();
+            $this->migrate_story_api_content();
 
             // to do: migrate story api fields
 
@@ -157,32 +161,14 @@ class Npr_cds_upd extends Installer
 
     private function migrate_story_api_settings(): void
     {
-        $legacy_settings = ee()->db->get('npr_story_api_settings')->result_array();
-
-        if (count($legacy_settings) <= 0) {
-            return;
-        }
-
-        $legacy_settings = $legacy_settings[0];
-        $data = array(
-            'mapped_channels' => $legacy_settings['mapped_channels'],
-            'npr_image_destination' => $legacy_settings['npr_image_destination'],
-            'org_id' => $legacy_settings['org_id'],
-        );
-
-        ee()->db->where('id', 1);
-        ee()->db->update('npr_cds_settings', $data);
-
-        return;
+        $migrator = new Story_api_settings_migrator();
+        $migrator->migrate();
     }
 
-    private function migrate_story_api_stories()
+    private function migrate_story_api_content(): void
     {
-        ee('CP/Alert')->makeBanner('story-api-story-migration')
-            ->asIssue()
-            ->withTitle('Legacy stories not migrated')
-            ->addToBody('to do: build models and migrate legacy api stories')
-            ->defer();
+        $migrator = new Story_api_content_migrator();
+        $migrator->migrate();
 
         return;
     }
