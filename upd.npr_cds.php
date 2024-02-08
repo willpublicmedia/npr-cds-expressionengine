@@ -7,7 +7,7 @@ require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 // require_once __DIR__ . '/libraries/installation/field_installer.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 // require_once __DIR__ . '/libraries/installation/status_installer.php';
-// require_once __DIR__ . '/libraries/installation/extension_installer.php';
+require_once __DIR__ . '/libraries/installation/extension_installer.php';
 require_once __DIR__ . '/libraries/configuration/tables/table_loader.php';
 require_once __DIR__ . '/libraries/configuration/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
@@ -16,9 +16,9 @@ use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
+use IllinoisPublicMedia\NprCds\Libraries\Installation\Extension_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Extension_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Field_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Status_installer;
 
@@ -89,6 +89,13 @@ class Npr_cds_upd
 
         if ($this->npr_story_api_installed() === true) {
             $this->migrate_story_api_settings();
+
+            // to do: migrate story api tables
+
+            // to do: migrate story api fields
+
+            $legacy_extensions = true;
+            $this->delete_extensions($legacy_extensions);
         }
 
         // $this->create_tables($this->tables['story']);
@@ -245,11 +252,11 @@ class Npr_cds_upd
     //     $installer->uninstall($this->channels, $this->publish_layout);
     // }
 
-    // private function delete_extensions()
-    // {
-    //     $uninstaller = new Extension_installer();
-    //     $uninstaller->uninstall();
-    // }
+    private function delete_extensions()
+    {
+        $uninstaller = new Extension_installer();
+        $uninstaller->uninstall();
+    }
 
     // private function delete_fields()
     // {
