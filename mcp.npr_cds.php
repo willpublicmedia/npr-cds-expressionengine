@@ -2,10 +2,13 @@
     exit('No direct script access allowed.');
 }
 
+require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/libraries/configuration/config_form_builder.php';
 require_once __DIR__ . '/libraries/validation/settings_validator.php';
 require_once __DIR__ . '/libraries/configuration/npr_constants.php';
 
+use ExpressionEngine\Service\Addon\Mcp;
+use IllinoisPublicMedia\NprCds\Constants;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Config_form_builder;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Validation\Settings_validator;
@@ -13,8 +16,10 @@ use IllinoisPublicMedia\NprCds\Libraries\Validation\Settings_validator;
 /**
  * NPR CDS control panel.
  */
-class Npr_cds_mcp
+class Npr_cds_mcp extends Mcp
 {
+    protected $addon_name = Constants::MODULE_NAME;
+
     private $settings = array();
 
     private $base_url;

@@ -18,6 +18,8 @@ class Constants
 
     const DOCS_URL = 'https://github.com/willpublicmedia/npr-cds-expressionengine';
 
+    const MODULE_NAME = 'npr_cds';
+
     const NAMESPACE  = 'IllinoisPublicMedia\NprCds';
 
     const VERSION = '0.0.0';

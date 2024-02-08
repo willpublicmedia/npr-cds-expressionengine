@@ -11,7 +11,8 @@ require_once __DIR__ . '/libraries/installation/extension_installer.php';
 require_once __DIR__ . '/libraries/configuration/tables/table_loader.php';
 require_once __DIR__ . '/libraries/configuration/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
-use IllinoisPublicMedia\NprCds\Constants;
+
+use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
@@ -25,13 +26,15 @@ use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 /**
  * NPR CDS updater.
  */
-class Npr_cds_upd
+class Npr_cds_upd extends Installer
 {
+    public $has_cp_backend = 'y';
+
+    public $has_publish_fields = 'n';
+
     private $channels = array(
         'npr_stories',
     );
-
-    private $module_name = 'Npr_cds';
 
     private $publish_layout = 'NPR CDS';
 
@@ -61,8 +64,6 @@ class Npr_cds_upd
         // ),
     );
 
-    private $version = Constants::VERSION;
-
     /**
      * NPR CDS updater constructor.
      *
@@ -70,6 +71,7 @@ class Npr_cds_upd
      */
     public function __construct()
     {
+        parent::__construct();
         ee()->load->dbforge();
     }
 
@@ -104,14 +106,7 @@ class Npr_cds_upd
         // $this->create_required_channels();
         // $this->create_required_extensions();
 
-        $data = array(
-            'module_name' => $this->module_name,
-            'module_version' => $this->version,
-            'has_cp_backend' => 'y',
-            'has_publish_fields' => 'n',
-        );
-
-        ee()->db->insert('modules', $data);
+        parent::install();
 
         return true;
     }
@@ -123,15 +118,15 @@ class Npr_cds_upd
      */
     public function uninstall()
     {
-        ee()->db->select('module_id');
-        ee()->db->from('modules');
-        ee()->db->where('module_name', $this->module_name);
-        $query = ee()->db->get();
+        // ee()->db->select('module_id');
+        // ee()->db->from('modules');
+        // ee()->db->where('module_name', $this->module_name);
+        // $query = ee()->db->get();
 
-        ee()->db->delete('module_member_roles', array('module_id' => $query->row('module_id')));
+        // ee()->db->delete('module_member_roles', array('module_id' => $query->row('module_id')));
 
-        ee()->db->delete('modules', array('module_name' => $this->module_name));
-        ee()->db->delete('actions', array('class' => $this->module_name));
+        // ee()->db->delete('modules', array('module_name' => $this->module_name));
+        // ee()->db->delete('actions', array('class' => $this->module_name));
 
         // $this->delete_channels();
         // $this->delete_statuses();
@@ -139,6 +134,8 @@ class Npr_cds_upd
         // $this->delete_extensions();
         // $this->delete_tables($this->tables['story']);
         // $this->delete_tables($this->tables['config']);
+
+        parent::uninstall();
 
         return true;
     }
@@ -152,20 +149,11 @@ class Npr_cds_upd
      */
     public function update($current = '')
     {
-        if (version_compare($this->version, '1.0.0', '<')) {
-            $this->uninstall();
-            $this->install();
-
-            return true;
-        }
-
-        if (version_compare($current, $this->version, '=')) {
-            return false;
-        }
-
         if ($this->check_dependencies() === false) {
             return false;
         }
+
+        parent::update($current);
 
         return true;
     }
