@@ -117,16 +117,6 @@ class Npr_cds_upd extends Installer
      */
     public function uninstall()
     {
-        // ee()->db->select('module_id');
-        // ee()->db->from('modules');
-        // ee()->db->where('module_name', $this->module_name);
-        // $query = ee()->db->get();
-
-        // ee()->db->delete('module_member_roles', array('module_id' => $query->row('module_id')));
-
-        // ee()->db->delete('modules', array('module_name' => $this->module_name));
-        // ee()->db->delete('actions', array('class' => $this->module_name));
-
         // $this->delete_channels();
         // $this->delete_statuses();
         // $this->delete_fields();
