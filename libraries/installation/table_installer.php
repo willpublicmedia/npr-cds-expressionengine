@@ -6,8 +6,8 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
-require_once __DIR__ . '/../configuration/tables/table.php';
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
+require_once __DIR__ . '/../../database/installation/tables/table.php';
+use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 
 /**
  * NPR CDS table installer.

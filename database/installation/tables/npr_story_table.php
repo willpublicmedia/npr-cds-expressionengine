@@ -1,13 +1,13 @@
 <?php
 
-namespace IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables;
+namespace IllinoisPublicMedia\NprCds\Database\Installation\Tables;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
 require_once __DIR__ . '/table.php';
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table;
+use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table;
 
 class npr_story_table extends Table
 {

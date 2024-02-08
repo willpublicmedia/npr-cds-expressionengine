@@ -1,14 +1,14 @@
 <?php
 
-namespace IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables;
+namespace IllinoisPublicMedia\NprCds\Database\Installation\Tables;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
-require_once __DIR__ . '/../../utilities/autoloader.php';
+require_once __DIR__ . '/../../../libraries/utilities/autoloader.php';
 require_once __DIR__ . '/itable.php';
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
+use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Autoloader;
 
 class Table_loader
@@ -24,7 +24,7 @@ class Table_loader
 
     public function load(
         string $model_name,
-        string $namespace = 'IllinoisPublicMedia\\NprCds\\Libraries\\Configuration\\Tables\\',
+        string $namespace = 'IllinoisPublicMedia\\NprCds\\Database\\Installation\\Tables\\',
         string $identifier = '_table'
     ): ITable {
         $table_name = $namespace . $model_name . $identifier;

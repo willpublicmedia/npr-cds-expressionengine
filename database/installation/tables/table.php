@@ -1,13 +1,13 @@
 <?php
 
-namespace IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables;
+namespace IllinoisPublicMedia\NprCds\Database\Installation\Tables;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
 require_once __DIR__ . '/itable.php';
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
+use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 
 class Table implements ITable
 {

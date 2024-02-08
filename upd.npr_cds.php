@@ -10,15 +10,15 @@ require_once __DIR__ . '/database/migrations/pre_install/story_api_content_migra
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 // require_once __DIR__ . '/libraries/installation/status_installer.php';
 require_once __DIR__ . '/libraries/installation/extension_installer.php';
-require_once __DIR__ . '/libraries/configuration/tables/table_loader.php';
-require_once __DIR__ . '/libraries/configuration/tables/itable.php';
+require_once __DIR__ . '/database/installation/tables/table_loader.php';
+require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 
 use ExpressionEngine\Service\Addon\Installer;
+use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
+use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_content_migrator;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\ITable;
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Extension_installer;

@@ -1,6 +1,6 @@
 <?php
 
-namespace IllinoisPublicMedia\NprCds\Libraries\Configuration\Tables;
+namespace IllinoisPublicMedia\NprCds\Database\Installation\Tables;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
