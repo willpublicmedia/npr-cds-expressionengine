@@ -56,9 +56,9 @@ class Settings_validator
             $is_valid = false;
 
             if ($data['pull_url'] === Npr_constants::NPR_STAGING_URL || $data['push_url'] === Npr_constants::NPR_STAGING_URL) {
-                $is_valid = preg_match("/^s\d+$/", $data['org_id']) === 1 ? true : false;
+                $is_valid = preg_match("/^s\d+$/", $data['org_id']) === 1 ? true : "Org ID should begin with 's' when used in staging environments.";
             } else {
-                $is_valid = preg_match("/\d+/", $data['org_id']) === 1 ? true : false;
+                $is_valid = preg_match("/\d+/", $data['org_id']) === 1 ? true : "Org ID should be numerical.";
             }
 
             return $is_valid;
