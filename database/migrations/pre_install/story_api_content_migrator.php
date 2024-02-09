@@ -11,13 +11,12 @@ class Story_api_content_migrator
     public function migrate()
     {
         $legacy_stories = ee()->db->get('npr_story_api_stories')->result_array();
-        $this->migrate_stories_table($legacy_stories);
+        // $this->migrate_stories_table($legacy_stories);
 
         ee('CP/Alert')->makeBanner('story-api-story-migration')
             ->asIssue()
             ->withTitle('Legacy stories not migrated')
             ->addToBody('to do: build models and migrate legacy api stories')
-            ->addToBody("missing org_id")
             ->addToBody('found ' . count($legacy_stories) . ' stories')
             ->defer();
     }
