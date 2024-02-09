@@ -9,6 +9,9 @@ if (!defined('BASEPATH')) {
 require_once __DIR__ . '/table.php';
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table;
 
+/**
+ * See https://content.api.npr.org/v1/profiles/document
+ */
 class npr_story_table extends Table
 {
     protected $_defaults = array();
