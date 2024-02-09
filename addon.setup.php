@@ -45,5 +45,10 @@ return array(
     //         'ee:ChannelEntry',
     //     ),
     // ),
+    'models' => [
+        'NprDocument'    => 'Model\NprCdsDocument',
+
+    ],
+ 
 )
 ?>

@@ -23,7 +23,7 @@ class npr_document_table extends Table
             'unsigned' => true,
             'auto_increment' => true,
         ),
-        'npr_story_id' => array(
+        'npr_id' => array(
             'type' => 'varchar',
             'constraint' => 48,
         ),
