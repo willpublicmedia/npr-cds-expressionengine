@@ -52,6 +52,28 @@ class NprCdsDocument extends Model
      */
     protected $meta;
 
+    // begin aggregation profile
+    /**
+     * profile: aggregation
+     * required: no
+     *
+     * NPR-specific string array of newsletter abbreviations associated with this aggregation.
+     */
+    protected array $related_newsletter_ids;
+
+    /**
+     * profile: aggregation
+     * required: yes
+     *
+     * Some notes about the items array:
+     *   - The items array can be empty
+     *   - There can be no more than 100 entries in the items array
+     *   - The items array should be considered already sorted by publishers
+     *   - items links cannot have rels
+     */
+    protected array $items;
+    // end aggregation profile
+
     /**
      * getter for authorized_service_org_ids
      */
