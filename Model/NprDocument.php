@@ -74,6 +74,23 @@ class NprCdsDocument extends Model
     protected array $items;
     // end aggregation profile
 
+    // begin area profile
+    /**
+     * profile: area
+     * required: yes
+     *
+     * A area is a document that contains other layout assets for sequential display. This profile requires the container profile, and a list of assets will be contained in the layout defined in the container profile.
+     *
+     * A descriptor for the semantic purpose of the Area. Accepted values are feature, navigation, zone, supplementary, or overflow.
+     */
+    protected string $areaType;
+
+    /**
+     * contains assets used by area profile
+     */
+    protected array $layouts;
+    // end area profile
+
     /**
      * getter for authorized_service_org_ids
      */
