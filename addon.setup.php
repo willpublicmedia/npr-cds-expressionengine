@@ -25,6 +25,8 @@ return array(
     'version' => Constants::VERSION,
     'settings_exist' => true,
     // 'models' => array(
+        'NprCdsProfile'    => 'Model\NprCdsProfile',
+
     //     'Npr_audio' => 'Libraries\Model\Content\Npr_audio',
     //     'Npr_audio_format' => 'Libraries\Model\Content\Npr_audio_format',
     //     'Npr_byline' => 'Libraries\Model\Content\Npr_byline',
