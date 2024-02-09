@@ -10,7 +10,7 @@ class NprCdsDocument extends Model
     // You can get this all instances of this model by using:
     // ee('Model')->get('npr_cds:NprCdsDocument')->all();
 
-    protected static $_primary_key = 'id';
+    protected static $_primary_key = 'ee_id';
 
     protected static $_table_name = 'npr_cds_documents';
 

@@ -17,7 +17,7 @@ class npr_document_table extends Table
     protected $_defaults = array();
 
     protected $_fields = array(
-        'id' => array(
+        'ee_id' => array(
             'type' => 'int',
             'constraint' => 64,
             'unsigned' => true,
