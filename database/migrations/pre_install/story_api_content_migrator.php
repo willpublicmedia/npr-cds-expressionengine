@@ -45,6 +45,6 @@ class Story_api_content_migrator
             $stories[] = $new_story;
         }
 
-        ee()->db->insert_batch('exp_npr_cds_stories', $stories);
+        ee()->db->insert_batch('exp_npr_cds_documents', $stories);
     }
 }

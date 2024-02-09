@@ -12,7 +12,7 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table;
 /**
  * See https://content.api.npr.org/v1/profiles/document
  */
-class npr_story_table extends Table
+class npr_document_table extends Table
 {
     protected $_defaults = array();
 
@@ -82,5 +82,5 @@ class npr_story_table extends Table
         // 'foreign' => 'organization_id',
     );
 
-    protected $_table_name = 'npr_cds_stories';
+    protected $_table_name = 'npr_cds_documents';
 }
