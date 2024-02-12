@@ -5,7 +5,6 @@
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
-require_once __DIR__ . '/database/migrations/pre_install/story_api_content_migrator.php';
 // require_once __DIR__ . '/libraries/installation/field_installer.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 // require_once __DIR__ . '/libraries/installation/status_installer.php';
@@ -17,7 +16,6 @@ require_once __DIR__ . '/libraries/installation/table_installer.php';
 use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
-use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_content_migrator;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
@@ -49,21 +47,6 @@ class Npr_cds_upd extends Installer
             // 'config_field_mappings',
         ),
         'story' => array(
-            'npr_story',
-            //     'npr_organization',
-            //     'npr_audio',
-            //     'npr_audio_format',
-            //     'npr_byline',
-            //     'npr_html_asset',
-            //     'npr_image',
-            //     'npr_image_crop',
-            //     'npr_permalink',
-            //     'npr_pull_correction',
-            //     'npr_pull_quote',
-            //     // rewrite related link for push-only.
-            //     // 'npr_related_link',
-            //     'npr_text_paragraph',
-            //     'npr_thumbnail',
             //     'pushed_stories',
         ),
     );
@@ -92,11 +75,9 @@ class Npr_cds_upd extends Installer
 
         // create and/or migrate settings
         $this->create_tables($this->tables['config']);
-        $this->create_tables($this->tables['story']);
 
         if ($this->npr_story_api_installed() === true) {
             $this->migrate_story_api_settings();
-            $this->migrate_story_api_content();
 
             // to do: migrate story api fields
 
@@ -107,12 +88,11 @@ class Npr_cds_upd extends Installer
         ee('CP/Alert')->makeBanner('npr-cds-installation')
             ->asIssue()
             ->withTitle('Installation incomplete')
-            ->addToBody('to do: create required tables')
             ->addToBody('to do: create required fields')
             ->addToBody('to do: create required statuses')
-            ->addToBody('to do: create required models')
             ->addToBody('to do: create required extensions')
             ->addToBody('to do: create required channels')
+            ->addToBody('to do: migrate story api fields')
             ->defer();
 
         // $this->create_required_fields();
@@ -174,14 +154,6 @@ class Npr_cds_upd extends Installer
     {
         $migrator = new Story_api_settings_migrator();
         $migrator->migrate();
-    }
-
-    private function migrate_story_api_content(): void
-    {
-        $migrator = new Story_api_content_migrator();
-        $migrator->migrate();
-
-        return;
     }
 
     private function npr_story_api_installed(): bool
