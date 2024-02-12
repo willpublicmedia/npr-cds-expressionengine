@@ -5,7 +5,7 @@
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
-// require_once __DIR__ . '/libraries/installation/field_installer.php';
+require_once __DIR__ . '/database/installation/fields/field_installer.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 require_once __DIR__ . '/database/installation/status_installer.php';
 require_once __DIR__ . '/libraries/installation/extension_installer.php';
@@ -18,12 +18,11 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
-use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
+use IllinoisPublicMedia\NprCds\Datbase\Installation\Fields\Field_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
+use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Extension_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
-
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Field_installer;
 
 /**
  * NPR CDS updater.
@@ -94,7 +93,7 @@ class Npr_cds_upd extends Installer
             ->addToBody('to do: migrate story api fields')
             ->defer();
 
-        // $this->create_required_fields();
+        $this->create_required_fields();
         $this->create_required_statuses();
         // $this->create_required_channels();
         // $this->create_required_extensions();
@@ -170,11 +169,11 @@ class Npr_cds_upd extends Installer
     //     $installer->install();
     // }
 
-    // private function create_required_fields()
-    // {
-    //     $installer = new Field_installer();
-    //     $installer->install();
-    // }
+    private function create_required_fields()
+    {
+        $installer = new Field_installer();
+        $installer->install();
+    }
 
     private function create_required_statuses()
     {
