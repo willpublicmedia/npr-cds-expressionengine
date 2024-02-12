@@ -7,13 +7,14 @@ require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
 // require_once __DIR__ . '/libraries/installation/field_installer.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
-// require_once __DIR__ . '/libraries/installation/status_installer.php';
+require_once __DIR__ . '/database/installation/status_installer.php';
 require_once __DIR__ . '/libraries/installation/extension_installer.php';
 require_once __DIR__ . '/database/installation/tables/table_loader.php';
 require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 
 use ExpressionEngine\Service\Addon\Installer;
+use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
@@ -23,7 +24,6 @@ use IllinoisPublicMedia\NprCds\Libraries\Installation\Extension_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Field_installer;
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Status_installer;
 
 /**
  * NPR CDS updater.
@@ -89,14 +89,13 @@ class Npr_cds_upd extends Installer
             ->asIssue()
             ->withTitle('Installation incomplete')
             ->addToBody('to do: create required fields')
-            ->addToBody('to do: create required statuses')
             ->addToBody('to do: create required extensions')
             ->addToBody('to do: create required channels')
             ->addToBody('to do: migrate story api fields')
             ->defer();
 
         // $this->create_required_fields();
-        // $this->create_required_statuses();
+        $this->create_required_statuses();
         // $this->create_required_channels();
         // $this->create_required_extensions();
 
@@ -112,12 +111,8 @@ class Npr_cds_upd extends Installer
      */
     public function uninstall()
     {
-        // $this->delete_channels();
-        // $this->delete_statuses();
-        // $this->delete_fields();
-        // $this->delete_extensions();
-        // $this->delete_tables($this->tables['story']);
-        // $this->delete_tables($this->tables['config']);
+        $this->delete_extensions();
+        $this->delete_tables($this->tables['config']);
 
         parent::uninstall();
 
@@ -181,15 +176,15 @@ class Npr_cds_upd extends Installer
     //     $installer->install();
     // }
 
-    // private function create_required_statuses()
-    // {
-    //     $statuses = array(
-    //         'draft',
-    //     );
+    private function create_required_statuses()
+    {
+        $statuses = array(
+            'draft',
+        );
 
-    //     $installer = new Status_installer();
-    //     $installer->install($statuses);
-    // }
+        $installer = new Status_installer();
+        $installer->install($statuses);
+    }
 
     private function create_tables(array $table_names)
     {
@@ -203,12 +198,6 @@ class Npr_cds_upd extends Installer
         $installer->install($tables);
     }
 
-    // private function delete_channels()
-    // {
-    //     $installer = new Channel_installer();
-    //     $installer->uninstall($this->channels, $this->publish_layout);
-    // }
-
     private function delete_extensions()
     {
         $uninstaller = new Extension_installer();
@@ -221,24 +210,18 @@ class Npr_cds_upd extends Installer
     //     $uninstaller->uninstall();
     // }
 
-    // private function delete_statuses()
-    // {
-    //     $uninstaller = new Status_installer();
-    //     $uninstaller->uninstall();
-    // }
+    private function delete_tables(array $table_names)
+    {
+        $tables = array();
+        foreach ($table_names as $name) {
+            $data = $this->load_table_config($name);
+            $table_name = $data->table_name();
+            array_push($tables, $table_name);
+        }
 
-    // private function delete_tables(array $table_names)
-    // {
-    //     $tables = array();
-    //     foreach ($table_names as $name) {
-    //         $data = $this->load_table_config($name);
-    //         $table_name = $data->table_name();
-    //         array_push($tables, $table_name);
-    //     }
-
-    //     $uninstaller = new Table_installer();
-    //     $uninstaller->uninstall($tables);
-    // }
+        $uninstaller = new Table_installer();
+        $uninstaller->uninstall($tables);
+    }
 
     private function load_table_config(string $table_name): ITable
     {
