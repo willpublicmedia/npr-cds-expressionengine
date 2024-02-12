@@ -5,9 +5,15 @@ namespace IllinoisPublicMedia\NprCds\Model;
 use ExpressionEngine\Service\Model\Model;
 
 /**
- * see:
- *   - https://npr.github.io/content-distribution-service/profiles/document.html
- *   - https://content.api.npr.org/v1/profiles/document
+ * The document profile is the “base” profile for all CDS documents; every document (and subdocument/asset) is required to list this profile in their profile list.
+ * The document profile specifies the base set of requirements needed by CDS to correctly process the document.
+ *
+ * Within the profile documentation we have examples for asset and subdocument JSON.
+ * Some of these may not have the document profile referenced however in reality they should.
+ * If you see this just note that in order to be valid, any of these documents need to include /v1/profiles/document in the profiles array.
+ *
+ * @see https://npr.github.io/content-distribution-service/profiles/document.html
+ * @see https://content.api.npr.org/v1/profiles/document
  */
 class NprCdsDocument extends Model
 {
@@ -19,6 +25,10 @@ class NprCdsDocument extends Model
         'Profiles' => array(
             'type' => 'hasMany',
             'model' => 'npr_cds:NprCdsProfile',
+        ),
+        'Audio' => array(
+            'type' => 'hasMany',
+            'model' => 'npr_cds:NprCdsAudio',
         ),
     );
 
