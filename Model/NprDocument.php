@@ -30,6 +30,10 @@ class NprCdsDocument extends Model
             'type' => 'hasMany',
             'model' => 'npr_cds:NprCdsAudio',
         ),
+        'Cards' => array(
+            'type' => 'hasMany',
+            'model' => 'npr_cds:NprCdsCard',
+        ),
     );
 
     protected int $ee_id;

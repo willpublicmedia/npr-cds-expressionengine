@@ -25,6 +25,8 @@ return array(
     'version' => Constants::VERSION,
     'settings_exist' => true,
     // 'models' => array(
+        'NprCdsCard'    => 'Model\NprCdsCard',
+
         'NprCdsAudio'    => 'Model\NprCdsAudio',
 
         'NprCdsProfile'    => 'Model\NprCdsProfile',
