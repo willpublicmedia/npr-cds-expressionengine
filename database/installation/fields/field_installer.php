@@ -13,7 +13,11 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Story_source_definit
 
 class Field_installer
 {
-    const DEFAULT_FIELD_GROUP_NAME = 'NPR Story API';
+    const DEFAULT_FIELD_GROUP = array(
+        'group_name' => 'NPR CDS',
+        'short_name' => 'npr_cds',
+        'group_description' => 'Entry fields used by the NPR Content Distribution System.',
+    );
 
     private $custom_field_group;
 
@@ -34,7 +38,7 @@ class Field_installer
         ee()->lang->loadfile('admin_content');
     }
 
-    public function install($field_group = self::DEFAULT_FIELD_GROUP_NAME)
+    public function install($field_group = self::DEFAULT_FIELD_GROUP)
     {
         $this->custom_field_group = $this->load_field_group($field_group);
 
@@ -148,12 +152,12 @@ class Field_installer
         }
     }
 
-    private function load_field_group($group_name)
+    private function load_field_group($group_definition)
     {
+        $group_name = $group_definition['group_name'];
         $group = ee('Model')->get('ChannelFieldGroup')->filter('group_name', '==', $group_name)->first();
         if ($group == null) {
-            $group = ee('Model')->make('ChannelFieldGroup');
-            $group->group_name = $group_name;
+            $group = ee('Model')->make('ChannelFieldGroup', $group_definition);
             $group->site_id = ee()->config->item('site_id');
             $group->save();
         }
@@ -196,7 +200,7 @@ class Field_installer
             ->withTitle('NPR field creation notice.')
             ->addToBody(
                 "A field with the name $field_name and compatible type $field_type was found and assigned to the " .
-                Field_installer::DEFAULT_FIELD_GROUP_NAME . " group.")
+                Field_installer::DEFAULT_FIELD_GROUP['group_name'] . " group.")
             ->defer();
     }
 
