@@ -14,11 +14,11 @@ require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 
 use ExpressionEngine\Service\Addon\Installer;
+use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
-use IllinoisPublicMedia\NprCds\Datbase\Installation\Fields\Field_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Extension_installer;
