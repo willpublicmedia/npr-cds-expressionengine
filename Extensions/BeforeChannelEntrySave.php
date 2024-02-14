@@ -69,7 +69,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $id_field = $this->fields['npr_story_id'];
         $npr_story_id = $values[$id_field];
 
-        // $result = $this->validate_story_id($entry, $values);
+        $result = $this->validate_story_id($entry, $values);
         // if ($result instanceof ValidationResult) {
         //     if ($result->isNotValid()) {
         //         return $this->display_error($result);
@@ -182,5 +182,36 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         $this->fields = $field_names;
+    }
+
+    private function validate_story_id($entry, $values)
+    {
+        $validator = ee('Validation')->make();
+        $validator->defineRule('uniqueStoryId', function ($key, $value, $parameters) use ($entry) {
+            $count = ee('Model')->get('npr_story_api:Npr_story')->filter('id', $value)->count();
+            if ($count === 0) {
+                return true;
+            }
+
+            $owner_entry = ee()->db->select('entry_id')
+                ->from('npr_story_api_stories')
+                ->where('id', $value)
+                ->limit(1)
+                ->get()
+                ->row('entry_id');
+
+            if ($owner_entry === $entry->entry_id) {
+                return true;
+            }
+
+            return "An NPR story with ID $value has already been created. Content rejected.";
+        });
+
+        $validator->setRules(array(
+            $this->fields['npr_story_id'] => 'uniqueStoryId',
+        ));
+
+        $result = $validator->validate($values);
+        return $result;
     }
 }
