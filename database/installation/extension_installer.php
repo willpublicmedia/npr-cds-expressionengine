@@ -1,12 +1,11 @@
 <?php
-namespace IllinoisPublicMedia\NprCds\Libraries\Installation;
+namespace IllinoisPublicMedia\NprCds\Database\Installation;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
 // require_once(__DIR__ . '/../../ext.npr_story_api.php');
-require_once __DIR__ . '/../../../npr_story_api/ext.npr_story_api.php';
 
 class Extension_installer
 {
@@ -33,7 +32,15 @@ class Extension_installer
 
     public function uninstall($legacy = false)
     {
-        $extensions = $legacy === false ? $this->required_extensions : $this->legacy_story_api_extensions;
+        $extensions = null;
+        if ($legacy) {
+            require_once __DIR__ . '/../../../npr_story_api/ext.npr_story_api.php';
+            $extensions = $this->legacy_story_api_extensions;
+        } else {
+
+            $extensions = $this->required_extensions;
+        }
+
         foreach ($extensions as $name) {
             try {
                 $class = '\\' . $name;

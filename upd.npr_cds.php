@@ -96,7 +96,7 @@ class Npr_cds_upd extends Installer
         // $this->create_required_fields();
         $this->create_required_statuses();
         // $this->create_required_channels();
-        // $this->create_required_extensions();
+        $this->create_required_extensions();
 
         parent::install();
 
@@ -163,11 +163,11 @@ class Npr_cds_upd extends Installer
     //     $installer->install($this->channels, $this->publish_layout);
     // }
 
-    // private function create_required_extensions()
-    // {
-    //     $installer = new Extension_installer();
-    //     $installer->install();
-    // }
+    private function create_required_extensions()
+    {
+        $installer = new Extension_installer();
+        $installer->install();
+    }
 
     private function create_required_fields()
     {
