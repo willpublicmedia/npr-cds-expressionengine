@@ -2,7 +2,9 @@
 
 namespace IllinoisPublicMedia\NprCds\Extensions;
 
+require_once __DIR__ . '/database/installation/fields/field_installer.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
+use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 
 class BeforeChannelEntrySave extends AbstractRoute
 {
@@ -56,14 +58,14 @@ class BeforeChannelEntrySave extends AbstractRoute
             $abort = true;
         }
 
-        // $has_required_fields = $this->check_required_fields($entry->Channel->FieldGroups);
-        // if ($has_required_fields === false) {
-        //     $abort = true;
-        // }
+        $has_required_fields = $this->check_required_fields($entry->Channel->FieldGroups);
+        if ($has_required_fields === false) {
+            $abort = true;
+        }
 
-        // if ($abort === true) {
-        //     return;
-        // }
+        if ($abort === true) {
+            return;
+        }
 
         // $id_field = $this->fields['npr_story_id'];
         // $npr_story_id = $values[$id_field];
@@ -96,6 +98,25 @@ class BeforeChannelEntrySave extends AbstractRoute
 
         // $story->ChannelEntry = $entry;
         // $story->save();
+    }
+
+    private function check_required_fields($field_groups, $display_error = true)
+    {
+        foreach ($field_groups as $group) {
+            if ($group->group_name === Field_installer::DEFAULT_FIELD_GROUP_NAME) {
+                return true;
+            }
+        }
+
+        if ($display_error) {
+            ee('CP/Alert')->makeInline('story-push-missing-fields')
+                ->asIssue()
+                ->withTitle('NPR Stories Mapping Error')
+                ->addToBody('Channel must use the ' . Field_installer::DEFAULT_FIELD_GROUP_NAME . ' field group.')
+                ->defer();
+        }
+
+        return false;
     }
 
     private function check_external_story_source($story_source)
