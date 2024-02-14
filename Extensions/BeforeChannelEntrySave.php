@@ -4,6 +4,7 @@ namespace IllinoisPublicMedia\NprCds\Extensions;
 
 require_once __DIR__ . '/../database/installation/fields/field_installer.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
+use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 
 class BeforeChannelEntrySave extends AbstractRoute
@@ -70,11 +71,11 @@ class BeforeChannelEntrySave extends AbstractRoute
         $npr_story_id = $values[$id_field];
 
         $result = $this->validate_story_id($entry, $values);
-        // if ($result instanceof ValidationResult) {
-        //     if ($result->isNotValid()) {
-        //         return $this->display_error($result);
-        //     }
-        // }
+        if ($result instanceof ValidationResult) {
+            if ($result->isNotValid()) {
+                return $this->display_error($result);
+            }
+        }
 
         // // WARNING: story pull executes loop. Story may be an array.
         // $story = $this->pull_npr_story($npr_story_id);
@@ -160,6 +161,21 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         return $is_mapped;
+    }
+
+    private function display_error($errors)
+    {
+        foreach ($errors->getAllErrors() as $field => $results) {
+            $alert = ee('CP/Alert')->makeInline('entries-form')
+                ->asIssue()
+                ->withTitle('NPR Story save error.');
+
+            foreach ($results as $message) {
+                $alert->addToBody($message);
+            }
+
+            $alert->defer();
+        }
     }
 
     private function load_settings()
