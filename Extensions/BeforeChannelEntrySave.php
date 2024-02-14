@@ -90,9 +90,9 @@ class BeforeChannelEntrySave extends AbstractRoute
         // $values = $objects['values'];
         // $entry = $objects['entry'];
 
-        // // Flip overwrite value
-        // $values[$overwrite_field] = false;
-        // $entry->{$overwrite_field} = false;
+        // Flip overwrite value
+        $values[$overwrite_field] = false;
+        $entry->{$overwrite_field} = false;
 
         // $story->ChannelEntry = $entry;
         // $story->save();
