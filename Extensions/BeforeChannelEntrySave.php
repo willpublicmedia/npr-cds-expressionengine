@@ -49,12 +49,12 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        // $abort = false;
+        $abort = false;
 
-        // $is_mapped_channel = $this->check_mapped_channel($entry->channel_id);
-        // if ($is_mapped_channel === false) {
-        //     $abort = true;
-        // }
+        $is_mapped_channel = $this->check_mapped_channel($entry->channel_id);
+        if ($is_mapped_channel === false) {
+            $abort = true;
+        }
 
         // $has_required_fields = $this->check_required_fields($entry->Channel->FieldGroups);
         // if ($has_required_fields === false) {
@@ -105,6 +105,30 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         return true;
+    }
+
+    private function check_mapped_channel($channel_id, $display_error = true)
+    {
+        $results = ee()->db->
+            select('mapped_channels')->
+            from('npr_story_api_settings')->
+            get()->
+            result_array();
+
+        $mapped_channels = (array_pop($results))['mapped_channels'];
+        $mapped_channels = explode("|", $mapped_channels);
+
+        $is_mapped = in_array($channel_id, $mapped_channels);
+
+        if (!$is_mapped && $display_error) {
+            ee('CP/Alert')->makeInline('story-push-not-mapped')
+                ->asIssue()
+                ->withTitle('NPR CDS Mapping Error')
+                ->addToBody('Channel not mapped to CDS data. See NPR CDS addon settings in control panel.')
+                ->defer();
+        }
+
+        return $is_mapped;
     }
 
     private function load_settings()
