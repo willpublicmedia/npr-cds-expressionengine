@@ -6,7 +6,7 @@ use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 
 class BeforeChannelEntrySave extends AbstractRoute
 {
-    public function process($entry, $values)
+    public function query_cds($entry, $values)
     {
     }
 }
