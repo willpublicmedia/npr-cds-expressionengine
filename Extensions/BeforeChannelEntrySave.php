@@ -9,21 +9,20 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 class BeforeChannelEntrySave extends AbstractRoute
 {
     private $fields = array(
-        // 'audio_files' => null,
+        'audio_files' => null,
         'channel_entry_source' => null,
-        // 'npr_images' => null,
-        // 'npr_story_id' => null,
-        // 'overwrite_local_values' => null,
-        // 'publish_to_npr' => null,
+        'npr_images' => null,
+        'npr_story_id' => null,
+        'overwrite_local_values' => null,
+        'publish_to_npr' => null,
     );
 
     private $settings = [
         'cds_token' => '',
         'document_prefix' => '',
-        // 'pull_url' => '',
-        // 'push_url' => ''
+        'pull_url' => '',
+        'push_url' => '',
         'org_id' => null,
-        // 'document_prefix' => '',
         // 'theme_uses_featured_image' => false,
         // 'max_image_width' => 1200,
         // 'image_quality' => 75,
@@ -67,8 +66,8 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        // $id_field = $this->fields['npr_story_id'];
-        // $npr_story_id = $values[$id_field];
+        $id_field = $this->fields['npr_story_id'];
+        $npr_story_id = $values[$id_field];
 
         // $result = $this->validate_story_id($entry, $values);
         // if ($result instanceof ValidationResult) {
