@@ -40,14 +40,14 @@ class BeforeChannelEntrySave extends AbstractRoute
     public function query_cds($entry, $values)
     {
         $source_field = $this->fields['channel_entry_source'];
-        // $is_external_story = array_key_exists($source_field, $values) ? $this->check_external_story_source($values[$source_field]) : false;
-        // $overwrite_field = $this->fields['overwrite_local_values'];
-        // $overwrite = array_key_exists($overwrite_field, $values) ? $values[$overwrite_field] : false;
+        $is_external_story = array_key_exists($source_field, $values) ? $this->check_external_story_source($values[$source_field]) : false;
+        $overwrite_field = $this->fields['overwrite_local_values'];
+        $overwrite = array_key_exists($overwrite_field, $values) ? $values[$overwrite_field] : false;
 
-        // // WARNING: check for push stories!
-        // if (!$is_external_story || !$overwrite) {
-        //     return;
-        // }
+        // WARNING: check for push stories!
+        if (!$is_external_story || !$overwrite) {
+            return;
+        }
 
         // $abort = false;
 
@@ -96,6 +96,15 @@ class BeforeChannelEntrySave extends AbstractRoute
 
         // $story->ChannelEntry = $entry;
         // $story->save();
+    }
+
+    private function check_external_story_source($story_source)
+    {
+        if (is_null($story_source) || $story_source == 'local') {
+            return false;
+        }
+
+        return true;
     }
 
     private function load_settings()
