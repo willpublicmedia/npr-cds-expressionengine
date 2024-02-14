@@ -2,7 +2,7 @@
 
 namespace IllinoisPublicMedia\NprCds\Extensions;
 
-require_once __DIR__ . '/database/installation/fields/field_installer.php';
+require_once __DIR__ . '/../database/installation/fields/field_installer.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 
@@ -102,7 +102,18 @@ class BeforeChannelEntrySave extends AbstractRoute
     private function check_required_fields($field_groups, $display_error = true)
     {
         foreach ($field_groups as $group) {
-            if ($group->group_name === Field_installer::DEFAULT_FIELD_GROUP_NAME) {
+            if ($group->group_name === Field_installer::DEFAULT_FIELD_GROUP['group_name']) {
+                return true;
+            }
+
+            if ($group->group_name === Field_installer::LEGACY_FIELD_GROUP['group_name']) {
+                ee('CP/Alert')->makeInline('legacy-field-group')
+                    ->asWarning()
+                    ->withTitle('NPR CDS Mapping Issue')
+                    ->addToBody('Legacy Story API fields detected.')
+                    ->addToBody('Channel should use the ' . Field_installer::DEFAULT_FIELD_GROUP['group_name'] . ' field group for accurate content mapping.')
+                    ->defer();
+
                 return true;
             }
         }
@@ -111,7 +122,7 @@ class BeforeChannelEntrySave extends AbstractRoute
             ee('CP/Alert')->makeInline('story-push-missing-fields')
                 ->asIssue()
                 ->withTitle('NPR Stories Mapping Error')
-                ->addToBody('Channel must use the ' . Field_installer::DEFAULT_FIELD_GROUP_NAME . ' field group.')
+                ->addToBody('Channel must use the ' . Field_installer::DEFAULT_FIELD_GROUP['group_name'] . ' field group.')
                 ->defer();
         }
 
@@ -186,19 +197,19 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function validate_story_id($entry, $values)
     {
+
         $validator = ee('Validation')->make();
         $validator->defineRule('uniqueStoryId', function ($key, $value, $parameters) use ($entry) {
-            $count = ee('Model')->get('npr_story_api:Npr_story')->filter('id', $value)->count();
+            $id_field = $this->fields['npr_story_id'];
+
+            $query = ee('Model')->get('ChannelEntry')->filter($id_field, $value);
+            $count = $query->count();
+
             if ($count === 0) {
                 return true;
             }
 
-            $owner_entry = ee()->db->select('entry_id')
-                ->from('npr_story_api_stories')
-                ->where('id', $value)
-                ->limit(1)
-                ->get()
-                ->row('entry_id');
+            $owner_entry = $query->first()->entry_id;
 
             if ($owner_entry === $entry->entry_id) {
                 return true;

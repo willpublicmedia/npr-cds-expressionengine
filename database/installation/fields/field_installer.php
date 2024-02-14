@@ -19,6 +19,10 @@ class Field_installer
         'group_description' => 'Entry fields used by the NPR Content Distribution System.',
     );
 
+    const LEGACY_FIELD_GROUP = array(
+        'group_name' => 'NPR Story API',
+    );
+
     private $custom_field_group;
 
     private $field_definitions;
