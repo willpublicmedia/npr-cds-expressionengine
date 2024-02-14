@@ -8,7 +8,7 @@ require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migr
 require_once __DIR__ . '/database/installation/fields/field_installer.php';
 // require_once __DIR__ . '/libraries/installation/channel_installer.php';
 require_once __DIR__ . '/database/installation/status_installer.php';
-require_once __DIR__ . '/libraries/installation/extension_installer.php';
+require_once __DIR__ . '/database/migrations/pre_install/legacy_extension_installer.php';
 require_once __DIR__ . '/database/installation/tables/table_loader.php';
 require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
@@ -18,10 +18,10 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
-use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
+use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Legacy_extension_installer;
 // use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
+use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
-use IllinoisPublicMedia\NprCds\Libraries\Installation\Extension_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 
 /**
@@ -80,8 +80,7 @@ class Npr_cds_upd extends Installer
 
             // to do: migrate story api fields
 
-            $legacy_extensions = true;
-            $this->delete_extensions($legacy_extensions);
+            $this->delete_legacy_extensions();
         }
 
         ee('CP/Alert')->makeBanner('npr-cds-installation')
@@ -96,7 +95,6 @@ class Npr_cds_upd extends Installer
         // $this->create_required_fields();
         $this->create_required_statuses();
         // $this->create_required_channels();
-        $this->create_required_extensions();
 
         parent::install();
 
@@ -110,7 +108,6 @@ class Npr_cds_upd extends Installer
      */
     public function uninstall()
     {
-        $this->delete_extensions();
         $this->delete_tables($this->tables['config']);
 
         parent::uninstall();
@@ -163,12 +160,6 @@ class Npr_cds_upd extends Installer
     //     $installer->install($this->channels, $this->publish_layout);
     // }
 
-    private function create_required_extensions()
-    {
-        $installer = new Extension_installer();
-        $installer->install();
-    }
-
     private function create_required_fields()
     {
         $installer = new Field_installer();
@@ -197,9 +188,9 @@ class Npr_cds_upd extends Installer
         $installer->install($tables);
     }
 
-    private function delete_extensions()
+    private function delete_legacy_extensions()
     {
-        $uninstaller = new Extension_installer();
+        $uninstaller = new Legacy_extension_installer();
         $uninstaller->uninstall();
     }
 
