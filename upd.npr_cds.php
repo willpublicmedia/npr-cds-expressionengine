@@ -87,13 +87,13 @@ class Npr_cds_upd extends Installer
         ee('CP/Alert')->makeBanner('npr-cds-installation')
             ->asIssue()
             ->withTitle('Installation incomplete')
-            ->addToBody('to do: create required fields')
+            ->addToBody('to do: install required fields')
             ->addToBody('to do: create required extensions')
             ->addToBody('to do: create required channels')
             ->addToBody('to do: migrate story api fields')
             ->defer();
 
-        $this->create_required_fields();
+        // $this->create_required_fields();
         $this->create_required_statuses();
         // $this->create_required_channels();
         // $this->create_required_extensions();
