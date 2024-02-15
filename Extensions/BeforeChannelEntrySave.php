@@ -220,12 +220,12 @@ class BeforeChannelEntrySave extends AbstractRoute
             $this->display_error('NPR API key not found. Configure key in NPR Story API module settings.');
             return;
         }
-
+throw new \Exception('url/param construction not the same as story api');
         $params = array(
             'id' => $npr_story_id,
             // 'dateType' => 'story',
             // 'output' => 'json',
-            'apiKey' => $cds_token,
+            'cdsToken' => $cds_token,
         );
 
         $pull_url = isset($this->settings['pull_url']) ? $this->settings['pull_url'] : null;
