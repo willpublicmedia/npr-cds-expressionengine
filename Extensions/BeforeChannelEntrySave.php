@@ -3,9 +3,11 @@
 namespace IllinoisPublicMedia\NprCds\Extensions;
 
 require_once __DIR__ . '/../database/installation/fields/field_installer.php';
+require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
+use IllinoisPublicMedia\NprStoryApi\Libraries\Publishing\Npr_cds_expressionengine;
 
 class BeforeChannelEntrySave extends AbstractRoute
 {
@@ -77,11 +79,11 @@ class BeforeChannelEntrySave extends AbstractRoute
             }
         }
 
-        // // WARNING: story pull executes loop. Story may be an array.
-        // $story = $this->pull_npr_story($npr_story_id);
-        // if (!$story) {
-        //     return;
-        // }
+        // WARNING: story pull executes loop. Story may be an array.
+        $story = $this->pull_npr_story($npr_story_id);
+        if (!$story) {
+            return;
+        }
 
         // if (isset($story[0])) {
         //     $story = $story[0];
@@ -209,6 +211,40 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         $this->fields = $field_names;
+    }
+
+    private function pull_npr_story($npr_story_id)
+    {
+        $cds_token = isset($this->settings['cds_token']) ? $this->settings['cds_token'] : '';
+        if ($cds_token === '') {
+            $this->display_error('NPR API key not found. Configure key in NPR Story API module settings.');
+            return;
+        }
+
+        $params = array(
+            'id' => $npr_story_id,
+            // 'dateType' => 'story',
+            // 'output' => 'json',
+            'apiKey' => $cds_token,
+        );
+
+        $pull_url = isset($this->settings['pull_url']) ? $this->settings['pull_url'] : null;
+
+        $api_service = new Npr_cds_expressionengine();
+        $api_service->request($pull_url, $params, 'documents');
+
+        // if ($api_service->response === null || isset($api_service->response->messages)) {
+        //     return;
+        // }
+
+        // $api_service->parse();
+
+        $stories = array();
+        // foreach ($api_service->stories as $story) {
+        //     $stories[] = $api_service->save_clean_response($story);
+        // }
+
+        return $stories;
     }
 
     private function validate_story_id($entry, $values)
