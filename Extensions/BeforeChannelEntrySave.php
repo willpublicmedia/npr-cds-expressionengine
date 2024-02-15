@@ -21,7 +21,6 @@ class BeforeChannelEntrySave extends AbstractRoute
     );
 
     private $settings = [
-        'cds_token' => '',
         'document_prefix' => '',
         'pull_url' => '',
         'push_url' => '',
@@ -182,9 +181,11 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function load_settings()
     {
-        $settings = ee()->db->select('*')
-            ->from('npr_story_api_settings')
-            ->get()
+        $fields = array_keys($this->settings);
+
+        $settings = ee()->db->select(implode(',', $fields))
+            ->limit(1)
+            ->get('npr_cds_settings')
             ->result_array();
 
         if (isset($settings[0])) {
@@ -215,17 +216,10 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function pull_npr_story($npr_story_id)
     {
-        $cds_token = isset($this->settings['cds_token']) ? $this->settings['cds_token'] : '';
-        if ($cds_token === '') {
-            $this->display_error('NPR API key not found. Configure key in NPR Story API module settings.');
-            return;
-        }
-throw new \Exception('url/param construction not the same as story api');
         $params = array(
             'id' => $npr_story_id,
             // 'dateType' => 'story',
             // 'output' => 'json',
-            'cdsToken' => $cds_token,
         );
 
         $pull_url = isset($this->settings['pull_url']) ? $this->settings['pull_url'] : null;

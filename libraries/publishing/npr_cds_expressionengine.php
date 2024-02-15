@@ -27,7 +27,7 @@ class Npr_cds_expressionengine
 
     public function request($base_url, $params = [], $path = 'documents', $method = 'get')
     {
-        $request_url = $this->build_request($params, $path, $base_url, $method);
+        $request_url = $this->build_request($base_url, $params, $path, $method);
 
         $response = $this->query_by_url($request_url, $method);
         // $this->response = $response;
@@ -71,24 +71,32 @@ class Npr_cds_expressionengine
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
 
-        // if ($method === 'post') {
-        //     curl_setopt($ch, CURLOPT_HEADER, true);
-        //     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        //         'Content-Type: text/xml;charset=UTF-8',
-        //         'Connection: Keep-Alive',
-        //         'Vary: Accept-Encoding',
-        //     ));
-        //     $field_count = count($this->request->params);
-        //     curl_setopt($ch, CURLOPT_POST, $field_count);
-        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request->postfields);
-        // }
+        $headers = [];
 
-        // if ($method === 'delete') {
-        //     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        // }
+        if ($method === 'post') {
+            $post_headers = [
+                'Content-Type: application/json;charset=UTF-8',
+                'Connection: Keep-Alive',
+                'Vary: Accept-Encoding',
+            ];
+            array_merge($headers, $post_headers);
+            curl_setopt($ch, CURLOPT_HEADER, true);
+            $field_count = count($this->request->params);
+            curl_setopt($ch, CURLOPT_POST, $field_count);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request->postfields);
+        }
 
-        // curl_setopt($ch, CURLOPT_VERBOSE, true);
+        if ($method === 'delete') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        }
 
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+        $cds_token = $this->request_auth_token();
+        $headers[] = 'Authorization: Bearer ' . $cds_token;
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        dd($headers);
         // $raw = curl_exec($ch);
 
         // //Did an error occur? If so, dump it out.
@@ -184,5 +192,19 @@ class Npr_cds_expressionengine
         // }
 
         // return $response;
+    }
+
+    private function request_auth_token(): string
+    {
+        $cds_token = ee()->db->select('cds_token')
+            ->limit('1')
+            ->get('npr_cds_settings')
+            ->result_array();
+
+        if (isset($cds_token[0])) {
+            $cds_token = $cds_token[0];
+        }
+
+        return $cds_token['cds_token'];
     }
 }
