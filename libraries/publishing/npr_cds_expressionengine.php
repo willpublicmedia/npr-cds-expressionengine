@@ -124,8 +124,8 @@ class Npr_cds_expressionengine
                 ->defer();
         }
 
-        // $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         // $is_xml = str_starts_with($raw, '<?xml');
         // $body = $is_xml ? $raw : substr($raw, $header_size);
 
