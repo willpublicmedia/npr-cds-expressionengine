@@ -22,12 +22,13 @@ class Npr_cds_expressionengine
         $this->request->data = null;
         $this->request->path = null;
         $this->request->base = null;
+        $this->request->version = null;
         $this->request->request_url = null;
     }
 
-    public function request($base_url, $params = [], $path = 'documents', $method = 'get')
+    public function request($base_url, $version = 'v1', $params = [], $path = 'documents', $method = 'get')
     {
-        $request_url = $this->build_request($base_url, $params, $path, $method);
+        $request_url = $this->build_request($base_url, $version, $params, $path, $method);
 
         $response = $this->query_by_url($request_url, $method);
         // $this->response = $response;
@@ -37,6 +38,9 @@ class Npr_cds_expressionengine
     {
         $queries = array();
         foreach ($params as $k => $v) {
+            if ($k === 'id') {
+                continue;
+            }
             $queries[] = "$k=$v";
             $param[$k] = $v;
         }
@@ -44,13 +48,20 @@ class Npr_cds_expressionengine
         return $queries;
     }
 
-    private function build_request($base_url, $params, $path, $method): string
+    private function build_request($base_url, $version, $params, $path, $method): string
     {
         $this->request->params = $params;
         $this->request->path = $path;
         $this->request->base = $base_url;
+        $this->request->version = $version;
 
-        $request_url = $this->request->base . '/' . $this->request->path;
+        $request_url = $this->request->base . '/'
+        . $this->request->version . '/'
+        . $this->request->path;
+
+        if (array_key_exists('id', $params)) {
+            $request_url = $request_url . '/' . $params['id'];
+        }
 
         if ($method === 'post') {
             $this->request->postfields = $params['body'];
@@ -58,7 +69,10 @@ class Npr_cds_expressionengine
         }
 
         $queries = $this->build_query_params($params);
-        $request_url = $request_url . '?' . implode('&', $queries);
+        $request_url = count($queries) > 0 ?
+        $request_url . '?' . implode('&', $queries) :
+        $request_url;
+
         $this->request->request_url = $request_url;
 
         return $request_url;
@@ -96,19 +110,19 @@ class Npr_cds_expressionengine
         $headers[] = 'Authorization: Bearer ' . $cds_token;
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        dd($headers);
-        // $raw = curl_exec($ch);
 
-        // //Did an error occur? If so, dump it out.
-        // if (curl_errno($ch)) {
-        //     $msg = curl_error($ch);
+        $raw = curl_exec($ch);
 
-        //     ee('CP/Alert')->makeInline('entries-form')
-        //         ->asIssue()
-        //         ->withTitle("Unable to connect to NPR Story API")
-        //         ->addToBody($msg)
-        //         ->defer();
-        // }
+        //Did an error occur? If so, dump it out.
+        if (curl_errno($ch)) {
+            $msg = curl_error($ch);
+
+            ee('CP/Alert')->makeInline('entries-form')
+                ->asIssue()
+                ->withTitle("Unable to connect to NPR Story API")
+                ->addToBody($msg)
+                ->defer();
+        }
 
         // $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         // $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);

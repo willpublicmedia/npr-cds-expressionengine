@@ -216,6 +216,7 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function pull_npr_story($npr_story_id)
     {
+        $api_version = 'v1';
         $params = array(
             'id' => $npr_story_id,
             // 'dateType' => 'story',
@@ -225,7 +226,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $pull_url = isset($this->settings['pull_url']) ? $this->settings['pull_url'] : null;
 
         $api_service = new Npr_cds_expressionengine();
-        $api_service->request($pull_url, $params, 'documents');
+        $api_service->request($pull_url, $api_version, $params, 'documents');
 
         // if ($api_service->response === null || isset($api_service->response->messages)) {
         //     return;
