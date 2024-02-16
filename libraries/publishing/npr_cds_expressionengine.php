@@ -158,6 +158,45 @@ class Npr_cds_expressionengine
         // return $response;
     }
 
+    private function create_response($raw, $url, $status, $message)
+    {
+        $response = new Api_response($raw);
+        $response->code = $status;
+        $response->url = $url;
+
+        if ($message) {
+            $response->messages = [$message];
+        }
+
+        $json = json_decode($raw);
+        // $data = is_null($json) ? $this->set_response_code($json, 400, $response->body) : $this->set_response_code($json);
+
+        // if (array_key_exists('messages', $data)) {
+        //     $response->messages = $data['messages'];
+        // }
+
+        $response->body = $json;
+
+        return $response;
+    }
+
+    private function convert_response($xmlstring, $url)
+    {
+        $response = new Api_response($xmlstring);
+        $response->url = $url;
+
+        $xml = simplexml_load_string($xmlstring);
+
+        $data = $xml === false ? $this->set_response_code($xml, 400, $response->body) : $this->set_response_code($xml);
+        $response->code = $data['code'];
+
+        if (array_key_exists('messages', $data)) {
+            $response->messages = $data['messages'];
+        }
+
+        return $response;
+    }
+
     private function create_error_response($message, $url, $status)
     {
         $response = new Api_response('');
@@ -233,5 +272,44 @@ class Npr_cds_expressionengine
         }
 
         return $cds_token['cds_token'];
+    }
+
+    private function set_response_code($json, $http_status = null, $response_message = null)
+    {
+        //     if (!$simplexml) {
+        //         $xml_start = strpos($response_message, "<?xml");
+        //         $simplexml = simplexml_load_string(substr($response_message, $xml_start));
+        //     }
+
+        //     if (!$simplexml) {
+        //         $code = $http_status ? $http_status : 501;
+        //         $message = 'Unable to process XML response. Probable submission/connection issue.';
+
+        //         return array(
+        //             'code' => $code,
+        //             'messages' => array(
+        //                 array(
+        //                     'message' => $message,
+        //                 ),
+        //             ),
+        //         );
+        //     }
+
+        //     if (!property_exists($simplexml, 'message')) {
+        //         return array('code' => self::NPRAPI_STATUS_OK);
+        //     }
+
+        //     $data = array(
+        //         'code' => (int) $simplexml->message->attributes()->id,
+        //         'messages' => array(
+        //             array(
+        //                 'message' => (string) $simplexml->message->text,
+        //                 'level' => (string) $simplexml->message->attributes()->level,
+        //             ),
+        //         ),
+        //     );
+
+        //     return $data;
+        // }
     }
 }
