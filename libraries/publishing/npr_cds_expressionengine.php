@@ -126,8 +126,9 @@ class Npr_cds_expressionengine
 
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        // $is_xml = str_starts_with($raw, '<?xml');
-        // $body = $is_xml ? $raw : substr($raw, $header_size);
+
+        $is_json = json_validate($raw);
+        $body = $is_json ? $raw : substr($raw, $header_size);
 
         // // parser expects an object, not xml string.
         // $response = curl_errno($ch) ? $this->create_error_response(curl_error($ch), $url) : $this->convert_response($body, $url);
