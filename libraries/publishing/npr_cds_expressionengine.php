@@ -133,10 +133,10 @@ class Npr_cds_expressionengine
         $body = $is_json ? $raw : substr($raw, $header_size);
 
         // parser expects an object, not json string.
-        $response = curl_errno($ch) ? $this->create_error_response(curl_error($ch), $url, $http_status) : $this->convert_response($body, $url);
+        $response = curl_errno($ch) ? $this->create_response($body, $url, $http_status, curl_error($ch)) : $this->create_response($body, $url, $http_status, null);
 
-        // curl_close($ch);
-
+        curl_close($ch);
+        dd($response);
         // if ($http_status != self::NPRAPI_STATUS_OK || $response->code != self::NPRAPI_STATUS_OK) {
         //     $code = property_exists($response, 'code') ? $response->code : $http_status;
         //     $message = "Error updating $url";
@@ -176,33 +176,6 @@ class Npr_cds_expressionengine
         // }
 
         $response->body = $json;
-
-        return $response;
-    }
-
-    private function convert_response($xmlstring, $url)
-    {
-        $response = new Api_response($xmlstring);
-        $response->url = $url;
-
-        $xml = simplexml_load_string($xmlstring);
-
-        $data = $xml === false ? $this->set_response_code($xml, 400, $response->body) : $this->set_response_code($xml);
-        $response->code = $data['code'];
-
-        if (array_key_exists('messages', $data)) {
-            $response->messages = $data['messages'];
-        }
-
-        return $response;
-    }
-
-    private function create_error_response($message, $url, $status)
-    {
-        $response = new Api_response('');
-        $response->url = $url;
-        $response->code = $status;
-        $response->messages = [$message];
 
         return $response;
     }
