@@ -2,13 +2,15 @@
 
 namespace IllinoisPublicMedia\NprStoryApi\Libraries\Publishing;
 
-use stdClass;
-
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
 require_once __DIR__ . '/../configuration/npr_constants.php';
+require_once __DIR__ . '/../dto/http/api_response.php';
+
+use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
+use stdClass;
 
 class Npr_cds_expressionengine
 {
