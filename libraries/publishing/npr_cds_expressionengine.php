@@ -132,8 +132,8 @@ class Npr_cds_expressionengine
         $is_json = json_validate($raw);
         $body = $is_json ? $raw : substr($raw, $header_size);
 
-        // parser expects an object, not xml string.
-        $response = curl_errno($ch) ? $this->create_error_response(curl_error($ch), $url) : $this->convert_response($body, $url);
+        // parser expects an object, not json string.
+        $response = curl_errno($ch) ? $this->create_error_response(curl_error($ch), $url, $http_status) : $this->convert_response($body, $url);
 
         // curl_close($ch);
 
@@ -158,11 +158,11 @@ class Npr_cds_expressionengine
         // return $response;
     }
 
-    private function create_error_response($message, $url)
+    private function create_error_response($message, $url, $status)
     {
         $response = new Api_response('');
         $response->url = $url;
-        $response->code = 503;
+        $response->code = $status;
         $response->messages = [$message];
 
         return $response;
