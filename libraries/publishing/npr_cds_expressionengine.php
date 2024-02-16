@@ -129,11 +129,14 @@ class Npr_cds_expressionengine
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 
-        $is_json = json_validate($raw);
-        $body = $is_json ? $raw : substr($raw, $header_size);
+        // may not be necessary
+        // $body = json_decode($raw);
+        // $is_json = json_last_error() === JSON_ERROR_NONE;
+        // $body = $is_json ? $raw : substr($raw, $header_size);
 
         // parser expects an object, not json string.
-        $response = curl_errno($ch) ? $this->create_response($body, $url, $http_status, curl_error($ch)) : $this->create_response($body, $url, $http_status, null);
+        $response = curl_errno($ch) ?
+        $this->create_response($raw, $url, $http_status, curl_error($ch)) : $this->create_response($raw, $url, $http_status, null);
 
         curl_close($ch);
         dd($response);
