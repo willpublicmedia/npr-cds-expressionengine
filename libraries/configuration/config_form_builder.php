@@ -46,6 +46,11 @@ class Config_form_builder
                         'type' => 'text',
                         'value' => '',
                     ),
+                    'service_name' => array(
+                        'type' => 'text',
+                        'value' => '',
+                        'disabled' => true,
+                    ),
                 ),
             ),
             array(
