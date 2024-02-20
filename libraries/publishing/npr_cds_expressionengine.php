@@ -140,26 +140,26 @@ class Npr_cds_expressionengine
         $this->create_response($raw, $url, $http_status, curl_error($ch)) : $this->create_response($raw, $url, $http_status, null);
 
         curl_close($ch);
-        dd($response);
-        // if ($http_status != self::NPRAPI_STATUS_OK || $response->code != self::NPRAPI_STATUS_OK) {
-        //     $code = property_exists($response, 'code') ? $response->code : $http_status;
-        //     $message = "Error updating $url";
-        //     if (property_exists($response, 'messages')) {
-        //         if (is_string($response->messages)) {
-        //             $message = $response->messages;
-        //         } elseif (is_array($response->messages) && sizeof($response->messages) > 0) {
-        //             $message = array_key_exists('message', $response->messages) ? $response->messages[0]['message'] : $response->messages[0];
-        //         }
-        //     }
 
-        //     ee('CP/Alert')->makeInline('entries-form')
-        //         ->asIssue()
-        //         ->withTitle("NPR API response error: $code")
-        //         ->addToBody($message)
-        //         ->defer();
-        // }
+        if ($http_status != Npr_constants::NPR_CDS_STATUS_OK || $response->code != Npr_constants::NPR_CDS_STATUS_OK) {
+            $code = property_exists($response, 'code') ? $response->code : $http_status;
+            $message = "Error updating $url";
+            if (property_exists($response, 'messages')) {
+                if (is_string($response->messages)) {
+                    $message = $response->messages;
+                } elseif (is_array($response->messages) && sizeof($response->messages) > 0) {
+                    $message = array_key_exists('message', $response->messages) ? $response->messages[0]['message'] : $response->messages[0];
+                }
+            }
 
-        // return $response;
+            ee('CP/Alert')->makeInline('entries-form')
+                ->asIssue()
+                ->withTitle("NPR API response error: $code")
+                ->addToBody($message)
+                ->defer();
+        }
+
+        return $response;
     }
 
     private function create_response($raw, $url, $status, $message)
