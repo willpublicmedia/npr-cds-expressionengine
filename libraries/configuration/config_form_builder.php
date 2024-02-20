@@ -102,13 +102,12 @@ class Config_form_builder
     private function add_form_values($settings)
     {
         foreach ($this->api_settings_form[0] as &$item) {
-            // get field id.
             reset($item['fields']);
-            $field_name = key($item['fields']);
 
-            $value = $settings[$field_name];
-
-            $item['fields'][$field_name]['value'] = $value;
+            foreach ($item['fields'] as $field_name => $definition) {
+                $value = $settings[$field_name];
+                $item['fields'][$field_name]['value'] = $value;
+            }
         }
     }
 
