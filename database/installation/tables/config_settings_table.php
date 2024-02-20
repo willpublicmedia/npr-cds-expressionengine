@@ -54,6 +54,11 @@ class config_settings_table extends Table
             'null' => true,
             'constraint' => 24,
         ),
+        'service_name' => array(
+            'type' => 'varchar',
+            'null' => true,
+            'constraint' => 128,
+        ),
         'pull_url' => array(
             'type' => 'text',
             'constraint' => 128,

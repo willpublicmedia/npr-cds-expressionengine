@@ -17,10 +17,13 @@ class Story_api_settings_migrator
         }
 
         $legacy_settings = $legacy_settings[0];
+        $service = $this->find_service_id($legacy_settings['org_id']);
+
         $data = array(
             'mapped_channels' => $legacy_settings['mapped_channels'],
             'npr_image_destination' => $legacy_settings['npr_image_destination'],
-            'service_id' => $this->find_service_id($legacy_settings['org_id']),
+            'service_id' => $service['service_id'],
+            'service_name' => $service['service_name'],
         );
 
         ee()->db->where('id', 1);
@@ -62,11 +65,20 @@ class Story_api_settings_migrator
                 ->addToBody("Contact NPR Station Services for assistance.")
                 ->defer();
 
-            return $org_id;
+            $settings = [
+                'service_id' => $org_id,
+                'service_name' => null,
+            ];
+
+            return $settings;
         }
 
         $service = $json->services[0];
+        $settings = [
+            'service_id' => $service->id,
+            'service_name' => $service->name,
+        ];
 
-        return $service->id;
+        return $settings;
     }
 }
