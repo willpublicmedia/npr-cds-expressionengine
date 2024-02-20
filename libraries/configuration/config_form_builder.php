@@ -40,9 +40,9 @@ class Config_form_builder
                 ),
             ),
             array(
-                'title' => 'Org ID',
+                'title' => 'Service ID',
                 'fields' => array(
-                    'org_id' => array(
+                    'service_id' => array(
                         'type' => 'text',
                         'value' => '',
                     ),

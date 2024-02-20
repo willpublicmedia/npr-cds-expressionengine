@@ -85,18 +85,18 @@ class Npr_cds_mcp extends Mcp
     private function matchOrgIdEnvironment($form_data)
     {
         if ($form_data['pull_url'] === Npr_constants::NPR_STAGING_URL || $form_data['push_url'] === Npr_constants::NPR_STAGING_URL) {
-            if (!str_starts_with($form_data['org_id'], 's')) {
-                $form_data['org_id'] = 's' . $form_data['org_id'];
+            if (!str_starts_with($form_data['service_id'], 's')) {
+                $form_data['service_id'] = 's' . $form_data['service_id'];
             }
         }
 
         if ($form_data['pull_url'] === Npr_constants::NPR_PRODUCTION_URL && $form_data['push_url'] === Npr_constants::NPR_PRODUCTION_URL) {
-            if (str_starts_with($form_data['org_id'], 's')) {
-                $form_data['org_id'] = ltrim($form_data['org_id'], 's');
+            if (str_starts_with($form_data['service_id'], 's')) {
+                $form_data['service_id'] = ltrim($form_data['service_id'], 's');
             }
         }
 
-        $_POST['org_id'] = $form_data['org_id'];
+        $_POST['service_id'] = $form_data['service_id'];
 
         return $form_data;
     }
