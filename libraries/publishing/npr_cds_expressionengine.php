@@ -9,6 +9,7 @@ if (!defined('BASEPATH')) {
 require_once __DIR__ . '/../configuration/npr_constants.php';
 require_once __DIR__ . '/../dto/http/api_response.php';
 
+use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
 use stdClass;
 
@@ -28,7 +29,7 @@ class Npr_cds_expressionengine
         $this->request->request_url = null;
     }
 
-    public function request($base_url, $version = 'v1', $params = [], $path = 'documents', $method = 'get')
+    public function request($base_url, $version = Npr_constants::NPR_CDS_VERSION, $params = [], $path = 'documents', $method = 'get')
     {
         $request_url = $this->build_request($base_url, $version, $params, $path, $method);
 
