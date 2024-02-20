@@ -17,6 +17,8 @@ class Npr_cds_expressionengine
 {
     public stdClass $request;
 
+    public stdClass $response;
+
     public function __construct()
     {
         $this->request = new stdClass();
@@ -34,7 +36,7 @@ class Npr_cds_expressionengine
         $request_url = $this->build_request($base_url, $version, $params, $path, $method);
 
         $response = $this->query_by_url($request_url, $method);
-        // $this->response = $response;
+        $this->response = $response;
     }
 
     private function build_query_params($params)
