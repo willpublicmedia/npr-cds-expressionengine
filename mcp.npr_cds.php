@@ -10,7 +10,6 @@ require_once __DIR__ . '/libraries/configuration/npr_constants.php';
 use ExpressionEngine\Service\Addon\Mcp;
 use IllinoisPublicMedia\NprCds\Constants;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Config_form_builder;
-use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Validation\Settings_validator;
 
 /**
@@ -82,28 +81,8 @@ class Npr_cds_mcp extends Mcp
         $this->settings = $settings;
     }
 
-    private function matchOrgIdEnvironment($form_data)
-    {
-        if ($form_data['pull_url'] === Npr_constants::NPR_STAGING_URL || $form_data['push_url'] === Npr_constants::NPR_STAGING_URL) {
-            if (!str_starts_with($form_data['service_id'], 's')) {
-                $form_data['service_id'] = 's' . $form_data['service_id'];
-            }
-        }
-
-        if ($form_data['pull_url'] === Npr_constants::NPR_PRODUCTION_URL && $form_data['push_url'] === Npr_constants::NPR_PRODUCTION_URL) {
-            if (str_starts_with($form_data['service_id'], 's')) {
-                $form_data['service_id'] = ltrim($form_data['service_id'], 's');
-            }
-        }
-
-        $_POST['service_id'] = $form_data['service_id'];
-
-        return $form_data;
-    }
-
     private function process_form_data($form_data)
     {
-        $form_data = $this->matchOrgIdEnvironment($form_data);
         $validator = new Settings_validator();
         $rules = Settings_validator::API_SETTINGS_RULES;
         $result = $validator->validate($form_data, $rules);
