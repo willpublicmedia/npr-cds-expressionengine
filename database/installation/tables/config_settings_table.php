@@ -16,7 +16,7 @@ class config_settings_table extends Table
         'document_prefix' => '',
         // 'pull_url' => '',
         // 'push_url' => ''
-        'org_id' => null,
+        'service_id' => null,
         // 'document_prefix' => '',
         // 'theme_uses_featured_image' => false,
         // 'max_image_width' => 1200,
@@ -49,10 +49,15 @@ class config_settings_table extends Table
             'type' => 'varchar',
             'constraint' => 64,
         ),
-        'org_id' => array(
+        'service_id' => array(
             'type' => 'varchar',
             'null' => true,
             'constraint' => 24,
+        ),
+        'service_name' => array(
+            'type' => 'varchar',
+            'null' => true,
+            'constraint' => 128,
         ),
         'pull_url' => array(
             'type' => 'text',

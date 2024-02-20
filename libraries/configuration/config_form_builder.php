@@ -40,11 +40,16 @@ class Config_form_builder
                 ),
             ),
             array(
-                'title' => 'Org ID',
+                'title' => 'Service ID',
                 'fields' => array(
-                    'org_id' => array(
+                    'service_id' => array(
                         'type' => 'text',
                         'value' => '',
+                    ),
+                    'service_name' => array(
+                        'type' => 'text',
+                        'value' => '',
+                        'disabled' => true,
                     ),
                 ),
             ),
@@ -97,13 +102,12 @@ class Config_form_builder
     private function add_form_values($settings)
     {
         foreach ($this->api_settings_form[0] as &$item) {
-            // get field id.
             reset($item['fields']);
-            $field_name = key($item['fields']);
 
-            $value = $settings[$field_name];
-
-            $item['fields'][$field_name]['value'] = $value;
+            foreach ($item['fields'] as $field_name => $definition) {
+                $value = $settings[$field_name];
+                $item['fields'][$field_name]['value'] = $value;
+            }
         }
     }
 
