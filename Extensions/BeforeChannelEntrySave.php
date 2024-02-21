@@ -25,7 +25,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         'document_prefix' => '',
         'pull_url' => '',
         'push_url' => '',
-        'org_id' => null,
+        'service_id' => null,
         // 'theme_uses_featured_image' => false,
         // 'max_image_width' => 1200,
         // 'image_quality' => 75,
