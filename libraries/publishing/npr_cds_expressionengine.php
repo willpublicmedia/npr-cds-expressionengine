@@ -135,7 +135,7 @@ class Npr_cds_expressionengine
         return $response;
     }
 
-    private function query_by_url(Api_request $request): void
+    private function query_by_url(Api_request $request): ?Api_response
     {
         $response = $this->connect_as_curl($request);
         // if (isset($response->messages)) {
@@ -148,7 +148,7 @@ class Npr_cds_expressionengine
         //     $this->notice[] = 'No data available.';
         // }
 
-        // return $response;
+        return $response;
     }
 
     private function request_auth_token(): string
