@@ -17,7 +17,7 @@ use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
 
 class Npr_cds_expressionengine
 {
-    public Api_response $response;
+    public ?Api_response $response;
 
     public function parse()
     {
