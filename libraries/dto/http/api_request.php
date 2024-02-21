@@ -19,6 +19,8 @@ class Api_request
 
     public array $params;
 
+    public array $postfields;
+
     public string $path;
 
     public ?string $request_url;
@@ -30,5 +32,6 @@ class Api_request
         $this->method = 'get';
         $this->params = [];
         $this->path = 'documents';
+        $this->postfields = [];
     }
 }
