@@ -228,9 +228,9 @@ class BeforeChannelEntrySave extends AbstractRoute
         $api_service = new Npr_cds_expressionengine();
         $api_service->request($pull_url, $api_version, $params, 'documents');
 
-        // if ($api_service->response === null || isset($api_service->response->messages)) {
-        //     return;
-        // }
+        if ($api_service->response === null || isset($api_service->response->messages)) {
+            return;
+        }
 
         // $api_service->parse();
 
