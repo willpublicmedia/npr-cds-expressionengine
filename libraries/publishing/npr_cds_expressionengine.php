@@ -18,19 +18,17 @@ use IllinoisPublicMedia\NprCds\Libraries\Publishing\Cds_parser;
 
 class Npr_cds_expressionengine
 {
-    public ?Api_response $response;
-
-    public function parse()
+    public function parse(Api_response $response)
     {
         $parser = new Cds_parser();
-        $data = $parser->parse($this->response);
+        $data = $parser->parse($response);
         dd($data);
     }
 
-    public function request(Api_request $request)
+    public function request(Api_request $request): Api_response
     {
         $response = $this->query_by_url($request);
-        $this->response = $response;
+        return $response;
     }
 
     private function connect_as_curl(Api_request $request)
