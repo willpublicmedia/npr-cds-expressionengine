@@ -26,6 +26,11 @@ class Npr_cds_expressionengine
         $this->request = new Api_request();
     }
 
+    public function parse()
+    {
+        throw new \Exception('parse not implemented');
+    }
+
     public function request($base_url, $version = Npr_constants::NPR_CDS_VERSION, $params = [], $path = 'documents', $method = 'get')
     {
         $request_url = $this->build_request($base_url, $version, $params, $path, $method);

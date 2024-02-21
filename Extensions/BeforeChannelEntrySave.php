@@ -232,7 +232,7 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        // $api_service->parse();
+        $api_service->parse();
 
         $stories = array();
         // foreach ($api_service->stories as $story) {
