@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
-require_once __DIR__ . '/../configuration/npr_constants.php';
+require_once __DIR__ . '/../../configuration/npr_constants.php';
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 
 class Api_request
