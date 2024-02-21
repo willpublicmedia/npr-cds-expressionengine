@@ -45,9 +45,19 @@ class Cds_parser
 
         $npr_has_video = false;
         $npr_layout = $this->get_body_with_layout($resource);
-        dump($npr_layout);
+
         dd($resource);
         throw new \Exception('not implemented');
+    }
+
+    public function extract_profiles($story): array
+    {
+        $output = [];
+        foreach ($story as $p) {
+            $p_xp = explode('/', $p->href);
+            $output[] = end($p_xp);
+        }
+        return $output;
     }
 
     /**
@@ -57,7 +67,7 @@ class Cds_parser
      * @param stdClass $story Story object created during import
      * @return array with reconstructed body and flags describing returned elements
      */
-    public function get_body_with_layout(stdClass $story): array
+    private function get_body_with_layout(stdClass $story): array
     {
         $returnary = ['has_image' => false, 'has_video' => false, 'has_external' => false, 'has_slideshow' => false, 'has_video_streaming' => false];
         $body_with_layout = "";
@@ -66,7 +76,8 @@ class Cds_parser
         // $use_npr_featured = !empty(get_option('npr_cds_query_use_featured'));
         $use_npr_featured = true;
 
-        // $profiles = $this->extract_profiles($story->profiles);
+        $profiles = $this->extract_profiles($story->profiles);
+        dump($profiles);
 
         // if (in_array('buildout', $profiles) && !empty($story->layout)) {
         //     foreach ($story->layout as $layout) {
