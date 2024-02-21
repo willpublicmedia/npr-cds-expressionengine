@@ -30,56 +30,13 @@ class Npr_cds_expressionengine
         throw new \Exception('parse not implemented');
     }
 
-    public function request($base_url, $version = Npr_constants::NPR_CDS_VERSION, $params = [], $path = 'documents', $method = 'get')
+    public function request(Api_request $request)
     {
-        $request_url = $this->build_request($base_url, $version, $params, $path, $method);
+        $request_url = $request->request_url();
+        $method = $request->method;
 
         $response = $this->query_by_url($request_url, $method);
         $this->response = $response;
-    }
-
-    private function build_query_params($params)
-    {
-        $queries = array();
-        foreach ($params as $k => $v) {
-            if ($k === 'id') {
-                continue;
-            }
-            $queries[] = "$k=$v";
-            $param[$k] = $v;
-        }
-
-        return $queries;
-    }
-
-    private function build_request($base_url, $version, $params, $path, $method): string
-    {
-        $this->request->params = $params;
-        $this->request->path = $path;
-        $this->request->base = $base_url;
-        $this->request->version = $version;
-
-        $request_url = $this->request->base . '/'
-        . $this->request->version . '/'
-        . $this->request->path;
-
-        if (array_key_exists('id', $params)) {
-            $request_url = $request_url . '/' . $params['id'];
-        }
-
-        if ($method === 'post') {
-            $this->request->postfields = $params['body'];
-            unset($params['body']);
-        }
-
-        $queries = $this->build_query_params($params);
-        $request_url = count($queries) > 0 ?
-        $request_url . '?' . implode('&', $queries) :
-        $request_url;
-
-        $this->request->request_url = $request_url;
-
-        return $request_url;
     }
 
     private function connect_as_curl($url, $method)
@@ -187,43 +144,6 @@ class Npr_cds_expressionengine
 
     private function query_by_url($url, $method): void
     {
-        /** Begin wp function */
-        // //fill out the $this->request->param array so we can know what params were sent
-        // $parsed_url = parse_url( $url );
-        // if ( !empty( $parsed_url['query'] ) ) {
-        //     $params = explode( '&', $parsed_url['query'] );
-        //     if ( !empty( $params ) ) {
-        //         foreach ( $params as $p ){
-        //             $attrs = explode( '=', $p );
-        //             $this->request->param[ $attrs[0] ] = $attrs[1];
-        //         }
-        //     }
-        // }
-        // $options = $this->get_token_options();
-        // $response = wp_remote_get( $url, $options );
-        // if ( !is_wp_error( $response ) ) {
-        //     $this->response = $response;
-        //     if ( $response['response']['code'] == self::NPR_CDS_STATUS_OK ) {
-        //         if ( $response['body'] ) {
-        //             $this->json = $response['body'];
-        //         } else {
-        //             $this->notice[] = __( 'No data available.', 'npr-content-distribution-service' );
-        //         }
-        //     } else {
-        //         npr_cds_show_message( 'An error occurred pulling your story from the NPR CDS.  The CDS responded with message = ' . $response['response']['message'], TRUE );
-        //     }
-        // } else {
-        //     $error_text = '';
-        //     if ( !empty( $response->errors['http_request_failed'][0] ) ) {
-        //         $error_text = '<br> HTTP Error response =  ' . $response->errors['http_request_failed'][0];
-        //     }
-        //     npr_cds_show_message( 'Error pulling story for url=' . $url . $error_text, TRUE );
-        //     npr_cds_error_log( 'Error retrieving story for url=' . $url );
-        // }
-        /** end wp function */
-
-        $this->request->request_url = $url;
-
         $response = $this->connect_as_curl($url, $method);
         // if (isset($response->messages)) {
         //     return;

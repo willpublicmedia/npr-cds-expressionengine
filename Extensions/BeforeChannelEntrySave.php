@@ -7,6 +7,7 @@ require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
+use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprStoryApi\Libraries\Publishing\Npr_cds_expressionengine;
 
 class BeforeChannelEntrySave extends AbstractRoute
@@ -216,7 +217,6 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function pull_npr_story($npr_story_id)
     {
-        $api_version = 'v1';
         $params = array(
             'id' => $npr_story_id,
             // 'dateType' => 'story',
@@ -225,8 +225,14 @@ class BeforeChannelEntrySave extends AbstractRoute
 
         $pull_url = isset($this->settings['pull_url']) ? $this->settings['pull_url'] : null;
 
+        $request = new Api_request();
+        $request->base_url = $pull_url;
+        $request->params = $params;
+        $request->path = 'documents';
+        $request->method = 'get';
+
         $api_service = new Npr_cds_expressionengine();
-        $api_service->request($pull_url, $api_version, $params, 'documents');
+        $api_service->request($request);
 
         if ($api_service->response === null || isset($api_service->response->messages)) {
             return;
