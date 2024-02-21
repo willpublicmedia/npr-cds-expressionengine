@@ -13,13 +13,12 @@ require_once __DIR__ . '/../dto/http/api_request.php';
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
-use stdClass;
 
 class Npr_cds_expressionengine
 {
-    public stdClass $request;
+    public Api_request $request;
 
-    public stdClass $response;
+    public Api_response $response;
 
     public function __construct()
     {
