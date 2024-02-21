@@ -8,7 +8,7 @@ use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
-use IllinoisPublicMedia\NprStoryApi\Libraries\Publishing\Npr_cds_expressionengine;
+use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 
 class BeforeChannelEntrySave extends AbstractRoute
 {

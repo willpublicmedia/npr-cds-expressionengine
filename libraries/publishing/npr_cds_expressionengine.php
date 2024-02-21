@@ -1,6 +1,6 @@
 <?php
 
-namespace IllinoisPublicMedia\NprStoryApi\Libraries\Publishing;
+namespace IllinoisPublicMedia\NprCds\Libraries\Publishing;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
@@ -14,6 +14,7 @@ require_once __DIR__ . '/cds_parser.php';
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
+use IllinoisPublicMedia\NprCds\Libraries\Publishing\Cds_parser;
 
 class Npr_cds_expressionengine
 {

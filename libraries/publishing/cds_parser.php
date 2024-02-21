@@ -1,6 +1,6 @@
 <?php
 
-namespace IllinoisPublicMedia\NprStoryApi\Libraries\Publishing;
+namespace IllinoisPublicMedia\NprCds\Libraries\Publishing;
 
 require_once __DIR__ . '/../dto/http/api_response.php';
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
