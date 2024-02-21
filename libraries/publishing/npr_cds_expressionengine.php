@@ -114,9 +114,10 @@ class Npr_cds_expressionengine
 
     private function create_response($raw, $url, $status, $message)
     {
-        $response = new Api_response($raw);
+        $response = new Api_response();
         $response->code = $status;
         $response->url = $url;
+        $response->raw = $raw;
 
         if ($message) {
             $response->messages = [$message];
@@ -129,7 +130,7 @@ class Npr_cds_expressionengine
         //     $response->messages = $data['messages'];
         // }
 
-        $response->body = $json;
+        $response->json = $json;
 
         return $response;
     }

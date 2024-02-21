@@ -2,25 +2,21 @@
 
 namespace IllinoisPublicMedia\NprCds\Libraries\Dto\Http;
 
+use ExpressionEngine\Service\Model\Column\Serialized\Json;
+
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
 class Api_response
 {
-    public $body;
+    public ?object $json;
 
-    public $code;
+    public ?int $code;
 
-    public $messages;
+    public ?array $messages;
 
-    public $raw;
+    public ?string $raw;
 
-    public $url;
-
-    public function __construct($json)
-    {
-        $this->raw = $json;
-        $this->body = $json;
-    }
+    public ?string $url;
 }
