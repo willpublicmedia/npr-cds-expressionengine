@@ -9,6 +9,7 @@ if (!defined('BASEPATH')) {
 require_once __DIR__ . '/../configuration/npr_constants.php';
 require_once __DIR__ . '/../dto/http/api_response.php';
 require_once __DIR__ . '/../dto/http/api_request.php';
+require_once __DIR__ . '/cds_parser.php';
 
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
@@ -20,7 +21,9 @@ class Npr_cds_expressionengine
 
     public function parse()
     {
-        throw new \Exception('parse not implemented');
+        $parser = new Cds_parser();
+        $data = $parser->parse($this->response);
+        dd($data);
     }
 
     public function request(Api_request $request)
