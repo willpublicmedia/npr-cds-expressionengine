@@ -16,14 +16,7 @@ use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
 
 class Npr_cds_expressionengine
 {
-    public Api_request $request;
-
     public Api_response $response;
-
-    public function __construct()
-    {
-        $this->request = new Api_request();
-    }
 
     public function parse()
     {
@@ -32,23 +25,20 @@ class Npr_cds_expressionengine
 
     public function request(Api_request $request)
     {
-        $request_url = $request->request_url();
-        $method = $request->method;
-
-        $response = $this->query_by_url($request_url, $method);
+        $response = $this->query_by_url($request);
         $this->response = $response;
     }
 
-    private function connect_as_curl($url, $method)
+    private function connect_as_curl(Api_request $request)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_URL, $request->request_url());
 
         $headers = [];
 
-        if ($method === 'post') {
+        if ($request->method === 'post') {
             $post_headers = [
                 'Content-Type: application/json;charset=UTF-8',
                 'Connection: Keep-Alive',
@@ -56,12 +46,12 @@ class Npr_cds_expressionengine
             ];
             array_merge($headers, $post_headers);
             curl_setopt($ch, CURLOPT_HEADER, true);
-            $field_count = count($this->request->params);
+            $field_count = count($request->params);
             curl_setopt($ch, CURLOPT_POST, $field_count);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request->postfields);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $request->postfields);
         }
 
-        if ($method === 'delete') {
+        if ($request->method === 'delete') {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
         }
 
@@ -95,13 +85,13 @@ class Npr_cds_expressionengine
 
         // parser expects an object, not json string.
         $response = curl_errno($ch) ?
-        $this->create_response($raw, $url, $http_status, curl_error($ch)) : $this->create_response($raw, $url, $http_status, null);
+        $this->create_response($raw, $request->request_url(), $http_status, curl_error($ch)) : $this->create_response($raw, $request->request_url(), $http_status, null);
 
         curl_close($ch);
 
         if ($http_status != Npr_constants::NPR_CDS_STATUS_OK || $response->code != Npr_constants::NPR_CDS_STATUS_OK) {
             $code = property_exists($response, 'code') ? $response->code : $http_status;
-            $message = "Error updating $url";
+            $message = "Error updating " . $request->request_url();
             if (property_exists($response, 'messages')) {
                 if (is_string($response->messages)) {
                     $message = $response->messages;
@@ -142,9 +132,9 @@ class Npr_cds_expressionengine
         return $response;
     }
 
-    private function query_by_url($url, $method): void
+    private function query_by_url(Api_request $request): void
     {
-        $response = $this->connect_as_curl($url, $method);
+        $response = $this->connect_as_curl($request);
         // if (isset($response->messages)) {
         //     return;
         // }
