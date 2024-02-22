@@ -331,17 +331,17 @@ class Cds_parser
             }
 
         }
-        // if (!empty($story->corrections)) {
-        //     $correction_text = '';
-        //     foreach ($story->corrections as $correction) {
-        //         $correct_id = $this->extract_asset_id($correction->href);
-        //         $correct_current = $story->assets->{$correct_id};
-        //         $correction_text .= '<li><strong><em>' .
-        //         wp_date(get_option('date_format'), strtotime($correct_current->dateTime)) .
-        //         '</em></strong><br />' . strip_tags($correct_current->text) . '</li>';
-        //     }
-        //     $body_with_layout .= '<figure class="wp-block-embed npr-correction"><div class="wp-block-embed__wrapper"><h3>Corrections:</h3><ul>' . $correction_text . '</ul></div></figure>';
-        // }
+        if (!empty($story->corrections)) {
+            $correction_text = '';
+            foreach ($story->corrections as $correction) {
+                $correct_id = $this->extract_asset_id($correction->href);
+                $correct_current = $story->assets->{$correct_id};
+                $correction_text .= '<li><strong><em>' .
+                date(ee()->config->get('date_format'), strtotime($correct_current->dateTime)) .
+                '</em></strong><br />' . strip_tags($correct_current->text) . '</li>';
+            }
+            $body_with_layout .= '<figure class="wp-block-embed npr-correction"><div class="wp-block-embed__wrapper"><h3>Corrections:</h3><ul>' . $correction_text . '</ul></div></figure>';
+        }
         // if (!empty($story->audio)) {
         //     $audio_file = '';
         //     foreach ($story->audio as $audio) {
