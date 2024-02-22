@@ -255,7 +255,7 @@ class Cds_parser
                             $full_credits = $this->parse_credits($ig_asset_current);
 
                             $link_text = str_replace('"', "'", $ig_asset_current->title . $full_credits);
-                            $fightml .= '<li class="splide__slide"><a href="' . urlencode($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . urlencode($image_href) . '" alt="' . ee('Format')->make('Text', $link_text)->attributeEscape() . '"></a><div>' . urlencode($link_text) . '</div></li>';
+                            $fightml .= '<li class="splide__slide"><a href="' . urlencode($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . urlencode($image_href) . '" alt="' . ee('Format')->make('Text', $link_text)->attributeEscape() . '"></a><div>' . htmlspecialchars($link_text) . '</div></li>';
                         }
                         $fightml .= '</div></div></ul></figure>';
                         $body_with_layout .= $fightml;
@@ -365,11 +365,11 @@ class Cds_parser
                 $body_with_layout = $audio_file . "\n" . $body_with_layout;
             }
         }
-        // $returnary['body'] = npr_cds_esc_html($body_with_layout);
+        $returnary['body'] = htmlspecialchars($body_with_layout);
         return $returnary;
     }
 
-    public function get_document($href): ?stdClass
+    private function get_document($href): ?stdClass
     {
         // $url = NPR_CDS_PULL_URL . $href;
         // $options = $this->get_token_options();
@@ -389,7 +389,7 @@ class Cds_parser
         return new stdClass();
     }
 
-    public function get_image_url($image)
+    private function get_image_url($image)
     {
         if (empty($image->hrefTemplate)) {
             return $image->href;
@@ -414,7 +414,7 @@ class Cds_parser
         return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
     }
 
-    public function parse_credits($asset): string
+    private function parse_credits($asset): string
     {
         $credits = [];
         foreach (['producer', 'provider', 'copyright'] as $item) {
