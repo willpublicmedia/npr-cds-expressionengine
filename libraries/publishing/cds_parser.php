@@ -209,37 +209,37 @@ class Cds_parser
                             $body_with_layout .= '<p><a href="' . $asset_current->externalLink->href . '">' . $asset_current->linkText . '</a></p>';
                         }
                         break;
-                        //             case 'image':
-                        //                 $thisimg_rels = [];
-                        //                 foreach ($story->images as $images) {
-                        //                     if ($images->href == '#/assets/' . $asset_id && !empty($images->rels)) {
-                        //                         $thisimg_rels = $images->rels;
-                        //                     }
-                        //                 }
-                        //                 if (in_array('primary', $thisimg_rels) && $use_npr_featured) {
-                        //                     break;
-                        //                 }
-                        //                 $thisimg = $asset_current->enclosures[0];
-                        //                 foreach ($asset_current->enclosures as $img_enclose) {
-                        //                     if (!empty($img_enclose->rels) && in_array('primary', $img_enclose->rels)) {
-                        //                         $thisimg = $img_enclose;
-                        //                     }
-                        //                 }
-                        //                 $figclass = "wp-block-image size-large";
-                        //                 $image_href = $this->get_image_url($thisimg);
-                        //                 $fightml = '<img src="' . $image_href . '"';
-                        //                 if (in_array('image-vertical', $thisimg->rels)) {
-                        //                     $figclass .= ' alignright';
-                        //                     $fightml .= " width=200";
-                        //                 }
-                        //                 $thiscaption = (!empty(trim($asset_current->caption)) ? trim($asset_current->caption) : '');
-                        //                 $fightml .= (!empty($fightml) && !empty($thiscaption) ? ' alt="' . str_replace('"', '\'', strip_tags($thiscaption)) . '"' : '');
-                        //                 $fightml .= (!empty($fightml) ? '>' : '');
-                        //                 $thiscaption .= (!empty($cites) ? " <cite>" . $this->parse_credits($asset_current) . "</cite>" : '');
-                        //                 $figcaption = (!empty($fightml) && !empty($thiscaption) ? "<figcaption>$thiscaption</figcaption>" : '');
-                        //                 $fightml .= (!empty($fightml) && !empty($figcaption) ? $figcaption : '');
-                        //                 $body_with_layout .= (!empty($fightml) ? "<figure class=\"$figclass\">$fightml</figure>\n\n" : '');
-                        //                 break;
+                    case 'image':
+                        $thisimg_rels = [];
+                        foreach ($story->images as $images) {
+                            if ($images->href == '#/assets/' . $asset_id && !empty($images->rels)) {
+                                $thisimg_rels = $images->rels;
+                            }
+                        }
+                        if (in_array('primary', $thisimg_rels) && $use_npr_featured) {
+                            break;
+                        }
+                        $thisimg = $asset_current->enclosures[0];
+                        foreach ($asset_current->enclosures as $img_enclose) {
+                            if (!empty($img_enclose->rels) && in_array('primary', $img_enclose->rels)) {
+                                $thisimg = $img_enclose;
+                            }
+                        }
+                        $figclass = "wp-block-image size-large";
+                        $image_href = $this->get_image_url($thisimg);
+                        $fightml = '<img src="' . $image_href . '"';
+                        if (in_array('image-vertical', $thisimg->rels)) {
+                            $figclass .= ' alignright';
+                            $fightml .= " width=200";
+                        }
+                        $thiscaption = (!empty(trim($asset_current->caption)) ? trim($asset_current->caption) : '');
+                        $fightml .= (!empty($fightml) && !empty($thiscaption) ? ' alt="' . str_replace('"', '\'', strip_tags($thiscaption)) . '"' : '');
+                        $fightml .= (!empty($fightml) ? '>' : '');
+                        $thiscaption .= (!empty($cites) ? " <cite>" . $this->parse_credits($asset_current) . "</cite>" : '');
+                        $figcaption = (!empty($fightml) && !empty($thiscaption) ? "<figcaption>$thiscaption</figcaption>" : '');
+                        $fightml .= (!empty($fightml) && !empty($figcaption) ? $figcaption : '');
+                        $body_with_layout .= (!empty($fightml) ? "<figure class=\"$figclass\">$fightml</figure>\n\n" : '');
+                        break;
                         //             case 'image-gallery':
                         //                 $fightml = '<figure class="wp-block-image"><div class="splide"><div class="splide__track"><ul class="splide__list">';
                         //                 $returnary['has_slideshow'] = true;
@@ -389,5 +389,30 @@ class Cds_parser
         // $json = json_decode($response['body'], false);
         // return $json->resources[0];
         return new stdClass();
+    }
+
+    public function get_image_url($image)
+    {
+        if (empty($image->hrefTemplate)) {
+            return $image->href;
+        }
+        // $format = get_option('npr_cds_image_format', 'webp');
+        // $quality = get_option('npr_cds_image_quality', 75);
+        // $width = get_option('npr_cds_image_width', 1200);
+        $format = 'jpeg';
+        $quality = 75;
+        $width = 1200;
+        $parse = parse_url($image->hrefTemplate);
+        parse_str($parse['query'], $output);
+        foreach ($output as $k => $v) {
+            if ($v == '{width}') {
+                $output[$k] = $width;
+            } elseif ($v == '{format}') {
+                $output[$k] = $format;
+            } elseif ($v == '{quality}') {
+                $output[$k] = $quality;
+            }
+        }
+        return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
     }
 }
