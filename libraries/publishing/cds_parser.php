@@ -240,27 +240,27 @@ class Cds_parser
                         $fightml .= (!empty($fightml) && !empty($figcaption) ? $figcaption : '');
                         $body_with_layout .= (!empty($fightml) ? "<figure class=\"$figclass\">$fightml</figure>\n\n" : '');
                         break;
-                        //             case 'image-gallery':
-                        //                 $fightml = '<figure class="wp-block-image"><div class="splide"><div class="splide__track"><ul class="splide__list">';
-                        //                 $returnary['has_slideshow'] = true;
-                        //                 foreach ($asset_current->layout as $ig_layout) {
-                        //                     $ig_asset_id = $this->extract_asset_id($ig_layout->href);
-                        //                     $ig_asset_current = $story->assets->{$ig_asset_id};
-                        //                     $thisimg = $ig_asset_current->enclosures[0];
-                        //                     foreach ($ig_asset_current->enclosures as $ig_img_enclose) {
-                        //                         if (!empty($ig_img_enclose->rels) && in_array('primary', $ig_img_enclose->rels)) {
-                        //                             $thisimg = $ig_img_enclose;
-                        //                         }
-                        //                     }
-                        //                     $image_href = $this->get_image_url($thisimg);
-                        //                     $full_credits = $this->parse_credits($ig_asset_current);
+                    case 'image-gallery':
+                        $fightml = '<figure class="wp-block-image"><div class="splide"><div class="splide__track"><ul class="splide__list">';
+                        $returnary['has_slideshow'] = true;
+                        foreach ($asset_current->layout as $ig_layout) {
+                            $ig_asset_id = $this->extract_asset_id($ig_layout->href);
+                            $ig_asset_current = $story->assets->{$ig_asset_id};
+                            $thisimg = $ig_asset_current->enclosures[0];
+                            foreach ($ig_asset_current->enclosures as $ig_img_enclose) {
+                                if (!empty($ig_img_enclose->rels) && in_array('primary', $ig_img_enclose->rels)) {
+                                    $thisimg = $ig_img_enclose;
+                                }
+                            }
+                            $image_href = $this->get_image_url($thisimg);
+                            $full_credits = $this->parse_credits($ig_asset_current);
 
-                        //                     $link_text = str_replace('"', "'", $ig_asset_current->title . $full_credits);
-                        //                     $fightml .= '<li class="splide__slide"><a href="' . esc_url($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . esc_url($image_href) . '" alt="' . esc_attr($link_text) . '"></a><div>' . npr_cds_esc_html($link_text) . '</div></li>';
-                        //                 }
-                        //                 $fightml .= '</div></div></ul></figure>';
-                        //                 $body_with_layout .= $fightml;
-                        //                 break;
+                            $link_text = str_replace('"', "'", $ig_asset_current->title . $full_credits);
+                            $fightml .= '<li class="splide__slide"><a href="' . urlencode($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . urlencode($image_href) . '" alt="' . ee('Format')->make('Text', $link_text)->attributeEscape() . '"></a><div>' . urlencode($link_text) . '</div></li>';
+                        }
+                        $fightml .= '</div></div></ul></figure>';
+                        $body_with_layout .= $fightml;
+                        break;
                         //             case str_contains($asset_profile, 'player-video'):
                         //                 if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
                         //                     $asset_caption = [];
@@ -367,6 +367,7 @@ class Cds_parser
         //     }
         // }
         // $returnary['body'] = npr_cds_esc_html($body_with_layout);
+        dump($body_with_layout);
         dd($returnary);
         return $returnary;
     }
@@ -414,5 +415,19 @@ class Cds_parser
             }
         }
         return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
+    }
+
+    public function parse_credits($asset): string
+    {
+        $credits = [];
+        foreach (['producer', 'provider', 'copyright'] as $item) {
+            if (!empty($asset->{$item})) {
+                $credits[] = $asset->{$item};
+            }
+        }
+        if (!empty($credits)) {
+            return ' (' . implode(' | ', $credits) . ')';
+        }
+        return '';
     }
 }
