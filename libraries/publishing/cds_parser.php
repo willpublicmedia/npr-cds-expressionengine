@@ -182,14 +182,14 @@ class Cds_parser
                         }
                         $body_with_layout .= '</blockquote>';
                         break;
-                        //             case 'youtube-video':
-                        //                 $asset_title = 'YouTube video player';
-                        //                 if (!empty($asset_current->headline)) {
-                        //                     $asset_title = $asset_current->headline;
-                        //                 }
-                        //                 $returnary['has_video'] = true;
-                        //                 $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
-                        //                 break;
+                    case 'youtube-video':
+                        $asset_title = 'YouTube video player';
+                        if (!empty($asset_current->headline)) {
+                            $asset_title = $asset_current->headline;
+                        }
+                        $returnary['has_video'] = true;
+                        $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
+                        break;
                         //             case 'internal-link':
                         //                 $link_url = '';
                         //                 $link_asset = $this->get_document($asset_current->documentLink->href);
