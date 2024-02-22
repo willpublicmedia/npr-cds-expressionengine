@@ -75,7 +75,7 @@ class Cds_parser
         $npr_has_video = false;
         $npr_layout = $this->get_body_with_layout($resource);
 
-        dd($resource);
+        dd($npr_layout);
         throw new \Exception('not implemented');
     }
 
@@ -123,7 +123,6 @@ class Cds_parser
         $use_npr_featured = true;
 
         $profiles = $this->extract_profiles($story->profiles);
-        dump($profiles);
 
         if (in_array('buildout', $profiles) && !empty($story->layout)) {
             foreach ($story->layout as $layout) {
@@ -261,72 +260,72 @@ class Cds_parser
                         $fightml .= '</div></div></ul></figure>';
                         $body_with_layout .= $fightml;
                         break;
-                        //             case str_contains($asset_profile, 'player-video'):
-                        //                 if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
-                        //                     $asset_caption = [];
-                        //                     $full_caption = '';
-                        //                     if (!empty($asset_current->title)) {
-                        //                         $asset_caption[] = $asset_current->title;
-                        //                     }
-                        //                     if (!empty($asset_current->caption)) {
-                        //                         $asset_caption[] = $asset_current->caption;
-                        //                     }
-                        //                     $credits = $this->parse_credits($asset_current);
-                        //                     if (!empty($credits)) {
-                        //                         $asset_caption[] = '(' . $credits . ')';
-                        //                     }
-                        //                     if (!empty($asset_caption)) {
-                        //                         $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
-                        //                     }
-                        //                     $returnary['has_video'] = true;
-                        //                     $video_asset = '';
-                        //                     if ($asset_profile == 'player-video') {
-                        //                         $poster = '';
-                        //                         $video_url = $asset_current->enclosures[0]->href;
-                        //                         if (!empty($asset_current->images)) {
-                        //                             foreach ($asset_current->images as $v_image) {
-                        //                                 if (in_array('thumbnail', $v_image->rels)) {
-                        //                                     $v_image_id = $this->extract_asset_id($v_image->href);
-                        //                                     $v_image_asset = $story->assets->{$v_image_id};
-                        //                                     foreach ($v_image_asset->enclosures as $vma) {
-                        //                                         $poster = ' poster="' . $this->get_image_url($vma) . '"';
-                        //                                     }
-                        //                                 }
-                        //                             }
-                        //                         }
-                        //                         foreach ($asset_current->enclosures as $v_enclose) {
-                        //                             if (in_array('mp4-hd', $v_enclose->rels)) {
-                        //                                 $video_url = $v_enclose->href;
-                        //                             } elseif (in_array('mp4-high', $v_enclose->rels)) {
-                        //                                 $video_url = $v_enclose->href;
-                        //                             }
-                        //                         }
-                        //                         $video_asset = '[video mp4="' . $video_url . '"' . $poster . '][/video]';
-                        //                     } elseif ($asset_profile == 'stream-player-video') {
-                        //                         if (in_array('hls', $asset_current->enclosures[0]->rels)) {
-                        //                             $returnary['has_video_streaming'] = true;
-                        //                             $video_asset = '<video id="' . $asset_current->id . '" controls></video>' .
-                        //                             '<script>' .
-                        //                             'let video = document.getElementById("' . $asset_current->id . '");' .
-                        //                             'if (Hls.isSupported()) {' .
-                        //                             'let hls = new Hls();' .
-                        //                             'hls.attachMedia(video);' .
-                        //                             'hls.on(Hls.Events.MEDIA_ATTACHED, () => {' .
-                        //                             'hls.loadSource("' . $asset_current->enclosures[0]->href . '");' .
-                        //                                 'hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {' .
-                        //                                 'console.log("manifest loaded, found " + data.levels.length + " quality level");' .
-                        //                                 '});' .
-                        //                                 '});' .
-                        //                                 '}' .
-                        //                                 '</script>';
-                        //                         }
-                        //                     }
-                        //                     $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
-                        //                 }
-                        //                 break;
-                        //             default:
-                        //                 // Do nothing???
-                        //                 break;
+                    case str_contains($asset_profile, 'player-video'):
+                        if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
+                            $asset_caption = [];
+                            $full_caption = '';
+                            if (!empty($asset_current->title)) {
+                                $asset_caption[] = $asset_current->title;
+                            }
+                            if (!empty($asset_current->caption)) {
+                                $asset_caption[] = $asset_current->caption;
+                            }
+                            $credits = $this->parse_credits($asset_current);
+                            if (!empty($credits)) {
+                                $asset_caption[] = '(' . $credits . ')';
+                            }
+                            if (!empty($asset_caption)) {
+                                $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
+                            }
+                            $returnary['has_video'] = true;
+                            $video_asset = '';
+                            if ($asset_profile == 'player-video') {
+                                $poster = '';
+                                $video_url = $asset_current->enclosures[0]->href;
+                                if (!empty($asset_current->images)) {
+                                    foreach ($asset_current->images as $v_image) {
+                                        if (in_array('thumbnail', $v_image->rels)) {
+                                            $v_image_id = $this->extract_asset_id($v_image->href);
+                                            $v_image_asset = $story->assets->{$v_image_id};
+                                            foreach ($v_image_asset->enclosures as $vma) {
+                                                $poster = ' poster="' . $this->get_image_url($vma) . '"';
+                                            }
+                                        }
+                                    }
+                                }
+                                foreach ($asset_current->enclosures as $v_enclose) {
+                                    if (in_array('mp4-hd', $v_enclose->rels)) {
+                                        $video_url = $v_enclose->href;
+                                    } elseif (in_array('mp4-high', $v_enclose->rels)) {
+                                        $video_url = $v_enclose->href;
+                                    }
+                                }
+                                $video_asset = '[video mp4="' . $video_url . '"' . $poster . '][/video]';
+                            } elseif ($asset_profile == 'stream-player-video') {
+                                if (in_array('hls', $asset_current->enclosures[0]->rels)) {
+                                    $returnary['has_video_streaming'] = true;
+                                    $video_asset = '<video id="' . $asset_current->id . '" controls></video>' .
+                                    '<script>' .
+                                    'let video = document.getElementById("' . $asset_current->id . '");' .
+                                    'if (Hls.isSupported()) {' .
+                                    'let hls = new Hls();' .
+                                    'hls.attachMedia(video);' .
+                                    'hls.on(Hls.Events.MEDIA_ATTACHED, () => {' .
+                                    'hls.loadSource("' . $asset_current->enclosures[0]->href . '");' .
+                                        'hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {' .
+                                        'console.log("manifest loaded, found " + data.levels.length + " quality level");' .
+                                        '});' .
+                                        '});' .
+                                        '}' .
+                                        '</script>';
+                                }
+                            }
+                            $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
+                        }
+                        break;
+                    default:
+                        // Do nothing???
+                        break;
                 }
 
             }
@@ -367,8 +366,6 @@ class Cds_parser
         //     }
         // }
         // $returnary['body'] = npr_cds_esc_html($body_with_layout);
-        dump($body_with_layout);
-        dd($returnary);
         return $returnary;
     }
 
