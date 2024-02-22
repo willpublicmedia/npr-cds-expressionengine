@@ -171,17 +171,17 @@ class Cds_parser
                             }
                         }
                         break;
-                        //             case 'pull-quote':
-                        //                 $body_with_layout .= '<blockquote class="npr-pull-quote"><h2>' . $asset_current->quote . '</h2>';
-                        //                 if (!empty($asset_current->attributionParty)) {
-                        //                     $body_with_layout .= '<p>' . $asset_current->attributionParty;
-                        //                     if (!empty($asset_current->attributionContext)) {
-                        //                         $body_with_layout .= ', ' . $asset_current->attributionContext;
-                        //                     }
-                        //                     $body_with_layout .= '</p>';
-                        //                 }
-                        //                 $body_with_layout .= '</blockquote>';
-                        //                 break;
+                    case 'pull-quote':
+                        $body_with_layout .= '<blockquote class="npr-pull-quote"><h2>' . $asset_current->quote . '</h2>';
+                        if (!empty($asset_current->attributionParty)) {
+                            $body_with_layout .= '<p>' . $asset_current->attributionParty;
+                            if (!empty($asset_current->attributionContext)) {
+                                $body_with_layout .= ', ' . $asset_current->attributionContext;
+                            }
+                            $body_with_layout .= '</p>';
+                        }
+                        $body_with_layout .= '</blockquote>';
+                        break;
                         //             case 'youtube-video':
                         //                 $asset_title = 'YouTube video player';
                         //                 if (!empty($asset_current->headline)) {
