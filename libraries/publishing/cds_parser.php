@@ -342,29 +342,29 @@ class Cds_parser
             }
             $body_with_layout .= '<figure class="wp-block-embed npr-correction"><div class="wp-block-embed__wrapper"><h3>Corrections:</h3><ul>' . $correction_text . '</ul></div></figure>';
         }
-        // if (!empty($story->audio)) {
-        //     $audio_file = '';
-        //     foreach ($story->audio as $audio) {
-        //         if (in_array('primary', $audio->rels) && !in_array('premium', $audio->rels)) {
-        //             $audio_id = $this->extract_asset_id($audio->href);
-        //             $audio_current = $story->assets->{$audio_id};
-        //             if ($audio_current->isAvailable) {
-        //                 if ($audio_current->isEmbeddable) {
-        //                     $audio_file = '<p><iframe class="npr-embed-audio" style="width: 100%; height: 235px;" src="' . $audio_current->embeddedPlayerLink->href . '"></iframe></p>';
-        //                 } elseif ($audio_current->isDownloadable) {
-        //                     foreach ($audio_current->enclosures as $enclose) {
-        //                         if (!empty($enclose->rels) && $enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
-        //                             $audio_file = '[audio mp3="' . $enclose->href . '"][/audio]';
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     if (!empty($audio_file)) {
-        //         $body_with_layout = $audio_file . "\n" . $body_with_layout;
-        //     }
-        // }
+        if (!empty($story->audio)) {
+            $audio_file = '';
+            foreach ($story->audio as $audio) {
+                if (in_array('primary', $audio->rels) && !in_array('premium', $audio->rels)) {
+                    $audio_id = $this->extract_asset_id($audio->href);
+                    $audio_current = $story->assets->{$audio_id};
+                    if ($audio_current->isAvailable) {
+                        if ($audio_current->isEmbeddable) {
+                            $audio_file = '<p><iframe class="npr-embed-audio" style="width: 100%; height: 235px;" src="' . $audio_current->embeddedPlayerLink->href . '"></iframe></p>';
+                        } elseif ($audio_current->isDownloadable) {
+                            foreach ($audio_current->enclosures as $enclose) {
+                                if (!empty($enclose->rels) && $enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
+                                    $audio_file = '[audio mp3="' . $enclose->href . '"][/audio]';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!empty($audio_file)) {
+                $body_with_layout = $audio_file . "\n" . $body_with_layout;
+            }
+        }
         // $returnary['body'] = npr_cds_esc_html($body_with_layout);
         return $returnary;
     }
