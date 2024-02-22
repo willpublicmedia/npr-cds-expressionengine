@@ -50,10 +50,22 @@ class Cds_parser
         throw new \Exception('not implemented');
     }
 
-    private function extract_asset_id ( $href ): bool|string {
-		$href_xp = explode( '/', $href );
-		return end( $href_xp );
-	}
+    private function extract_asset_id($href): bool | string
+    {
+        $href_xp = explode('/', $href);
+        return end($href_xp);
+    }
+
+    public function extract_asset_profile($asset): bool | string
+    {
+        $output = '';
+        foreach ($asset->profiles as $profile) {
+            if (!empty($profile->rels) && in_array('type', $profile->rels)) {
+                $output = $this->extract_asset_id($profile->href);
+            }
+        }
+        return $output;
+    }
 
     private function extract_profiles($story): array
     {
@@ -86,9 +98,9 @@ class Cds_parser
 
         if (in_array('buildout', $profiles) && !empty($story->layout)) {
             foreach ($story->layout as $layout) {
-                        $asset_id = $this->extract_asset_id($layout->href);
-                //         $asset_current = $story->assets->{$asset_id};
-                //         $asset_profile = $this->extract_asset_profile($asset_current);
+                $asset_id = $this->extract_asset_id($layout->href);
+                $asset_current = $story->assets->{$asset_id};
+                $asset_profile = $this->extract_asset_profile($asset_current);
                 //         switch ($asset_profile) {
                 //             case 'text':
                 //                 if (!empty($asset_current->text)) {
