@@ -190,25 +190,25 @@ class Cds_parser
                         $returnary['has_video'] = true;
                         $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
                         break;
-                        //             case 'internal-link':
-                        //                 $link_url = '';
-                        //                 $link_asset = $this->get_document($asset_current->documentLink->href);
-                        //                 if (!empty($link_asset->webPages)) {
-                        //                     foreach ($link_asset->webPages as $web) {
-                        //                         if (in_array('canonical', $web->rels)) {
-                        //                             $link_url = $web->href;
-                        //                         }
-                        //                     }
-                        //                 }
-                        //                 if (!empty($link_url)) {
-                        //                     $body_with_layout .= '<p><a href="' . $link_url . '">' . $asset_current->linkText . '</a></p>';
-                        //                 }
-                        //                 break;
-                        //             case 'external-link':
-                        //                 if (!empty($asset_current->externalLink->href)) {
-                        //                     $body_with_layout .= '<p><a href="' . $asset_current->externalLink->href . '">' . $asset_current->linkText . '</a></p>';
-                        //                 }
-                        //                 break;
+                    case 'internal-link':
+                        $link_url = '';
+                        $link_asset = $this->get_document($asset_current->documentLink->href);
+                        if (!empty($link_asset->webPages)) {
+                            foreach ($link_asset->webPages as $web) {
+                                if (in_array('canonical', $web->rels)) {
+                                    $link_url = $web->href;
+                                }
+                            }
+                        }
+                        if (!empty($link_url)) {
+                            $body_with_layout .= '<p><a href="' . $link_url . '">' . $asset_current->linkText . '</a></p>';
+                        }
+                        break;
+                    case 'external-link':
+                        if (!empty($asset_current->externalLink->href)) {
+                            $body_with_layout .= '<p><a href="' . $asset_current->externalLink->href . '">' . $asset_current->linkText . '</a></p>';
+                        }
+                        break;
                         //             case 'image':
                         //                 $thisimg_rels = [];
                         //                 foreach ($story->images as $images) {
