@@ -158,19 +158,19 @@ class Cds_parser
                             $returnary['has_video'] = true;
                         }
                         break;
-                        //             case 'audio':
-                        //                 if ($asset_current->isAvailable) {
-                        //                     if ($asset_current->isEmbeddable) {
-                        //                         $body_with_layout .= '<p><iframe class="npr-embed-audio" style="width: 100%; height: 239px;" src="' . $asset_current->embeddedPlayerLink->href . '"></iframe></p>';
-                        //                     } elseif ($asset_current->isDownloadable) {
-                        //                         foreach ($asset_current->enclosures as $enclose) {
-                        //                             if ($enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
-                        //                                 $body_with_layout .= '[audio mp3="' . $enclose->href . '"][/audio]';
-                        //                             }
-                        //                         }
-                        //                     }
-                        //                 }
-                        //                 break;
+                    case 'audio':
+                        if ($asset_current->isAvailable) {
+                            if ($asset_current->isEmbeddable) {
+                                $body_with_layout .= '<p><iframe class="npr-embed-audio" style="width: 100%; height: 239px;" src="' . $asset_current->embeddedPlayerLink->href . '"></iframe></p>';
+                            } elseif ($asset_current->isDownloadable) {
+                                foreach ($asset_current->enclosures as $enclose) {
+                                    if ($enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
+                                        $body_with_layout .= '[audio mp3="' . $enclose->href . '"][/audio]';
+                                    }
+                                }
+                            }
+                        }
+                        break;
                         //             case 'pull-quote':
                         //                 $body_with_layout .= '<blockquote class="npr-pull-quote"><h2>' . $asset_current->quote . '</h2>';
                         //                 if (!empty($asset_current->attributionParty)) {
