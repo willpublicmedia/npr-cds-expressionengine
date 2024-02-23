@@ -87,7 +87,9 @@ class Cds_parser
             $npr_has_video = $npr_layout['has_video'];
         }
 
-        dump($npr_layout);
+        // add transcript
+        $resource->body .= $this->get_transcript_body($resource);
+
         dd($resource);
         throw new \Exception('not implemented');
     }
@@ -425,6 +427,33 @@ class Cds_parser
             }
         }
         return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
+    }
+
+    /**
+     * This function will check a story to see if there are transcripts that should go with it, if there are
+     * we'll return the transcript as one big string with Transcript at the top and each paragraph separated by <p>
+     *
+     * @param object $story
+     *
+     * @return string
+     */
+    public function get_transcript_body(object $story): string
+    {
+        $transcript_body = "";
+        if (!empty($story->audio)) {
+            foreach ($story->audio as $audio) {
+                $audio_id = $this->extract_asset_id($audio->href);
+                $audio_current = $story->assets->{$audio_id};
+                if (!empty($audio_current->transcriptLink)) {
+                    $transcript = $this->get_document($audio_current->transcriptLink->href);
+                    if (!empty($transcript->text)) {
+                        $transcript_body .= '<div class="npr-transcript"><p><strong>Transcript:</strong></p>' . $transcript->text . '</div>';
+                    }
+                }
+
+            }
+        }
+        return $transcript_body;
     }
 
     private function parse_credits($asset): string
