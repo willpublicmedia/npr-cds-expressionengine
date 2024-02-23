@@ -82,7 +82,6 @@ class BeforeChannelEntrySave extends AbstractRoute
             }
         }
 
-        // WARNING: story pull executes loop. Story may be an array.
         $response = $this->pull_npr_story($npr_story_id);
         if (is_null($response) || isset($response->messages)) {
             return;
@@ -208,9 +207,16 @@ class BeforeChannelEntrySave extends AbstractRoute
         $this->fields = $field_names;
     }
 
-    private function map_story_values($entry, $values, Api_response $document): array
+    private function map_story_values($entry, $values, Api_response $response): array
     {
-        throw new \Exception('not implemented');
+        $objects = [
+            'entry' => $entry,
+            'values' => $values,
+            'response' => $response,
+        ];
+
+        dd($objects);
+        return $objects;
     }
 
     private function pull_npr_story($npr_story_id): ?Api_response
