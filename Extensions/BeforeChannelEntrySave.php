@@ -5,11 +5,13 @@ namespace IllinoisPublicMedia\NprCds\Extensions;
 require_once __DIR__ . '/../database/installation/fields/field_installer.php';
 require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
 require_once __DIR__ . '/../libraries/utilities/field_utils.php';
+require_once __DIR__ . '/../libraries/mapping/publish_form_mapper.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
+use IllinoisPublicMedia\NprCds\Libraries\Mapping\Publish_form_mapper;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
@@ -209,10 +211,13 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function map_story_values($entry, $values, Api_response $response): array
     {
+        $mapper = new Publish_form_mapper();
+        $mapper->map($entry, $values, $response->json);
         $objects = [
             'entry' => $entry,
             'values' => $values,
             'response' => $response,
+            'story' => null,
         ];
 
         dd($objects);
