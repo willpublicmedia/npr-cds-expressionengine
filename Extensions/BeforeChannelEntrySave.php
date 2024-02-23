@@ -9,6 +9,7 @@ use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
+use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
@@ -82,14 +83,12 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         // WARNING: story pull executes loop. Story may be an array.
-        $document = $this->pull_npr_story($npr_story_id);
-        if (!$document) {
+        $response = $this->pull_npr_story($npr_story_id);
+        if (is_null($response) || isset($response->messages)) {
             return;
         }
 
-        // if (isset($story[0])) {
-        //     $story = $story[0];
-        // }
+        $objects = $this->map_story_values($entry, $values, $response);
 
         // $objects = $this->map_story_values($entry, $values, $story);
         // $story = $objects['story'];
@@ -209,7 +208,12 @@ class BeforeChannelEntrySave extends AbstractRoute
         $this->fields = $field_names;
     }
 
-    private function pull_npr_story($npr_story_id)
+    private function map_story_values($entry, $values, Api_response $document): array
+    {
+        throw new \Exception('not implemented');
+    }
+
+    private function pull_npr_story($npr_story_id): ?Api_response
     {
         $params = array(
             'id' => $npr_story_id,
@@ -226,16 +230,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $api_service = new Npr_cds_expressionengine();
         $response = $api_service->request($request);
 
-        if ($response === null || isset($response->messages)) {
-            return;
-        }
-
-        $stories = array();
-        // foreach ($api_service->stories as $story) {
-        //     $stories[] = $api_service->save_clean_response($story);
-        // }
-
-        return $stories;
+        return $response;
     }
 
     private function validate_story_id($entry, $values)
