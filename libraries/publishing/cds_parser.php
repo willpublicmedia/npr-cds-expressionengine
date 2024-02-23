@@ -20,7 +20,7 @@ class Cds_parser
 
         if (!empty($json->resources)) {
             foreach ($json->resources as $resource) {
-                $story = $this->create_story($resource);
+                $story = $this->map_story($resource);
                 $stories[] = $story;
             }
         }
@@ -62,7 +62,7 @@ class Cds_parser
         return $output;
     }
 
-    private function create_story(object $resource): object
+    private function map_story(object $resource): object
     {
         // see: NPR_CDS_WP->update_posts_from_stories() line 165
         // to do: check story exists && should be updated
