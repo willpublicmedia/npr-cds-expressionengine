@@ -13,16 +13,10 @@ class Publish_form_mapper
 {
     public function map($entry, $values, $json)
     {
-        dump($entry);
-        dump($values);
-        dump($json);
-
         $data = [
             'teaser' => $json->teaser,
             'title' => $json->title,
         ];
-
-        dd($data);
 
         $entry_builder = new Channel_entry_builder();
         $objects = $entry_builder->assign_data_to_entry($data, $entry, $values);

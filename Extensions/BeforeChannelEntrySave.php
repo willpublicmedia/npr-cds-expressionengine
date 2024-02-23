@@ -89,19 +89,29 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        $objects = $this->map_story_values($entry, $values, $response);
+        $stories = $response->json->resources;
+        if (count($stories) > 1) {
+            $error = [
+                'npr_story_id' => [
+                    'Story ID represents a document collection. Select a single document ID and try again.',
+                ],
+            ];
+            $this->display_error($error);
+            return;
+        }
 
-        // $objects = $this->map_story_values($entry, $values, $story);
-        // $story = $objects['story'];
-        // $values = $objects['values'];
-        // $entry = $objects['entry'];
+        $objects = $this->map_story_values($entry, $values, $stories[0]);
+
+        $story = $objects['story'];
+        $values = $objects['values'];
+        $entry = $objects['entry'];
 
         // Flip overwrite value
         $values[$overwrite_field] = false;
         $entry->{$overwrite_field} = false;
 
-        // $story->ChannelEntry = $entry;
-        // $story->save();
+        $story->ChannelEntry = $entry;
+        $story->save();
     }
 
     private function check_required_fields($field_groups, $display_error = true)
@@ -209,16 +219,10 @@ class BeforeChannelEntrySave extends AbstractRoute
         $this->fields = $field_names;
     }
 
-    private function map_story_values($entry, $values, Api_response $response): array
+    private function map_story_values($entry, $values, $story): array
     {
         $mapper = new Publish_form_mapper();
-        $mapper->map($entry, $values, $response->json);
-        $objects = [
-            'entry' => $entry,
-            'values' => $values,
-            'response' => $response,
-            'story' => null,
-        ];
+        $objects = $mapper->map($entry, $values, $story);
 
         dd($objects);
         return $objects;
