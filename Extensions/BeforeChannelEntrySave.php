@@ -82,8 +82,8 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         // WARNING: story pull executes loop. Story may be an array.
-        $story = $this->pull_npr_story($npr_story_id);
-        if (!$story) {
+        $document = $this->pull_npr_story($npr_story_id);
+        if (!$document) {
             return;
         }
 
@@ -213,8 +213,6 @@ class BeforeChannelEntrySave extends AbstractRoute
     {
         $params = array(
             'id' => $npr_story_id,
-            // 'dateType' => 'story',
-            // 'output' => 'json',
         );
 
         $pull_url = isset($this->settings['pull_url']) ? $this->settings['pull_url'] : null;
@@ -231,8 +229,6 @@ class BeforeChannelEntrySave extends AbstractRoute
         if ($response === null || isset($response->messages)) {
             return;
         }
-
-        $api_service->parse($response);
 
         $stories = array();
         // foreach ($api_service->stories as $story) {
