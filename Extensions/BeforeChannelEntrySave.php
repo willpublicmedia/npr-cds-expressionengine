@@ -46,7 +46,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $this->map_model_fields(array_keys($this->fields));
     }
 
-    public function pull_story_via_entry_save($entry, $values): void
+    public function pull_story_via_entry_save($entry, $values)
     {
         $source_field = $this->fields['channel_entry_source'];
         $is_external_story = array_key_exists($source_field, $values) ? $this->check_external_story_source($values[$source_field]) : false;
