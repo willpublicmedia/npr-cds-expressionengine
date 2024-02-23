@@ -11,18 +11,18 @@ use IllinoisPublicMedia\NprCds\Libraries\Utilities\Channel_entry_builder;
 
 class Publish_form_mapper
 {
-    public function map($entry, $values, $json)
+    public function map($entry, $values, $story)
     {
-        $url_title = $this->generate_url_title($entry, $json->title);
+        $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
-            'teaser' => $json->teaser,
-            'title' => $json->title,
+            'teaser' => $story->teaser,
+            'title' => $story->title,
             'url_title' => $url_title,
         ];
 
         $entry_builder = new Channel_entry_builder();
         $objects = $entry_builder->assign_data_to_entry($data, $entry, $values);
-        $objects['json'] = $json;
+        $objects['story'] = $story;
 
         return $objects;
     }

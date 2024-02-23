@@ -46,7 +46,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $this->map_model_fields(array_keys($this->fields));
     }
 
-    public function pull_story_via_entry_save($entry, $values)
+    public function pull_story_via_entry_save($entry, $values): void
     {
         $source_field = $this->fields['channel_entry_source'];
         $is_external_story = array_key_exists($source_field, $values) ? $this->check_external_story_source($values[$source_field]) : false;
@@ -110,8 +110,9 @@ class BeforeChannelEntrySave extends AbstractRoute
         $values[$overwrite_field] = false;
         $entry->{$overwrite_field} = false;
 
-        $story->ChannelEntry = $entry;
-        $story->save();
+        // currently no cds model in this plugin
+        // $story->ChannelEntry = $entry;
+        // $story->save();
     }
 
     private function check_required_fields($field_groups, $display_error = true)
