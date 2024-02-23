@@ -11,9 +11,9 @@ class Npr_cds_ext extends Extension
 {
     protected $addon_name = 'npr_cds';
 
-    public function query_cds($entry, $values)
+    public function pull_story_via_entry_save($entry, $values)
     {
         $runner = new BeforeChannelEntrySave();
-        $runner->query_cds($entry, $values);
+        $runner->pull_story_via_entry_save($entry, $values);
     }
 }

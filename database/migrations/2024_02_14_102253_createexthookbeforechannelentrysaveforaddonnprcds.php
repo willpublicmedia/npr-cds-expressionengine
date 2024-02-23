@@ -5,7 +5,7 @@ use ExpressionEngine\Service\Migration\Migration;
 class CreateExtHookBeforeChannelEntrySaveForAddonNprCds extends Migration
 {
     private $required_extensions = array(
-        'query_cds' => array(
+        'pull_story_via_entry_save' => array(
             'hook' => 'before_channel_entry_save',
             'priority' => 10,
         ),
