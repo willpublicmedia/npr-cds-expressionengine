@@ -4,11 +4,13 @@ namespace IllinoisPublicMedia\NprCds\Extensions;
 
 require_once __DIR__ . '/../database/installation/fields/field_installer.php';
 require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
+require_once __DIR__ . '/../libraries/utilities/field_utils.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
 class BeforeChannelEntrySave extends AbstractRoute
 {
@@ -198,18 +200,10 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function map_model_fields($field_array)
     {
+        $field_utils = new Field_utils();
         $field_names = array();
         foreach ($field_array as $model_field) {
-            $field = ee('Model')->get('ChannelField')
-                ->filter('field_name', $model_field)
-                ->first();
-
-            if ($field === null) {
-                continue;
-            }
-
-            $field_id = $field->field_id;
-            $field_names[$model_field] = "field_id_{$field_id}";
+            $field_names[$model_field] = $field_utils->get_field_name($model_field);
         }
 
         $this->fields = $field_names;
