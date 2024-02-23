@@ -31,7 +31,6 @@ class Cds_parser
             $message = $json->message;
         }
 
-        dd($response);
         throw new \Exception('not implemented');
     }
 
@@ -90,7 +89,6 @@ class Cds_parser
         // add transcript
         $resource->body .= $this->get_transcript_body($resource);
 
-        dd($resource);
         throw new \Exception('not implemented');
     }
 

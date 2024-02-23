@@ -224,7 +224,6 @@ class BeforeChannelEntrySave extends AbstractRoute
         $mapper = new Publish_form_mapper();
         $objects = $mapper->map($entry, $values, $story);
 
-        dd($objects);
         return $objects;
     }
 
