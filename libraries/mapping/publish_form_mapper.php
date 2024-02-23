@@ -13,9 +13,11 @@ class Publish_form_mapper
 {
     public function map($entry, $values, $json)
     {
+        $url_title = $this->generate_url_title($entry, $json->title);
         $data = [
             'teaser' => $json->teaser,
             'title' => $json->title,
+            'url_title' => $url_title,
         ];
 
         $entry_builder = new Channel_entry_builder();
@@ -25,8 +27,16 @@ class Publish_form_mapper
         return $objects;
     }
 
-    private function map_audio($json)
+    private function generate_url_title($entry, $story_title)
     {
-        return null;
+        $url_title = $entry->isNew() ?
+        (string) ee('Format')->make('Text', $story_title)->urlSlug() :
+        $entry->url_title;
+
+        if (empty($url_title)) {
+            $url_title = $entry->url_title;
+        }
+
+        return $url_title;
     }
 }
