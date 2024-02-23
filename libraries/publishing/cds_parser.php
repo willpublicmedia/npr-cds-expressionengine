@@ -3,7 +3,9 @@
 namespace IllinoisPublicMedia\NprCds\Libraries\Publishing;
 
 require_once __DIR__ . '/../dto/http/api_response.php';
+require_once __DIR__ . '/../utilities/field_utils.php';
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 use stdClass;
 
 if (!defined('BASEPATH')) {
@@ -64,8 +66,14 @@ class Cds_parser
 
     private function map_story(object $resource): object
     {
-        // see: NPR_CDS_WP->update_posts_from_stories() line 165
-        // to do: check story exists && should be updated
+        $field_utils = new Field_utils();
+        $story_id_field = $field_utils->get_field_name('npr_story_id');
+        $entry_query = ee('Model')->get('ChannelEntry')
+            ->filter('entry_id', '>', '0')
+            ->filter($story_id_field, $resource->id);
+
+        $exists = $entry_query->count() >= 1;
+        // to do: see if entry needs to be updated
 
         $cats = [];
         if (empty($resource->body)) {
