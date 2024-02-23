@@ -82,8 +82,13 @@ class Cds_parser
 
         $npr_has_video = false;
         $npr_layout = $this->get_body_with_layout($resource);
+        if (!empty($npr_layout['body'])) {
+            $resource->body = $npr_layout['body'];
+            $npr_has_video = $npr_layout['has_video'];
+        }
 
-        dd($npr_layout);
+        dump($npr_layout);
+        dd($resource);
         throw new \Exception('not implemented');
     }
 
