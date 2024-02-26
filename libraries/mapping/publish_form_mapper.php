@@ -14,6 +14,8 @@ class Publish_form_mapper
 {
     public function map($entry, $values, $story)
     {
+        $profiles = $this->extract_profiles($story->profiles);
+
         $npr_layout = $this->get_body_with_layout($story);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
         /**
