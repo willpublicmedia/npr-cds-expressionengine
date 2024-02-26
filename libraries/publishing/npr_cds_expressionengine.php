@@ -129,16 +129,6 @@ class Npr_cds_expressionengine
     private function query_by_url(Api_request $request): ?Api_response
     {
         $response = $this->connect_as_curl($request);
-        // if (isset($response->messages)) {
-        //     return;
-        // }
-
-        // if ($response->body) {
-        //     $this->xml = $response->body;
-        // } else {
-        //     $this->notice[] = 'No data available.';
-        // }
-
         return $response;
     }
 
@@ -154,44 +144,5 @@ class Npr_cds_expressionengine
         }
 
         return $cds_token['cds_token'];
-    }
-
-    private function set_response_code($json, $http_status = null, $response_message = null)
-    {
-        //     if (!$simplexml) {
-        //         $xml_start = strpos($response_message, "<?xml");
-        //         $simplexml = simplexml_load_string(substr($response_message, $xml_start));
-        //     }
-
-        //     if (!$simplexml) {
-        //         $code = $http_status ? $http_status : 501;
-        //         $message = 'Unable to process XML response. Probable submission/connection issue.';
-
-        //         return array(
-        //             'code' => $code,
-        //             'messages' => array(
-        //                 array(
-        //                     'message' => $message,
-        //                 ),
-        //             ),
-        //         );
-        //     }
-
-        //     if (!property_exists($simplexml, 'message')) {
-        //         return array('code' => self::NPRAPI_STATUS_OK);
-        //     }
-
-        //     $data = array(
-        //         'code' => (int) $simplexml->message->attributes()->id,
-        //         'messages' => array(
-        //             array(
-        //                 'message' => (string) $simplexml->message->text,
-        //                 'level' => (string) $simplexml->message->attributes()->level,
-        //             ),
-        //         ),
-        //     );
-
-        //     return $data;
-        // }
     }
 }
