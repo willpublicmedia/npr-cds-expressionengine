@@ -39,9 +39,9 @@ class Publish_form_mapper
          * link type=api -> deprecated
          * link type=html -> see webpages link
          * storyDate -> publishedDate
-         * pubDate -> editorialLastModifiedDate
-         * publishedDate -> editorialLastModifiedDate
-         * lastModifiedDate -> deprecated
+         * [x] pubDate -> editorialLastModifiedDate
+         * [x] publishedDate -> editorialLastModifiedDate
+         * [x] lastModifiedDate -> deprecated
          * audioRunByDate -> recommendUntilDateTime
          * keywords -> deprecated
          * priorityKeywords
@@ -56,20 +56,20 @@ class Publish_form_mapper
          * multimedia -> see multimedia
          * show -> see show
          * correction -> see correction
-         * product -> deprecated
-         * promoArt -> deprecated
-         * staticGraphic -> deprecated
-         * performance -> deprecated
-         * fullStory -> deprecated
-         * fullText -> text
-         * listText -> deprecated
-         * message -> deprecated
-         * bookEdition deprecated
-         * book -> deprecated
-         * trait -> deprecated
-         * author -> deprecated
-         * externalAsset -> deprecated
-         * calendarEvent -> deprecated
+         * [x] product -> deprecated
+         * [x] promoArt -> deprecated
+         * [x] staticGraphic -> deprecated
+         * [x] performance -> deprecated
+         * [x] fullStory -> deprecated
+         * [x] fullText -> text
+         * [x] listText -> deprecated
+         * [x] message -> deprecated
+         * [x] bookEdition deprecated
+         * [x] book -> deprecated
+         * [x] trait -> deprecated
+         * [x] author -> deprecated
+         * [x] externalAsset -> deprecated
+         * [x] calendarEvent -> deprecated
          * audio -> see audio
          * pullQuote
          * album -> see album
@@ -80,6 +80,7 @@ class Publish_form_mapper
          */
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
+            'editorialLastModifiedDate' => $story->editorialLastModifiedDate,
             'teaser' => $story->teaser,
             'text' => $text,
             'title' => $story->title,
