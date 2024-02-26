@@ -11,9 +11,9 @@ use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 
 class Api_request
 {
-    public ?string $base_url;
+    public ?string $base_url = null;
 
-    public ?string $data;
+    public ?string $data = null;
 
     public string $method;
 

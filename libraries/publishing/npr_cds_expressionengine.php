@@ -14,7 +14,6 @@ require_once __DIR__ . '/cds_parser.php';
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
-use IllinoisPublicMedia\NprCds\Libraries\Publishing\Cds_parser;
 
 class Npr_cds_expressionengine
 {
@@ -87,7 +86,7 @@ class Npr_cds_expressionengine
         if ($http_status != Npr_constants::NPR_CDS_STATUS_OK || $response->code != Npr_constants::NPR_CDS_STATUS_OK) {
             $code = property_exists($response, 'code') ? $response->code : $http_status;
             $message = "Error updating " . $request->request_url();
-            if (property_exists($response, 'messages')) {
+            if (property_exists($response, 'messages') && !is_null($response->messages)) {
                 if (is_string($response->messages)) {
                     $message = $response->messages;
                 } elseif (is_array($response->messages) && sizeof($response->messages) > 0) {
