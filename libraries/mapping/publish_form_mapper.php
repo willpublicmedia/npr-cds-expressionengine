@@ -19,6 +19,7 @@ class Publish_form_mapper
     public function map($entry, $values, $story)
     {
         $profiles = $this->extract_profiles($story->profiles);
+        $corrections = $this->get_corrections($story);
 
         $npr_layout = $this->get_body_with_layout($story, $profiles);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
@@ -80,6 +81,7 @@ class Publish_form_mapper
          */
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
+            'corrections' => $corrections,
             'editorialLastModifiedDate' => $story->editorialLastModifiedDate,
             'teaser' => $story->teaser,
             'text' => $text,
@@ -425,6 +427,25 @@ class Publish_form_mapper
         }
         $returnary['body'] = $body_with_layout;
         return $returnary;
+    }
+
+    private function get_corrections(stdClass $story): ?array
+    {
+        if (empty($story->corrections)) {
+            return null;
+        }
+
+        $corrections = [];
+        foreach ($story->corrections as $correction) {
+            $correct_id = $this->extract_asset_id($correction->href);
+            $correct_current = $story->assets->{$correct_id};
+            $corrections[$correct_id] = [
+                'date' => date(ee()->config->get('date_format'), strtotime($correct_current->dateTime)),
+                'text' => strip_tags($correct_current->text),
+            ];
+        }
+
+        return $corrections;
     }
 
     private function get_document($href): ?stdClass
