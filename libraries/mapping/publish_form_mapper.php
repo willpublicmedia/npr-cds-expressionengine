@@ -7,6 +7,10 @@ if (!defined('BASEPATH')) {
 }
 
 require_once __DIR__ . '/../utilities/channel_entry_builder.php';
+require_once __DIR__ . '/../publishing/npr_cds_expressionengine.php';
+
+use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
+use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Channel_entry_builder;
 use \stdClass;
 
@@ -423,22 +427,23 @@ class Publish_form_mapper
 
     private function get_document($href): ?stdClass
     {
-        // $url = NPR_CDS_PULL_URL . $href;
-        // $options = $this->get_token_options();
-        // $response = wp_remote_get($url, $options);
-        // if (is_wp_error($response)) {
-        //     /**
-        //      * @var WP_Error $response
-        //      */
-        //     $code = $response->get_error_code();
-        //     $message = $response->get_error_message();
-        //     $message = sprintf('Error requesting document via CDS URL: %s (%s [%d])', $url, $message, $code);
-        //     error_log($message);
-        //     return $response;
-        // }
-        // $json = json_decode($response['body'], false);
-        // return $json->resources[0];
-        return new stdClass();
+        $pull_url = ee()->db->select('pull_url')
+            ->limit(1)
+            ->get('npr_cds_settings')
+            ->result_array()[0]['pull_url'];
+
+        $request = new Api_request();
+        $request->base_url = $pull_url;
+        $request->params = [];
+        $request->path = $href;
+        $request->version = '';
+        $request->method = 'get';
+
+        $api_service = new Npr_cds_expressionengine();
+        $response = $api_service->request($request);
+
+        $json = json_decode($response->raw, false);
+        return $json->resources[0];
     }
 
     private function get_image_url($image)

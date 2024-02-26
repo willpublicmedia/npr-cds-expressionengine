@@ -41,9 +41,11 @@ class Api_request
 
     private function build_request_url(): string
     {
-        $request_url = $this->base_url . '/'
-        . $this->version . '/'
-        . $this->path;
+        $request_url = rtrim($this->base_url, '/');
+        if (!empty($this->version)) {
+            $request_url = $request_url . '/' . $this->version;
+        }
+        $request_url = $request_url . '/' . ltrim($this->path, '/');
 
         if (array_key_exists('id', $this->params)) {
             $request_url = $request_url . '/' . $this->params['id'];
