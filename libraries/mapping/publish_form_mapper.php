@@ -20,7 +20,7 @@ class Publish_form_mapper
     {
         $profiles = $this->extract_profiles($story->profiles);
 
-        $npr_layout = $this->get_body_with_layout($story);
+        $npr_layout = $this->get_body_with_layout($story, $profiles);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
         /**
          * @see https://npr.github.io/content-distribution-service/getting-started/story-api-migration-guide/table-of-fields.html
@@ -167,9 +167,10 @@ class Publish_form_mapper
      * and return an array of the transformed body and flags for what sort of elements are returned
      *
      * @param stdClass $story Story object created during import
+     * @param array $profiles Array of profile types extracted from story object.
      * @return array with reconstructed body and flags describing returned elements
      */
-    private function get_body_with_layout($story)
+    private function get_body_with_layout(stdClass $story, array $profiles = [])
     {
         $returnary = ['has_image' => false, 'has_video' => false, 'has_external' => false, 'has_slideshow' => false, 'has_video_streaming' => false];
         $body_with_layout = "";
@@ -178,7 +179,7 @@ class Publish_form_mapper
         // $use_npr_featured = !empty(get_option('npr_cds_query_use_featured'));
         $use_npr_featured = true;
 
-        $profiles = $this->extract_profiles($story->profiles);
+        $profiles = count($profiles) > 0 ? $profiles : $this->extract_profiles($story->profiles);
 
         if (in_array('buildout', $profiles) && !empty($story->layout)) {
             foreach ($story->layout as $layout) {
