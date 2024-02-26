@@ -28,14 +28,14 @@ class Publish_form_mapper
          * [x] title
          * [x] subtitle
          * [x] teaser
-         * shortTitle -> socialTitle
-         * miniTeaser -> shortTeaser
-         * shortTeaser
-         * socialTitle
-         * contributorText -> shortTeaser
+         * [x] shortTitle -> socialTitle
+         * [x] miniTeaser -> shortTeaser
+         * [x] shortTeaser
+         * [x] socialTitle
+         * [x] contributorText -> shortTeaser
          * thumbnail -> see image
          * slug -> see slug
-         * id
+         * [x] id
          * partnerId -> deprecated
          * link type=api -> deprecated
          * link type=html -> see webpages link
@@ -83,6 +83,8 @@ class Publish_form_mapper
         $data = [
             'corrections' => $corrections,
             'editorialLastModifiedDate' => $story->editorialLastModifiedDate,
+            'socialTitle' => property_exists($story, 'socialTitle') ? $story->socialTitle : null,
+            'shortTeaser' => property_exists($story, 'shortTeaser') ? $story->socialTitle : null,
             'teaser' => $story->teaser,
             'text' => $text,
             'title' => $story->title,
