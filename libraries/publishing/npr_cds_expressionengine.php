@@ -116,13 +116,12 @@ class Npr_cds_expressionengine
         }
 
         $json = json_decode($raw);
-        // $data = is_null($json) ? $this->set_response_code($json, 400, $response->body) : $this->set_response_code($json);
 
-        // if (array_key_exists('messages', $data)) {
-        //     $response->messages = $data['messages'];
-        // }
-
-        $response->json = $json;
+        if (property_exists($json, 'Message') && !empty($json->Message)) {
+            $response->messages[] = $json->Message;
+        } else {
+            $response->json = $json;
+        }
 
         return $response;
     }
