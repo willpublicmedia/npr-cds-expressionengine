@@ -20,6 +20,7 @@ class Publish_form_mapper
     {
         $profiles = $this->extract_profiles($story->profiles);
         $corrections = $this->get_corrections($story);
+        $images = in_array('has-images', $profiles) ? $this->get_images($story) : null;
 
         $npr_layout = $this->get_body_with_layout($story, $profiles);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
@@ -494,6 +495,49 @@ class Publish_form_mapper
             }
         }
         return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
+    }
+
+    private function get_images($story): array
+    {
+        $images = [];
+
+        foreach ($story->images as $image_ref) {
+            $rels = [];
+
+            $asset_id = $this->extract_asset_id($image_ref->href);
+            if (!empty($image_ref->rels)) {
+                $rels = $image_ref->rels;
+            }
+
+            $asset_current = $story->assets->{$asset_id};
+
+            $images[$asset_id] = [
+                'rels' => $rels,
+                'caption' => property_exists($asset_current, 'caption') ? $asset_current->caption : '',
+                'displaySize' => property_exists($asset_current, 'displaySize') ? $asset_current->displaySize : '',
+                'title' => property_exists($asset_current, 'title') ? $asset_current->title : '',
+                'provider' => property_exists($asset_current, 'provider') ? $asset_current->provider : '',
+                'producer' => property_exists($asset_current, 'producer') ? $asset_current->producer : '',
+            ];
+
+            $enclosures = [];
+            foreach ($asset_current->enclosures as $enclosure) {
+                $data = [
+                    'height' => $enclosure->height,
+                    'width' => $enclosure->width,
+                    'href' => $enclosure->href,
+                    'rels' => $enclosure->rels,
+                ];
+
+                if (property_exists($enclosure, 'hrefTemplate')) {
+                    $data['hrefTemplate'] = $enclosure->hrefTemplate;
+                }
+
+                $enclosures[] = $data;
+            }
+        }
+
+        return $images;
     }
 
     private function parse_credits($asset): string
