@@ -34,7 +34,7 @@ class Publish_form_mapper
          * [x] shortTeaser
          * [x] socialTitle
          * [x] contributorText -> shortTeaser
-         * thumbnail -> see image
+         * [x] thumbnail -> see image
          * slug -> see slug
          * [x] id
          * partnerId -> deprecated
@@ -77,13 +77,14 @@ class Publish_form_mapper
          * album -> see album
          * artist -> see album
          * transcript -> see transcript
-         * story -> see document
-         * image -> see image
+         * [x] story -> see document
+         * [x] image -> see image
          */
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
             'corrections' => $corrections,
             'editorialLastModifiedDate' => $story->editorialLastModifiedDate,
+            'images' => $images,
             'socialTitle' => property_exists($story, 'socialTitle') ? $story->socialTitle : null,
             'shortTeaser' => property_exists($story, 'shortTeaser') ? $story->socialTitle : null,
             'teaser' => $story->teaser,
