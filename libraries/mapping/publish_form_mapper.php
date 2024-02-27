@@ -543,19 +543,18 @@ class Publish_form_mapper
         return $images;
     }
 
-    private function get_video($story): array
+    private function get_video_streaming($asset): array
     {
-        $asset_title = 'YouTube video player';
-        // if (!empty($asset_current->headline)) {
-        //     $asset_title = $asset_current->headline;
-        // }
-        // $returnary['has_video'] = true;
-        // $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
-        return [];
-    }
+        // youtube array reference
+        // $video = [
+        //     'title' => !empty($asset->headline) ? $asset->headline : "YouTube Video Player ($asset->videoId)",
+        //     'startTime' => property_exists($asset, 'startTime') ? $asset->startTime : 0,
+        //     'displaySize' => property_exists($asset, 'displaySize') ? $asset->displaySize : null,
+        //     'videoId' => $asset->videoId,
+        //     'subheadline' => property_exists($asset, 'subheadline') ? $asset->subheadline : null,
+        // ];
 
-    private function get_video_streaming($story): array
-    {
+
         // if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
         //     $asset_caption = [];
         //     $full_caption = '';
@@ -620,11 +619,45 @@ class Publish_form_mapper
         return [];
     }
 
+    private function get_video_youtube($asset): array
+    {
+        $video = [
+            'title' => !empty($asset->headline) ? $asset->headline : "YouTube Video Player ($asset->videoId)",
+            'startTime' => property_exists($asset, 'startTime') ? $asset->startTime : 0,
+            'displaySize' => property_exists($asset, 'displaySize') ? $asset->displaySize : null,
+            'videoId' => $asset->videoId,
+            'subheadline' => property_exists($asset, 'subheadline') ? $asset->subheadline : null,
+        ];
+
+        $video['embed_code'] = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' . $$asset->videoId . '" title="' . $video['title'] . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+
+        return $video;
+    }
+
     private function get_videos($story): array
     {
-        $youtube_videos = $this->get_video($story);
-        $streaming_videos = $this->get_video_streaming($story);
-        $videos = array_merge($youtube_videos, $streaming_videos);
+        $video_refs = $story->videos;
+        $videos = [];
+        foreach ($video_refs as $ref) {
+            $asset_id = $this->extract_asset_id($ref->href);
+            $asset_current = $story->assets->{$asset_id};
+            $asset_profile = $this->extract_asset_profile($asset_current);
+
+            $video = [];
+            switch ($asset_profile) {
+                case 'youtube-video':
+                    $video = $this->get_video_youtube($asset_current);
+                    break;
+                case str_contains($asset_profile, 'player-video');
+                    $video = $this->get_video_streaming($asset_current);
+                default:
+                    // no code
+                    break;
+            }
+
+            $videos[$asset_id] = $video;
+        }
+
         dd($videos);
         return [];
     }
