@@ -553,9 +553,13 @@ class Publish_form_mapper
         //     'videoId' => $asset->videoId,
         //     'subheadline' => property_exists($asset, 'subheadline') ? $asset->subheadline : null,
         // ];
+        
+        if ($asset->isRestrictedToAuthorizedOrgServiceIds == true) {
+            continue;
+        }
 
+        $video = [];
 
-        // if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
         //     $asset_caption = [];
         //     $full_caption = '';
         //     if (!empty($asset_current->title)) {
@@ -615,8 +619,7 @@ class Publish_form_mapper
         //         }
         //     }
         //     $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
-        // }
-        return [];
+        return $video;
     }
 
     private function get_video_youtube($asset): array
