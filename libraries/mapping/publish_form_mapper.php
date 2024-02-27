@@ -21,6 +21,7 @@ class Publish_form_mapper
         $profiles = $this->extract_profiles($story->profiles);
         $corrections = $this->get_corrections($story);
         $images = in_array('has-images', $profiles) || property_exists($story, 'images') ? $this->get_images($story) : null;
+        $videos = in_array('has-videos', $profiles) || property_exists($story, 'videos') ? $this->get_videos($story) : null;
 
         $npr_layout = $this->get_body_with_layout($story, $profiles);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
@@ -539,6 +540,92 @@ class Publish_form_mapper
         }
 
         return $images;
+    }
+
+    private function get_video($story): array
+    {
+        $asset_title = 'YouTube video player';
+        // if (!empty($asset_current->headline)) {
+        //     $asset_title = $asset_current->headline;
+        // }
+        // $returnary['has_video'] = true;
+        // $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
+        return [];
+    }
+
+    private function get_video_streaming($story): array
+    {
+        // if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
+        //     $asset_caption = [];
+        //     $full_caption = '';
+        //     if (!empty($asset_current->title)) {
+        //         $asset_caption[] = $asset_current->title;
+        //     }
+        //     if (!empty($asset_current->caption)) {
+        //         $asset_caption[] = $asset_current->caption;
+        //     }
+        //     $credits = $this->parse_credits($asset_current);
+        //     if (!empty($credits)) {
+        //         $asset_caption[] = '(' . $credits . ')';
+        //     }
+        //     if (!empty($asset_caption)) {
+        //         $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
+        //     }
+        //     $returnary['has_video'] = true;
+        //     $video_asset = '';
+        //     if ($asset_profile == 'player-video') {
+        //         $poster = '';
+        //         $video_url = $asset_current->enclosures[0]->href;
+        //         if (!empty($asset_current->images)) {
+        //             foreach ($asset_current->images as $v_image) {
+        //                 if (in_array('thumbnail', $v_image->rels)) {
+        //                     $v_image_id = $this->extract_asset_id($v_image->href);
+        //                     $v_image_asset = $story->assets->{$v_image_id};
+        //                     foreach ($v_image_asset->enclosures as $vma) {
+        //                         $poster = ' poster="' . $this->get_image_url($vma) . '"';
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //         foreach ($asset_current->enclosures as $v_enclose) {
+        //             if (in_array('mp4-hd', $v_enclose->rels)) {
+        //                 $video_url = $v_enclose->href;
+        //             } elseif (in_array('mp4-high', $v_enclose->rels)) {
+        //                 $video_url = $v_enclose->href;
+        //             }
+        //         }
+        //         $video_asset = '[video mp4="' . $video_url . '"' . $poster . '][/video]';
+        //     } elseif ($asset_profile == 'stream-player-video') {
+        //         if (in_array('hls', $asset_current->enclosures[0]->rels)) {
+        //             $returnary['has_video_streaming'] = true;
+        //             $video_asset = '<video id="' . $asset_current->id . '" controls></video>' .
+        //             '<script>' .
+        //             'let video = document.getElementById("' . $asset_current->id . '");' .
+        //             'if (Hls.isSupported()) {' .
+        //             'let hls = new Hls();' .
+        //             'hls.attachMedia(video);' .
+        //             'hls.on(Hls.Events.MEDIA_ATTACHED, () => {' .
+        //             'hls.loadSource("' . $asset_current->enclosures[0]->href . '");' .
+        //                 'hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {' .
+        //                 'console.log("manifest loaded, found " + data.levels.length + " quality level");' .
+        //                 '});' .
+        //                 '});' .
+        //                 '}' .
+        //                 '</script>';
+        //         }
+        //     }
+        //     $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
+        // }
+        return [];
+    }
+
+    private function get_videos($story): array
+    {
+        $youtube_videos = $this->get_video($story);
+        $streaming_videos = $this->get_video_streaming($story);
+        $videos = array_merge($youtube_videos, $streaming_videos);
+        dd($videos);
+        return [];
     }
 
     private function parse_credits($asset): string
