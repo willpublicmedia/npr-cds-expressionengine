@@ -92,6 +92,7 @@ class Publish_form_mapper
             'text' => $text,
             'title' => $story->title,
             'url_title' => $url_title,
+            'videos' => $videos,
         ];
 
         $entry_builder = new Channel_entry_builder();
