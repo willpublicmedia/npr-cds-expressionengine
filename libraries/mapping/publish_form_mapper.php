@@ -20,7 +20,7 @@ class Publish_form_mapper
     {
         $profiles = $this->extract_profiles($story->profiles);
         $corrections = $this->get_corrections($story);
-        $images = in_array('has-images', $profiles) ? $this->get_images($story) : null;
+        $images = in_array('has-images', $profiles) || property_exists($story, 'images') ? $this->get_images($story) : null;
 
         $npr_layout = $this->get_body_with_layout($story, $profiles);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
