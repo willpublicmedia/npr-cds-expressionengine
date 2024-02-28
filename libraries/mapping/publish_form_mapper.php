@@ -20,6 +20,7 @@ class Publish_form_mapper
     {
         $profiles = $this->extract_profiles($story->profiles);
         $corrections = $this->get_corrections($story);
+        $audio = in_array('has-audio', $profiles) || property_exists($story, 'audio') ? $this->get_audio($story) : null;
         $images = in_array('has-images', $profiles) || property_exists($story, 'images') ? $this->get_images($story) : null;
         $videos = in_array('has-videos', $profiles) || property_exists($story, 'videos') ? $this->get_videos($story) : null;
 
@@ -169,6 +170,55 @@ class Publish_form_mapper
         }
 
         return $url_title;
+    }
+
+    private function get_audio(stdClass $story): array
+    {
+        $audio_refs = $story->audio;
+        $audios = [];
+        foreach ($audio_refs as $ref) {
+            $asset_id = $this->extract_asset_id($ref->href);
+            $asset = $story->assets->{$asset_id};
+            $asset_profile = $this->extract_asset_profile($asset);
+
+            if (!$asset->isAvailable) {
+                continue;
+            }
+
+            $enclosures = [];
+            foreach ($asset->enclosures as $enclosure) {
+                $data = [
+                    'url' => $enclosure->href,
+                    'rels' => !empty($enclosure->rels) ? $enclosure->rels : null,
+                    'type' => !empty($enclosure->type) ? $enclosure->type : null,
+                    'filesize' => !empty($enclosure->fileSize) ? $enclosure->fileSize : null,
+                ];
+                $enclosures[] = $data;
+            }
+
+            $audio = [
+                'available' => $asset->isAvailable,
+                'streamable' => $asset->isStreamable,
+                'downloadable' => $asset->isDownloadable,
+                'embeddable' => $asset->isEmbeddable,
+                'title' => !empty($asset->headline) ? $asset->headline : null,
+                'enclosures' => $enclosures,
+                'duration' => !empty($asset->duration) ? $asset->duration : null,
+                'availabilityMessage' => !empty($asset->availabilityMessage) ? $asset->availabilityMessage : null,
+                'songTitle' => !empty($asset->songTitle) ? $asset->songTitle : null,
+                'songArtist' => !empty($asset->songArtist) ? $asset->songArtist : null,
+                'songTrackNumber' => !empty($asset->songTrackNumber) ? $asset->songTrackNumber : null,
+                'albumTitle' => !empty($asset->albumTitle) ? $asset->albumTitle : null,
+                'albumArtist' => !empty($asset->albumArtist) ? $asset->albumArtist : null,
+                'expiration' => !empty($asset->streamExpirationDateTime) ? $asset->streamExpirationDateTime : null,
+                'transcriptLink' => !empty($asset->transcriptLink) ? $asset->transcriptLink->href : null,
+                'embeddedPlayerLink' => !empty($asset->embeddedPlayerLink) ? $asset->embeddedPlayerLink->href : null,
+            ];
+
+            $audios[$asset_id] = $audio;
+        }
+
+        return $audios;
     }
 
     /**
