@@ -659,8 +659,7 @@ class Publish_form_mapper
             $videos[$asset_id] = $video;
         }
 
-        dd($videos);
-        return [];
+        return $videos;
     }
 
     private function parse_credits($asset): string
