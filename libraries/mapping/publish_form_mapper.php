@@ -659,6 +659,7 @@ class Publish_form_mapper
                     break;
             }
 
+            $video['profile'] = $asset_profile;
             $videos[$asset_id] = $video;
         }
 
