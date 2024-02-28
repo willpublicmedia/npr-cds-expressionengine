@@ -554,7 +554,11 @@ class Publish_form_mapper
         //     'subheadline' => property_exists($asset, 'subheadline') ? $asset->subheadline : null,
         // ];
         
-        if ($asset->isRestrictedToAuthorizedOrgServiceIds == true) {
+        if ($asset->isRestrictedToAuthorizedOrgServiceIds === true) {
+            continue;
+        }
+
+        if ($asset->isEmbeddable === false) {
             continue;
         }
 
