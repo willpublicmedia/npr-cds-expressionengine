@@ -653,6 +653,7 @@ class Publish_form_mapper
                     break;
                 case str_contains($asset_profile, 'player-video');
                     $video = $this->get_video_streaming($asset_current);
+                    break;
                 default:
                     // no code
                     break;
