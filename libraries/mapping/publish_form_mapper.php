@@ -84,6 +84,7 @@ class Publish_form_mapper
          */
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
+            'audio' => $audio,
             'corrections' => $corrections,
             'editorialLastModifiedDate' => $story->editorialLastModifiedDate,
             'images' => $images,
@@ -99,7 +100,6 @@ class Publish_form_mapper
         $entry_builder = new Channel_entry_builder();
         $objects = $entry_builder->assign_data_to_entry($data, $entry, $values);
         $objects['story'] = $story;
-
         return $objects;
     }
 
