@@ -543,14 +543,14 @@ class Publish_form_mapper
         return $images;
     }
 
-    private function get_video_streaming($asset, $profile): array
+    private function get_video_streaming($asset, $profile): ?array
     {
         if ($asset->isRestrictedToAuthorizedOrgServiceIds === true) {
-            continue;
+            return null;
         }
 
         if ($asset->isEmbeddable === false) {
-            continue;
+            return null;
         }
 
         $closedCaptions = null;
@@ -569,24 +569,23 @@ class Publish_form_mapper
             'copyright' => !empty($asset->copyright) ? $asset->copyright : null,
             'displaySize' => !empty($asset->displaySize) ? $asset->displaySize : null,
             'duration' => !empty($asset->duration) ? $asset->duration : 1,
-            'closedCaptions' => $closedCaptions
+            'closedCaptions' => $closedCaptions,
         ];
-        
-        
+
         if ($profile === 'player-video') {
             $enclosures = [];
             foreach ($asset->enclosures as $enclosure) {
                 $data = [
                     'url' => $enclosure->href,
                     'rels' => $enclosure->rels,
-                    'type' => $enclosure->type
+                    'type' => $enclosure->type,
                 ];
 
                 $enclosures[] = $data;
             }
 
             $video['enclosures'] = $enclosures;
-            
+
             if (!empty($asset->images)) {
                 foreach ($asset->images as $v_image) {
                     if (in_array('thumbnail', $v_image->rels)) {
@@ -615,7 +614,7 @@ class Publish_form_mapper
                 $video['embed_code'] = $embed_code;
             }
         }
-        
+
         return $video;
     }
 
