@@ -543,17 +543,8 @@ class Publish_form_mapper
         return $images;
     }
 
-    private function get_video_streaming($asset): array
+    private function get_video_streaming($asset, $profile): array
     {
-        // youtube array reference
-        // $video = [
-        //     'title' => !empty($asset->headline) ? $asset->headline : "YouTube Video Player ($asset->videoId)",
-        //     'startTime' => property_exists($asset, 'startTime') ? $asset->startTime : 0,
-        //     'displaySize' => property_exists($asset, 'displaySize') ? $asset->displaySize : null,
-        //     'videoId' => $asset->videoId,
-        //     'subheadline' => property_exists($asset, 'subheadline') ? $asset->subheadline : null,
-        // ];
-        
         if ($asset->isRestrictedToAuthorizedOrgServiceIds === true) {
             continue;
         }
@@ -562,16 +553,24 @@ class Publish_form_mapper
             continue;
         }
 
-        $video = [];
+        $closedCaptions = null;
+        if (!empty($asset->closedCaptions)) {
+            $closedCaptions = [];
+            foreach ($asset->closedCaptions as $caption) {
+                $closedCaptions[] = $caption->href;
+            }
+        }
 
-        $title = !empty($asset->title) ? $asset->title : "Video {$asset->id}";
-        $caption = !empty($asset->caption) ? $asset->caption : null;
-        $producer = !empty($asset->producer) ? $asset->producer : null;
-        $provider = !empty($asset->provider) ? $asset->provider : null;
-        $copyright = !empty($asset->copyright) ? $asset->copyright : null;
-        $displaySize = !empty($asset->displaySize) ? $asset->displaySize : null;
-        $duration = !empty($asset->duration) ? $asset->duration : 1;
-        $duration = !empty($asset->duration) ? $asset->duration : 1;
+        $video = [
+            'title' => !empty($asset->title) ? $asset->title : "Video {$asset->id}",
+            'caption' => !empty($asset->caption) ? $asset->caption : null,
+            'producer' => !empty($asset->producer) ? $asset->producer : null,
+            'provider' => !empty($asset->provider) ? $asset->provider : null,
+            'copyright' => !empty($asset->copyright) ? $asset->copyright : null,
+            'displaySize' => !empty($asset->displaySize) ? $asset->displaySize : null,
+            'duration' => !empty($asset->duration) ? $asset->duration : 1,
+            'closedCaptions' => $closedCaptions
+        ];
         
         //     $video_asset = '';
         //     if ($asset_profile == 'player-video') {
@@ -615,7 +614,6 @@ class Publish_form_mapper
         //                 '</script>';
         //         }
         //     }
-        //     $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
         return $video;
     }
 
@@ -649,7 +647,7 @@ class Publish_form_mapper
                     $video = $this->get_video_youtube($asset_current);
                     break;
                 case str_contains($asset_profile, 'player-video');
-                    $video = $this->get_video_streaming($asset_current);
+                    $video = $this->get_video_streaming($asset_current, $asset_profile);
                     break;
                 default:
                     // no code
