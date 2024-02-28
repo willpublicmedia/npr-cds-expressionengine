@@ -211,9 +211,14 @@ class Publish_form_mapper
                 'albumTitle' => !empty($asset->albumTitle) ? $asset->albumTitle : null,
                 'albumArtist' => !empty($asset->albumArtist) ? $asset->albumArtist : null,
                 'expiration' => !empty($asset->streamExpirationDateTime) ? $asset->streamExpirationDateTime : null,
-                'transcriptLink' => !empty($asset->transcriptLink) ? $asset->transcriptLink->href : null,
                 'embeddedPlayerLink' => !empty($asset->embeddedPlayerLink) ? $asset->embeddedPlayerLink->href : null,
             ];
+
+            if (!empty($asset->transcriptLink)) {
+                $transcriptLink = $asset->transcriptLink->href;
+                $transcriptDoc = $this->get_document($transcriptLink);
+                $audio['transcript'] = $transcriptDoc->text;
+            }
 
             $audios[$asset_id] = $audio;
         }
