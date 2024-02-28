@@ -86,7 +86,7 @@ class Publish_form_mapper
         $data = [
             'audio' => $audio,
             'corrections' => $corrections,
-            'editorialLastModifiedDate' => $story->editorialLastModifiedDate,
+            'editorialLastModifiedDate' => !empty($story->editorialLastModifiedDateTime) ? $story->editorialLastModifiedDateTime : null,
             'images' => $images,
             'socialTitle' => property_exists($story, 'socialTitle') ? $story->socialTitle : null,
             'shortTeaser' => property_exists($story, 'shortTeaser') ? $story->socialTitle : null,
