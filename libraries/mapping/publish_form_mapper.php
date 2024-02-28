@@ -572,48 +572,50 @@ class Publish_form_mapper
             'closedCaptions' => $closedCaptions
         ];
         
-        //     $video_asset = '';
-        //     if ($asset_profile == 'player-video') {
-        //         $poster = '';
-        //         $video_url = $asset_current->enclosures[0]->href;
-        //         if (!empty($asset_current->images)) {
-        //             foreach ($asset_current->images as $v_image) {
-        //                 if (in_array('thumbnail', $v_image->rels)) {
-        //                     $v_image_id = $this->extract_asset_id($v_image->href);
-        //                     $v_image_asset = $story->assets->{$v_image_id};
-        //                     foreach ($v_image_asset->enclosures as $vma) {
-        //                         $poster = ' poster="' . $this->get_image_url($vma) . '"';
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //         foreach ($asset_current->enclosures as $v_enclose) {
-        //             if (in_array('mp4-hd', $v_enclose->rels)) {
-        //                 $video_url = $v_enclose->href;
-        //             } elseif (in_array('mp4-high', $v_enclose->rels)) {
-        //                 $video_url = $v_enclose->href;
-        //             }
-        //         }
-        //         $video_asset = '[video mp4="' . $video_url . '"' . $poster . '][/video]';
-        //     } elseif ($asset_profile == 'stream-player-video') {
-        //         if (in_array('hls', $asset_current->enclosures[0]->rels)) {
-        //             $returnary['has_video_streaming'] = true;
-        //             $video_asset = '<video id="' . $asset_current->id . '" controls></video>' .
-        //             '<script>' .
-        //             'let video = document.getElementById("' . $asset_current->id . '");' .
-        //             'if (Hls.isSupported()) {' .
-        //             'let hls = new Hls();' .
-        //             'hls.attachMedia(video);' .
-        //             'hls.on(Hls.Events.MEDIA_ATTACHED, () => {' .
-        //             'hls.loadSource("' . $asset_current->enclosures[0]->href . '");' .
-        //                 'hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {' .
-        //                 'console.log("manifest loaded, found " + data.levels.length + " quality level");' .
-        //                 '});' .
-        //                 '});' .
-        //                 '}' .
-        //                 '</script>';
-        //         }
-        //     }
+        
+        if ($profile === 'player-video') {
+            $enclosures = [];
+            foreach ($asset->enclosures as $enclosure) {
+                $data = [
+                    'url' => $enclosure->href,
+                    'rels' => $enclosure->rels,
+                    'type' => $enclosure->type
+                ];
+
+                $enclosures[] = $data;
+            }
+
+            $video['enclosures'] = $enclosures;
+            
+            if (!empty($asset->images)) {
+                foreach ($asset->images as $v_image) {
+                    if (in_array('thumbnail', $v_image->rels)) {
+                        $v_image_id = $this->extract_asset_id($v_image->href);
+                        $video['thumbnail'] = $v_image;
+                    }
+                }
+            }
+        } elseif ($profile === 'stream-player-video') {
+            if (in_array('hls', $asset->enclosures[0]->rels)) {
+                $embed_code = '<video id="' . $asset->id . '" controls></video>' .
+                '<script>' .
+                'let video = document.getElementById("' . $asset->id . '");' .
+                'if (Hls.isSupported()) {' .
+                'let hls = new Hls();' .
+                'hls.attachMedia(video);' .
+                'hls.on(Hls.Events.MEDIA_ATTACHED, () => {' .
+                'hls.loadSource("' . $asset->enclosures[0]->href . '");' .
+                    'hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {' .
+                    'console.log("manifest loaded, found " + data.levels.length + " quality level");' .
+                    '});' .
+                    '});' .
+                    '}' .
+                    '</script>';
+
+                $video['embed_code'] = $embed_code;
+            }
+        }
+        
         return $video;
     }
 
