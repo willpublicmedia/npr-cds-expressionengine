@@ -560,22 +560,15 @@ class Publish_form_mapper
 
         $video = [];
 
-        //     $asset_caption = [];
-        //     $full_caption = '';
-        //     if (!empty($asset_current->title)) {
-        //         $asset_caption[] = $asset_current->title;
-        //     }
-        //     if (!empty($asset_current->caption)) {
-        //         $asset_caption[] = $asset_current->caption;
-        //     }
-        //     $credits = $this->parse_credits($asset_current);
-        //     if (!empty($credits)) {
-        //         $asset_caption[] = '(' . $credits . ')';
-        //     }
-        //     if (!empty($asset_caption)) {
-        //         $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
-        //     }
-        //     $returnary['has_video'] = true;
+        $title = !empty($asset->title) ? $asset->title : "Video {$asset->id}";
+        $caption = !empty($asset->caption) ? $asset->caption : null;
+        $producer = !empty($asset->producer) ? $asset->producer : null;
+        $provider = !empty($asset->provider) ? $asset->provider : null;
+        $copyright = !empty($asset->copyright) ? $asset->copyright : null;
+        $displaySize = !empty($asset->displaySize) ? $asset->displaySize : null;
+        $duration = !empty($asset->duration) ? $asset->duration : 1;
+        $duration = !empty($asset->duration) ? $asset->duration : 1;
+        
         //     $video_asset = '';
         //     if ($asset_profile == 'player-video') {
         //         $poster = '';
