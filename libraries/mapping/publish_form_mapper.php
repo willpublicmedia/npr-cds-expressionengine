@@ -23,6 +23,7 @@ class Publish_form_mapper
         $audio = in_array('has-audio', $profiles) || property_exists($story, 'audio') ? $this->get_audio($story) : null;
         $images = in_array('has-images', $profiles) || property_exists($story, 'images') ? $this->get_images($story) : null;
         $videos = in_array('has-videos', $profiles) || property_exists($story, 'videos') ? $this->get_videos($story) : null;
+        $bylines = property_exists($story, 'bylines') ? $this->get_bylines($story) : null;
 
         $npr_layout = $this->get_body_with_layout($story, $profiles);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
@@ -51,7 +52,7 @@ class Publish_form_mapper
          * priorityKeywords
          * organization -> see organization
          * parent ->  see parent
-         * byline -> see byline
+         * [x] byline -> see byline
          * [x] text
          * [x] textWithHtml -> text
          * layout -> see layout
@@ -85,6 +86,7 @@ class Publish_form_mapper
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
             'audio' => $audio,
+            'bylines' => $bylines,
             'corrections' => $corrections,
             'editorialLastModifiedDate' => !empty($story->editorialLastModifiedDateTime) ? $story->editorialLastModifiedDateTime : null,
             'images' => $images,
@@ -488,6 +490,27 @@ class Publish_form_mapper
         }
         $returnary['body'] = $body_with_layout;
         return $returnary;
+    }
+
+    private function get_bylines(stdClass $story): ?array
+    {
+        $byline_refs = $story->bylines;
+
+        $bylines = [];
+        foreach ($byline_refs as $ref) {
+            $id = $this->extract_asset_id($ref);
+            $asset = $story->assets->{$id};
+
+            if (property_exists($asset, 'name')) {
+                $bylines[] = $asset->name;
+            } elseif (property_exists($asset, 'bylineDocuments')) {
+                $bio_id = $this->extract_asset_id($asset->bylineDocuments[0]->href);
+                $bio = $this->get_document($bio_id);
+                $bylines[] = $bio->title;
+            }
+        }
+
+        return $bylines;
     }
 
     private function get_corrections(stdClass $story): ?array
