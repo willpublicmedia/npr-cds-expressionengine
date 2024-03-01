@@ -50,7 +50,8 @@ class Publish_form_mapper
             'videos' => $videos,
         ];
 
-        $data = Story_api_compatibility_mapper::map_cds_to_story($data);
+        $api_compat = new Story_api_compatibility_mapper();
+        $data = $api_compat->map_cds_to_story($data);
 
         $entry_builder = new Channel_entry_builder();
         $objects = $entry_builder->assign_data_to_entry($data, $entry, $values);
