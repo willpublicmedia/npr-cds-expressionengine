@@ -145,13 +145,13 @@ class Story_api_compatibility_mapper
             //         continue;
             //     }
 
-            // $file_segments = $this->sideload_file($model);
-            //     $file = $this->file_manager_compatibility_mode === true ?
-            //         $file_segments['dir'] . $file_segments['file']->file_name :
-            //         '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
+            $file_segments = $this->sideload_file($enclosure);
+            $file = $this->file_manager_compatibility_mode === true ?
+            $file_segments['dir'] . $file_segments['file']->file_name :
+            '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
 
             $crop_array[] = [
-                // 'file' => $file,
+                'file' => $file,
                 'type' => $enclosure['rels'],
                 'src' => $enclosure['href'],
                 'height' => array_key_exists('height', $enclosure) ? $enclosure['height'] : '',
@@ -211,11 +211,12 @@ class Story_api_compatibility_mapper
 
     }
 
-    private function sideload_file($model, $field = 'userfile')
+    private function sideload_file(array $data, $field = 'userfile')
     {
         // rename file if it'll be problematic.
-        $filename = $this->strip_sideloaded_query_strings($model->src);
+        $filename = $this->strip_sideloaded_query_strings($data['href']);
 
+        // see if file has already been uploaded
         $file = ee('Model')->get('File')
             ->filter('upload_location_id', $this->settings->npr_image_destination)
             ->filter('file_name', $filename)
@@ -241,7 +242,7 @@ class Story_api_compatibility_mapper
         // upload path should be set by library loader, but it's not.
         ee()->upload->set_upload_path($destination->server_path);
 
-        $raw = file_get_contents($model->src);
+        $raw = file_get_contents($data['href']);
 
         if (ee()->upload->raw_upload($filename, $raw) === false) {
             ee('CP/Alert')->makeInline('shared-form')
@@ -265,7 +266,7 @@ class Story_api_compatibility_mapper
         $thumb_info = ee()->filemanager->get_thumb($upload_data['file_name'], $destination->id);
 
         // Build list of information to save and return
-        $file_data = array(
+        $file_data = [
             'upload_location_id' => $destination->id,
             'site_id' => ee()->config->item('site_id'),
 
@@ -288,13 +289,13 @@ class Story_api_compatibility_mapper
             'file_hw_original' => $upload_data['image_height'] . ' ' . $upload_data['image_width'],
             'max_width' => $destination->max_width,
             'max_height' => $destination->max_height,
-        );
+        ];
 
-        $is_crop = property_exists($model, 'image_id') ? true : false;
+        $is_crop = array_key_exists('image_id', $data) ? true : false;
 
         $file_data['title'] = $filename;
-        $file_data['description'] = $is_crop ? $model->Image->caption : $model->caption->value;
-        $file_data['credit'] = $is_crop ? $this->map_image_credit($model->Image) : $this->map_image_credit($model);
+        // $file_data['description'] = $is_crop ? $model->Image->caption : $model->caption->value;
+        // $file_data['credit'] = $is_crop ? $this->map_image_credit($model->Image) : $this->map_image_credit($model);
 
         $saved = ee()->filemanager->save_file($upload_data['full_path'], $destination->id, $upload_data);
 
@@ -308,18 +309,18 @@ class Story_api_compatibility_mapper
             ->first();
 
         $file->title = $file_data['title'];
-        $file->description = $file_data['description'];
-        $file->credit = $file_data['credit'];
+        // $file->description = $file_data['description'];
+        // $file->credit = $file_data['credit'];
         $file->save();
 
         $dir = $this->file_manager_compatibility_mode === true ?
         '{filedir_' . $destination->id . '}' :
         'file';
 
-        $results = array(
+        $results = [
             'dir' => $dir,
             'file' => $file,
-        );
+        ];
 
         return $results;
     }
