@@ -5,6 +5,11 @@ namespace IllinoisPublicMedia\NprCds\Libraries\Mapping;
 require_once __DIR__ . '/../utilities/field_utils.php';
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
+// see /ee/ExpressionEngine/Config/constants.php
+if (!defined('FILE_WRITE_MODE')) {
+    define('FILE_WRITE_MODE', 0666);
+}
+
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
@@ -13,9 +18,25 @@ class Story_api_compatibility_mapper
 {
     private Field_utils $field_utils;
 
+    private $file_manager_compatibility_mode = true;
+
+    private $settings;
+
     public function __construct()
     {
         $this->field_utils = new Field_utils();
+
+        if (APP_VER >= 7) {
+            $compatibility_mode = ee()->config->item('file_manager_compatibility_mode');
+            if ($compatibility_mode === 'n') {
+                $this->file_manager_compatibility_mode = false;
+            }
+        }
+
+        $this->settings = ee()->db
+            ->limit(1)
+            ->get('npr_story_api_settings')
+            ->row();
     }
 
     public function map_cds_to_story(array $cds_data): array
@@ -118,16 +139,13 @@ class Story_api_compatibility_mapper
     {
         $crop_array = [];
         foreach ($enclosures as $enclosure) {
-            dd($enclosure);
-            // $primary = in_array('primary', $data['rels']);
-
             //     // we only care about the largest image size.
             //     // caution: watch for <image primary='false' /> edge case.
             //     if (!$primary) {
             //         continue;
             //     }
 
-            //     $file_segments = $this->sideload_file($model);
+            // $file_segments = $this->sideload_file($model);
             //     $file = $this->file_manager_compatibility_mode === true ?
             //         $file_segments['dir'] . $file_segments['file']->file_name :
             //         '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
@@ -191,5 +209,136 @@ class Story_api_compatibility_mapper
         $allowed = array_keys($permissions, 'true');
         return implode(', ', $allowed);
 
+    }
+
+    private function sideload_file($model, $field = 'userfile')
+    {
+        // rename file if it'll be problematic.
+        $filename = $this->strip_sideloaded_query_strings($model->src);
+
+        $file = ee('Model')->get('File')
+            ->filter('upload_location_id', $this->settings->npr_image_destination)
+            ->filter('file_name', $filename)
+            ->first();
+
+        if ($file != null) {
+            $dir = $this->file_manager_compatibility_mode ?
+            '{filedir_' . $this->settings->npr_image_destination . '}' :
+            'file';
+
+            return array(
+                'dir' => $dir,
+                'file' => $file,
+            );
+        }
+
+        $destination = ee('Model')->get('UploadDestination')
+            ->filter('id', $this->settings->npr_image_destination)
+            ->filter('site_id', ee()->config->item('site_id'))
+            ->first();
+
+        ee()->load->library('upload', array('upload_path' => $destination->server_path));
+        // upload path should be set by library loader, but it's not.
+        ee()->upload->set_upload_path($destination->server_path);
+
+        $raw = file_get_contents($model->src);
+
+        if (ee()->upload->raw_upload($filename, $raw) === false) {
+            ee('CP/Alert')->makeInline('shared-form')
+                ->asIssue()
+                ->withTitle(lang('upload_filedata_error'))
+                ->addToBody('')
+                ->now();
+
+            return false;
+        }
+
+        // from filemanager
+        $upload_data = ee()->upload->data();
+
+        // (try to) Set proper permissions
+        @chmod($upload_data['full_path'], FILE_WRITE_MODE);
+        // --------------------------------------------------------------------
+        // Add file the database
+
+        ee()->load->library('filemanager', array('upload_path' => dirname($destination->server_path)));
+        $thumb_info = ee()->filemanager->get_thumb($upload_data['file_name'], $destination->id);
+
+        // Build list of information to save and return
+        $file_data = array(
+            'upload_location_id' => $destination->id,
+            'site_id' => ee()->config->item('site_id'),
+
+            'file_name' => $upload_data['file_name'],
+            'orig_name' => $filename, // name before any upload library processing
+            'file_data_orig_name' => $upload_data['orig_name'], // name after upload lib but before duplicate checks
+
+            'is_image' => $upload_data['is_image'],
+            'mime_type' => $upload_data['file_type'],
+
+            'file_thumb' => $thumb_info['thumb'],
+            'thumb_class' => $thumb_info['thumb_class'],
+
+            'modified_by_member_id' => ee()->session->userdata('member_id'),
+            'uploaded_by_member_id' => ee()->session->userdata('member_id'),
+
+            'file_size' => $upload_data['file_size'] * 1024, // Bring it back to Bytes from KB
+            'file_height' => $upload_data['image_height'],
+            'file_width' => $upload_data['image_width'],
+            'file_hw_original' => $upload_data['image_height'] . ' ' . $upload_data['image_width'],
+            'max_width' => $destination->max_width,
+            'max_height' => $destination->max_height,
+        );
+
+        $is_crop = property_exists($model, 'image_id') ? true : false;
+
+        $file_data['title'] = $filename;
+        $file_data['description'] = $is_crop ? $model->Image->caption : $model->caption->value;
+        $file_data['credit'] = $is_crop ? $this->map_image_credit($model->Image) : $this->map_image_credit($model);
+
+        $saved = ee()->filemanager->save_file($upload_data['full_path'], $destination->id, $upload_data);
+
+        if ($saved['status'] === false) {
+            return;
+        }
+
+        $file = ee('Model')->get('File')
+            ->filter('file_id', $saved['file_id'])
+            ->limit(1)
+            ->first();
+
+        $file->title = $file_data['title'];
+        $file->description = $file_data['description'];
+        $file->credit = $file_data['credit'];
+        $file->save();
+
+        $dir = $this->file_manager_compatibility_mode === true ?
+        '{filedir_' . $destination->id . '}' :
+        'file';
+
+        $results = array(
+            'dir' => $dir,
+            'file' => $file,
+        );
+
+        return $results;
+    }
+
+    private function strip_sideloaded_query_strings($url)
+    {
+        $url_data = parse_url($url);
+        $filename = basename($url_data['path']);
+
+        if (!array_key_exists('query', $url_data)) {
+            return $filename;
+        }
+
+        $path_data = pathinfo($filename);
+        $filename = "{$path_data['filename']}-{$url_data['query']}.{$path_data['extension']}";
+
+        ee()->load->library('upload');
+        $filename = ee()->upload->clean_file_name($filename);
+
+        return $filename;
     }
 }
