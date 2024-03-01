@@ -35,12 +35,12 @@ class Publish_form_mapper
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
             'audio' => $audio,
-            'audio_runby_date' => !empty($story->recommendUntilDateTime) ? $story->recommendUntilDateTime : null,
             'bylines' => $bylines,
             'corrections' => $corrections,
             'last_modified_date' => !empty($story->editorialLastModifiedDateTime) ? $story->editorialLastModifiedDateTime : null,
             'images' => $images,
             'pub_date' => !empty($story->publishDateTime) ? $story->publishDateTime : null,
+            'recommendUntilDateTime' => !empty($story->recommendUntilDateTime) ? $story->recommendUntilDateTime : null,
             'socialTitle' => property_exists($story, 'socialTitle') ? $story->socialTitle : null,
             'shortTeaser' => property_exists($story, 'shortTeaser') ? $story->socialTitle : null,
             'teaser' => $story->teaser,

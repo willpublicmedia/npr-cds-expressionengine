@@ -14,6 +14,12 @@ class Story_api_compatibility_mapper
 
         foreach ($cds_data as $key => $value) {
             switch ($key) {
+                case ($key === 'recommendUntilDateTime'):
+                    $story_api_compatible_data['audio_runby_date'] = $value;
+                    break;
+                case ($key === 'recommendUntilDateTime'):
+                    $story_api_compatible_data['audio_runby_date'] = $value;
+                    break;
                 case ($key === 'bylines'):
                     $story_api_compatible_data['byline'] = implode(', ', $value);
                     break;
