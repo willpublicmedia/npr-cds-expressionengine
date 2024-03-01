@@ -546,16 +546,6 @@ class Publish_form_mapper
 
             $asset_current = $story->assets->{$asset_id};
 
-            $images[$asset_id] = [
-                'rels' => $rels,
-                'caption' => property_exists($asset_current, 'caption') ? $asset_current->caption : '',
-                'copyright' => property_exists($asset_current, 'copyright') ? $asset_current->copyright : null,
-                'displaySize' => property_exists($asset_current, 'displaySize') ? $asset_current->displaySize : '',
-                'title' => property_exists($asset_current, 'title') ? $asset_current->title : '',
-                'provider' => property_exists($asset_current, 'provider') ? $asset_current->provider : '',
-                'producer' => property_exists($asset_current, 'producer') ? $asset_current->producer : '',
-            ];
-
             $enclosures = [];
             foreach ($asset_current->enclosures as $enclosure) {
                 $data = [
@@ -571,6 +561,17 @@ class Publish_form_mapper
 
                 $enclosures[] = $data;
             }
+
+            $images[$asset_id] = [
+                'rels' => $rels,
+                'caption' => property_exists($asset_current, 'caption') ? $asset_current->caption : '',
+                'copyright' => property_exists($asset_current, 'copyright') ? $asset_current->copyright : null,
+                'displaySize' => property_exists($asset_current, 'displaySize') ? $asset_current->displaySize : '',
+                'title' => property_exists($asset_current, 'title') ? $asset_current->title : '',
+                'provider' => property_exists($asset_current, 'provider') ? $asset_current->provider : '',
+                'producer' => property_exists($asset_current, 'producer') ? $asset_current->producer : '',
+                'enclosures' => $enclosures,
+            ];
         }
 
         return $images;
