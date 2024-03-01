@@ -498,7 +498,7 @@ class Publish_form_mapper
 
         $bylines = [];
         foreach ($byline_refs as $ref) {
-            $id = $this->extract_asset_id($ref);
+            $id = $this->extract_asset_id($ref->href);
             $asset = $story->assets->{$id};
 
             if (property_exists($asset, 'name')) {
