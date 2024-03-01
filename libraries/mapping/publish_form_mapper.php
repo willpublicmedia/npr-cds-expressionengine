@@ -504,8 +504,8 @@ class Publish_form_mapper
             if (property_exists($asset, 'name')) {
                 $bylines[] = $asset->name;
             } elseif (property_exists($asset, 'bylineDocuments')) {
-                $bio_id = $this->extract_asset_id($asset->bylineDocuments[0]->href);
-                $bio = $this->get_document($bio_id);
+                $bio_href = ltrim($asset->bylineDocuments[0]->href, '#');
+                $bio = $this->get_document($bio_href);
                 $bylines[] = $bio->title;
             }
         }
