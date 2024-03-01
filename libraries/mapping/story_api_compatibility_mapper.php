@@ -10,6 +10,15 @@ class Story_api_compatibility_mapper
 {
     public static function map_cds_to_story(array $cds_data): array
     {
-        return $cds_data;
+        $story_api_compatible_data = [];
+
+        foreach ($cds_data as $key => $value) {
+            switch ($key) {
+                default:
+                    $story_api_compatible_data[$key] = $value;
+                    break;
+            }
+        }
+        return $story_api_compatible_data;
     }
 }
