@@ -29,67 +29,16 @@ class Publish_form_mapper
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
         /**
          * @see https://npr.github.io/content-distribution-service/getting-started/story-api-migration-guide/table-of-fields.html
-         * [x] title
-         * [x] subtitle
-         * [x] teaser
-         * [x] shortTitle -> socialTitle
-         * [x] miniTeaser -> shortTeaser
-         * [x] shortTeaser
-         * [x] socialTitle
-         * [x] contributorText -> shortTeaser
-         * [x] thumbnail -> see image
-         * slug -> see slug
-         * [x] id
-         * partnerId -> deprecated
-         * link type=api -> deprecated
-         * link type=html -> see webpages link
-         * storyDate -> publishedDate
-         * [x] pubDate -> editorialLastModifiedDate
-         * [x] publishedDate -> editorialLastModifiedDate
-         * [x] lastModifiedDate -> deprecated
-         * audioRunByDate -> recommendUntilDateTime
-         * keywords -> deprecated
-         * priorityKeywords
-         * organization -> see organization
-         * parent ->  see parent
-         * [x] byline -> see byline
-         * [x] text
-         * [x] textWithHtml -> text
-         * layout -> see layout
-         * relatedLink -> see relatedLink
-         * htmlAsset -> see htmlAsset
-         * multimedia -> see multimedia
-         * show -> see show
-         * correction -> see correction
-         * [x] product -> deprecated
-         * [x] promoArt -> deprecated
-         * [x] staticGraphic -> deprecated
-         * [x] performance -> deprecated
-         * [x] fullStory -> deprecated
-         * [x] fullText -> text
-         * [x] listText -> deprecated
-         * [x] message -> deprecated
-         * [x] bookEdition deprecated
-         * [x] book -> deprecated
-         * [x] trait -> deprecated
-         * [x] author -> deprecated
-         * [x] externalAsset -> deprecated
-         * [x] calendarEvent -> deprecated
-         * audio -> see audio
-         * pullQuote
-         * album -> see album
-         * artist -> see album
-         * transcript -> see transcript
-         * [x] story -> see document
-         * [x] image -> see image
          */
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
             'audio' => $audio,
+            'audio_runby_date' => !empty($story->recommendUntilDateTime) ? $story->recommendUntilDateTime : null,
             'byline' => implode(', ', $bylines),
             'corrections' => $corrections,
-            'editorialLastModifiedDate' => !empty($story->editorialLastModifiedDateTime) ? $story->editorialLastModifiedDateTime : null,
+            'last_modified_date' => !empty($story->editorialLastModifiedDateTime) ? $story->editorialLastModifiedDateTime : null,
             'images' => $images,
+            'pub_date' => !empty($story->publishDateTime) ? $story->publishDateTime : null,
             'socialTitle' => property_exists($story, 'socialTitle') ? $story->socialTitle : null,
             'shortTeaser' => property_exists($story, 'shortTeaser') ? $story->socialTitle : null,
             'teaser' => $story->teaser,
