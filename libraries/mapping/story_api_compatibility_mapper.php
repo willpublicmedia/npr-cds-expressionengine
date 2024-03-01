@@ -34,6 +34,9 @@ class Story_api_compatibility_mapper
                 case ($key === 'bylines'):
                     $story_api_compatible_data['byline'] = implode(', ', $value);
                     break;
+                case ($key === 'images'):
+                    $story_api_compatible_data['images'] = $this->map_images($value);
+                    break;
                 case ($key === 'recommendUntilDateTime'):
                     $story_api_compatible_data['audio_runby_date'] = $value;
                     break;
@@ -98,6 +101,94 @@ class Story_api_compatibility_mapper
         }
 
         return $api_audio;
+    }
+
+    private function map_image_credit(array $data): string
+    {
+        $credit = "{$data['producer']}/{$data['provider']}";
+
+        if (!is_null($data['copyright'])) {
+            $credit = "Copyright {$data['copyright']} {$credit}";
+        }
+
+        return $credit;
+    }
+
+    private function map_image_crops(array $image_data): array
+    {
+        $crop_array = [];
+        foreach ($image_data as $data) {
+            // $primary = in_array('primary', $data['rels']);
+
+            //     // we only care about the largest image size.
+            //     // caution: watch for <image primary='false' /> edge case.
+            //     if (!$primary) {
+            //         continue;
+            //     }
+
+            //     $file_segments = $this->sideload_file($model);
+            //     $file = $this->file_manager_compatibility_mode === true ?
+            //         $file_segments['dir'] . $file_segments['file']->file_name :
+            //         '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
+
+            //     $crop_array[] = array(
+            //         'file' => $file,
+            //         'type' => $model->type,
+            //         'src' => $model->src,
+            //         'height' => property_exists($model, 'height') ? $model->height : '',
+            //         'width' => property_exists($model, 'width') ? $model->width : '',
+            //         'primary' => $primary,
+            //     );
+        }
+
+        return $crop_array;
+    }
+
+    private function map_images(array $image_data): array
+    {
+        $image_array = [];
+
+        $field_id = $this->field_utils->get_field_id('npr_images');
+        $grid_column_names = $this->field_utils->get_grid_column_names($field_id);
+
+        $count = 1;
+        foreach ($image_data as $id => $data) {
+            $credit = $this->map_image_credit($data);
+            $primary = in_array('primary', $data['rels']);
+            dd($data);
+            $crops = $this->map_image_crops($data);
+
+            //     $extra_images = $this->map_image_crops($model);
+            //     if (array_key_exists(0, $extra_images)) {
+            //         $crops[] = $extra_images[0];
+            //     }
+
+            foreach ($crops as $crop) {
+                //         // we only care about the largest image size.
+                //         if (!$crop['primary']) {
+                //             continue;
+                //         }
+
+                // should be row_id_x if row exists, but this doesn't seem to duplicate entries.
+                $row_name = "new_row_$count";
+
+                $image = array(
+                    //             $grid_column_names['file'] => $crop['file'],
+                    //             $grid_column_names['crop_type'] => $crop['type'],
+                    //             $grid_column_names['crop_src'] => $crop['src'],
+                    //             $grid_column_names['crop_width'] => $crop['width'],
+                    $grid_column_names['crop_primary'] => $primary,
+                    $grid_column_names['crop_caption'] => $data['caption'],
+                    //             $grid_column_names['crop_provider_url'] => $model->providerUrl,
+                    $grid_column_names['crop_credit'] => $credit,
+                );
+
+                $image_array['rows'][$row_name] = $image;
+                $count++;
+            }
+        }
+
+        return $image_array;
     }
 
     private function parse_audio_permissions(array $permissions): string
