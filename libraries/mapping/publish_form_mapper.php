@@ -86,7 +86,7 @@ class Publish_form_mapper
         $url_title = $this->generate_url_title($entry, $story->title);
         $data = [
             'audio' => $audio,
-            'bylines' => $bylines,
+            'byline' => implode(', ', $bylines),
             'corrections' => $corrections,
             'editorialLastModifiedDate' => !empty($story->editorialLastModifiedDateTime) ? $story->editorialLastModifiedDateTime : null,
             'images' => $images,
