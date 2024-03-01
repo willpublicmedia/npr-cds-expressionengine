@@ -36,7 +36,7 @@ class Publish_form_mapper
         $data = [
             'audio' => $audio,
             'audio_runby_date' => !empty($story->recommendUntilDateTime) ? $story->recommendUntilDateTime : null,
-            'byline' => implode(', ', $bylines),
+            'bylines' => $bylines,
             'corrections' => $corrections,
             'last_modified_date' => !empty($story->editorialLastModifiedDateTime) ? $story->editorialLastModifiedDateTime : null,
             'images' => $images,

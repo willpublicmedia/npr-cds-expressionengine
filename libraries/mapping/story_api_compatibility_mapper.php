@@ -14,6 +14,9 @@ class Story_api_compatibility_mapper
 
         foreach ($cds_data as $key => $value) {
             switch ($key) {
+                case ($key === 'bylines'):
+                    $story_api_compatible_data['byline'] = implode(', ', $value);
+                    break;
                 default:
                     $story_api_compatible_data[$key] = $value;
                     break;
