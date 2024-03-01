@@ -8,8 +8,10 @@ if (!defined('BASEPATH')) {
 
 require_once __DIR__ . '/../utilities/channel_entry_builder.php';
 require_once __DIR__ . '/../publishing/npr_cds_expressionengine.php';
+require_once __DIR__ . '/story_api_compatibility_mapper.php';
 
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
+use IllinoisPublicMedia\NprCds\Libraries\Mapping\Story_api_compatibility_mapper;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Channel_entry_builder;
 use \stdClass;
@@ -47,6 +49,8 @@ class Publish_form_mapper
             'url_title' => $url_title,
             'videos' => $videos,
         ];
+
+        $data = Story_api_compatibility_mapper::map_cds_to_story($data);
 
         $entry_builder = new Channel_entry_builder();
         $objects = $entry_builder->assign_data_to_entry($data, $entry, $values);
