@@ -114,10 +114,11 @@ class Story_api_compatibility_mapper
         return $credit;
     }
 
-    private function map_image_crops(array $image_data): array
+    private function map_image_crops(array $enclosures): array
     {
         $crop_array = [];
-        foreach ($image_data as $data) {
+        foreach ($enclosures as $enclosure) {
+            dd($enclosure);
             // $primary = in_array('primary', $data['rels']);
 
             //     // we only care about the largest image size.
@@ -131,14 +132,13 @@ class Story_api_compatibility_mapper
             //         $file_segments['dir'] . $file_segments['file']->file_name :
             //         '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
 
-            //     $crop_array[] = array(
-            //         'file' => $file,
-            //         'type' => $model->type,
-            //         'src' => $model->src,
-            //         'height' => property_exists($model, 'height') ? $model->height : '',
-            //         'width' => property_exists($model, 'width') ? $model->width : '',
-            //         'primary' => $primary,
-            //     );
+            $crop_array[] = [
+                // 'file' => $file,
+                'type' => $enclosure['rels'],
+                'src' => $enclosure['href'],
+                'height' => array_key_exists('height', $enclosure) ? $enclosure['height'] : '',
+                'width' => array_key_exists('width', $enclosure) ? $enclosure['width'] : '',
+            ];
         }
 
         return $crop_array;
@@ -155,13 +155,8 @@ class Story_api_compatibility_mapper
         foreach ($image_data as $id => $data) {
             $credit = $this->map_image_credit($data);
             $primary = in_array('primary', $data['rels']);
-            dd($data);
-            $crops = $this->map_image_crops($data);
 
-            //     $extra_images = $this->map_image_crops($model);
-            //     if (array_key_exists(0, $extra_images)) {
-            //         $crops[] = $extra_images[0];
-            //     }
+            $crops = $this->map_image_crops($data['enclosures']);
 
             foreach ($crops as $crop) {
                 //         // we only care about the largest image size.
