@@ -135,8 +135,9 @@ class Story_api_compatibility_mapper
         return $credit;
     }
 
-    private function map_image_crops(array $enclosures): array
+    private function map_image_crops(array $image_data): array
     {
+        $enclosures = $image_data['enclosures'];
         $crop_array = [];
         foreach ($enclosures as $enclosure) {
             //     // we only care about the largest image size.
@@ -145,7 +146,7 @@ class Story_api_compatibility_mapper
             //         continue;
             //     }
 
-            $file_segments = $this->sideload_file($enclosure);
+            $file_segments = $this->sideload_file($image_data);
             $file = $this->file_manager_compatibility_mode === true ?
             $file_segments['dir'] . $file_segments['file']->file_name :
             '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
@@ -174,7 +175,7 @@ class Story_api_compatibility_mapper
             $credit = $this->map_image_credit($data);
             $primary = in_array('primary', $data['rels']);
 
-            $crops = $this->map_image_crops($data['enclosures']);
+            $crops = $this->map_image_crops($data);
 
             foreach ($crops as $crop) {
                 //         // we only care about the largest image size.
