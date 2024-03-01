@@ -27,12 +27,18 @@ class Story_api_compatibility_mapper
                 case ($key === 'audio'):
                     $audio = $this->map_audio_to_api($value);
                     $story_api_compatible_data['audio_files'] = $audio;
+                    if (array_key_exists('transcripts', $audio)) {
+                        $story_api_compatible_data['transcript'] = $audio['transcripts'][0];
+                    }
                     break;
                 case ($key === 'bylines'):
                     $story_api_compatible_data['byline'] = implode(', ', $value);
                     break;
                 case ($key === 'recommendUntilDateTime'):
                     $story_api_compatible_data['audio_runby_date'] = $value;
+                    break;
+                case ($key === 'transcripts'):
+                    $story_api_compatible_data['transcript'] = $value[0];
                     break;
                 default:
                     $story_api_compatible_data[$key] = $value;
@@ -81,6 +87,11 @@ class Story_api_compatibility_mapper
                 //     $grid_column_names['audio_region'] => $model->region,
                 //     $grid_column_names['audio_rightsholder'] => $model->rightsholder,
             ];
+
+            // this is a cheat, not a valid column
+            if (!is_null($data['transcript'])) {
+                $api_audio['transcripts'][] = $data['transcript'];
+            }
 
             $api_audio['rows'][$row_name] = $audio;
             $count++;
