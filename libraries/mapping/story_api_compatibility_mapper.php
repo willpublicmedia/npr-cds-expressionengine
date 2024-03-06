@@ -189,13 +189,13 @@ class Story_api_compatibility_mapper
                 $row_name = "new_row_$count";
 
                 $image = array(
-                    //             $grid_column_names['file'] => $crop['file'],
-                    //             $grid_column_names['crop_type'] => $crop['type'],
-                    //             $grid_column_names['crop_src'] => $crop['src'],
-                    //             $grid_column_names['crop_width'] => $crop['width'],
+                    $grid_column_names['file'] => $crop['file'],
+                    $grid_column_names['crop_type'] => $crop['type'][0],
+                    $grid_column_names['crop_src'] => $crop['src'],
+                    $grid_column_names['crop_width'] => $crop['width'],
                     $grid_column_names['crop_primary'] => $primary,
                     $grid_column_names['crop_caption'] => $data['caption'],
-                    //             $grid_column_names['crop_provider_url'] => $model->providerUrl,
+                    // $grid_column_names['crop_provider_url'] => $model->providerUrl,
                     $grid_column_names['crop_credit'] => $credit,
                 );
 
