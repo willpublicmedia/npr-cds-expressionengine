@@ -286,7 +286,7 @@ class Story_api_compatibility_mapper
             'modified_by_member_id' => ee()->session->userdata('member_id'),
             'uploaded_by_member_id' => ee()->session->userdata('member_id'),
 
-            'file_size' => $upload_data['file_size'] * 1024, // Bring it back to Bytes from KB
+            'file_size' => $upload_data['file_size'],
             'file_height' => $upload_data['image_height'],
             'file_width' => $upload_data['image_width'],
             'file_hw_original' => $upload_data['image_height'] . ' ' . $upload_data['image_width'],
