@@ -195,7 +195,7 @@ class Story_api_compatibility_mapper
                     $grid_column_names['crop_width'] => $crop['width'],
                     $grid_column_names['crop_primary'] => $primary,
                     $grid_column_names['crop_caption'] => $data['caption'],
-                    // $grid_column_names['crop_provider_url'] => $model->providerUrl,
+                    $grid_column_names['crop_provider_url'] => $data['providerLink'],
                     $grid_column_names['crop_credit'] => $credit,
                 );
 

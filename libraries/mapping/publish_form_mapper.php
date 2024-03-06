@@ -570,6 +570,7 @@ class Publish_form_mapper
                 'title' => property_exists($asset_current, 'title') ? $asset_current->title : '',
                 'provider' => property_exists($asset_current, 'provider') ? $asset_current->provider : '',
                 'producer' => property_exists($asset_current, 'producer') ? $asset_current->producer : '',
+                'providerLink' => property_exists($asset_current, 'providerLink') ? $asset_current->providerLink : '',
                 'enclosures' => $enclosures,
             ];
         }
