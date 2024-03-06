@@ -137,7 +137,7 @@ class Story_api_compatibility_mapper
         return $credit;
     }
 
-    private function map_image_crops(array $image_data): array
+    private function map_image_crops(array $image_data, string $description, string $credit): array
     {
         $enclosures = $image_data['enclosures'];
         $crop_array = [];
@@ -148,7 +148,7 @@ class Story_api_compatibility_mapper
             //         continue;
             //     }
 
-            $file_segments = $this->sideload_file($enclosure);
+            $file_segments = $this->sideload_file($enclosure, $description, $credit);
             $file = $this->file_manager_compatibility_mode === true ?
             $file_segments['dir'] . $file_segments['file']->file_name :
             '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
@@ -177,7 +177,7 @@ class Story_api_compatibility_mapper
             $credit = $this->map_image_credit($data);
             $primary = in_array('primary', $data['rels']);
 
-            $crops = $this->map_image_crops($data);
+            $crops = $this->map_image_crops($data, $data['caption'], $credit);
 
             foreach ($crops as $crop) {
                 //         // we only care about the largest image size.
@@ -214,7 +214,7 @@ class Story_api_compatibility_mapper
 
     }
 
-    private function sideload_file(array $data, $field = 'userfile')
+    private function sideload_file(array $data, string $description, string $credit, $field = 'userfile')
     {
         // rename file if it'll be problematic.
         $filename = $this->strip_sideloaded_query_strings($data['href']);
@@ -294,11 +294,9 @@ class Story_api_compatibility_mapper
             'max_height' => $destination->max_height,
         ];
 
-        $is_crop = array_key_exists('image_id', $data) ? true : false;
-
         $file_data['title'] = $filename;
-        // $file_data['description'] = $is_crop ? $model->Image->caption : $model->caption->value;
-        // $file_data['credit'] = $is_crop ? $this->map_image_credit($model->Image) : $this->map_image_credit($model);
+        $file_data['description'] = $description;
+        $file_data['credit'] = $credit;
 
         $saved = ee()->filemanager->save_file($upload_data['full_path'], $destination->id, $upload_data);
 
