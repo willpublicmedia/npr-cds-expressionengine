@@ -56,7 +56,7 @@ class Story_api_compatibility_mapper
                     $story_api_compatible_data['byline'] = is_null($value) ? '' : implode(', ', $value);
                     break;
                 case ($key === 'images'):
-                    $story_api_compatible_data['images'] = is_null($value) ? [] : $this->map_images($value);
+                    $story_api_compatible_data['npr_images'] = is_null($value) ? [] : $this->map_images($value);
                     break;
                 case ($key === 'recommendUntilDateTime'):
                     $story_api_compatible_data['audio_runby_date'] = $value;
