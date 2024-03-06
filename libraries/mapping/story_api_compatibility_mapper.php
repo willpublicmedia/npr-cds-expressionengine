@@ -148,7 +148,7 @@ class Story_api_compatibility_mapper
             //         continue;
             //     }
 
-            $file_segments = $this->sideload_file($image_data);
+            $file_segments = $this->sideload_file($enclosure);
             $file = $this->file_manager_compatibility_mode === true ?
             $file_segments['dir'] . $file_segments['file']->file_name :
             '{' . $file_segments['dir'] . ':' . $file_segments['file']->file_id . ':url}';
