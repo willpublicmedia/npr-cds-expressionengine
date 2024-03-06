@@ -46,26 +46,28 @@ class Story_api_compatibility_mapper
         foreach ($cds_data as $key => $value) {
             switch ($key) {
                 case ($key === 'audio'):
-                    $audio = $this->map_audio_to_api($value);
+                    $audio = is_null($value) ? [] : $this->map_audio_to_api($value);
                     $story_api_compatible_data['audio_files'] = $audio;
                     if (array_key_exists('transcripts', $audio)) {
                         $story_api_compatible_data['transcript'] = $audio['transcripts'][0];
                     }
                     break;
                 case ($key === 'bylines'):
-                    $story_api_compatible_data['byline'] = implode(', ', $value);
+                    $story_api_compatible_data['byline'] = is_null($value) ? '' : implode(', ', $value);
                     break;
                 case ($key === 'images'):
-                    $story_api_compatible_data['images'] = $this->map_images($value);
+                    $story_api_compatible_data['images'] = is_null($value) ? [] : $this->map_images($value);
                     break;
                 case ($key === 'recommendUntilDateTime'):
                     $story_api_compatible_data['audio_runby_date'] = $value;
                     break;
                 case ($key === 'transcripts'):
-                    $story_api_compatible_data['transcript'] = $value[0];
+                    $story_api_compatible_data['transcript'] = is_null($value) ? '' : $value[0];
                     break;
                 default:
-                    $story_api_compatible_data[$key] = $value;
+                    if (!is_null($value)) {
+                        $story_api_compatible_data[$key] = $value;
+                    }
                     break;
             }
         }
