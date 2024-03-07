@@ -49,21 +49,21 @@ class Cds_mapper
         $npr_org = new stdClass;
         $npr_org->href = 'https://organization.api.npr.org/v4/services/' . $org_id;
 
-        // $webPage = new stdClass;
-        // $webPage->href = get_permalink($post);
-        // $webPage->rels = ['canonical'];
+        $webPage = new stdClass;
+        $webPage->href = $this->construct_canonical_url($entry->Channel->preview_url, $entry->url_title);
+        $webPage->rels = ['canonical'];
 
-        // $cds_count = 0;
+        $cds_count = 0;
 
-        // $story->brandings = [$npr_org];
-        // $story->owners = [$npr_org];
-        // $story->authorizedOrgServiceIds = [$org_id];
-        // $story->webPages = [$webPage];
-        // $story->layout = [];
-        // $story->assets = new stdClass;
-        // $story->collections = [];
+        $story->brandings = [$npr_org];
+        $story->owners = [$npr_org];
+        $story->authorizedOrgServiceIds = [$org_id];
+        $story->webPages = [$webPage];
+        $story->layout = [];
+        $story->assets = new stdClass;
+        $story->collections = [];
         // $story->profiles = npr_cds_base_profiles();
-        // $story->bylines = [];
+        $story->bylines = [];
         // $story->publishDateTime = mysql2date('c', $post->post_modified_gmt);
         // $story->editorialLastModifiedDateTime = mysql2date('c', $post->post_modified_gmt);
 
@@ -471,6 +471,21 @@ class Cds_mapper
         //  * The story has been assembled; now we shall return it
         //  */
         // return json_encode($story);
+    }
+
+    private function construct_canonical_url(string $base_url, string $url_title)
+    {
+        $url_segments = explode('/', $base_url);
+
+        $last = $url_segments[array_key_last($url_segments)];
+        if ($last === '{entry_id}' || $last === '{url_title}') {
+            unset($url_segments[array_key_last($url_segments)]);
+        }
+
+        array_push($url_segments, $url_title);
+        $url = rtrim(ee()->config->item('site_url'), '/') . '/' . ltrim(implode('/', $url_segments), '/');
+
+        return $url;
     }
 
     private function load_settings()
