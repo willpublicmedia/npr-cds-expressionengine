@@ -62,7 +62,7 @@ class Cds_mapper
         $story->layout = [];
         $story->assets = new stdClass;
         $story->collections = [];
-        // $story->profiles = npr_cds_base_profiles();
+        $story->profiles = $this->get_npr_cds_base_profiles($cds_version);
         $story->bylines = [];
         // $story->publishDateTime = mysql2date('c', $post->post_modified_gmt);
         // $story->editorialLastModifiedDateTime = mysql2date('c', $post->post_modified_gmt);
@@ -486,6 +486,29 @@ class Cds_mapper
         $url = rtrim(ee()->config->item('site_url'), '/') . '/' . ltrim(implode('/', $url_segments), '/');
 
         return $url;
+    }
+
+    public function get_npr_cds_base_profiles($cds_version): array
+    {
+        $profiles = [
+            'v1' => ['story', 'publishable', 'document', 'renderable', 'buildout'],
+        ];
+
+        $output = [];
+        foreach ($profiles[$cds_version] as $p) {
+            $new = new stdClass;
+            $new->href = '/' . $cds_version . '/profiles/' . $p;
+            if ($p !== 'document') {
+                if ($p == 'story') {
+                    $new->rels = ['type'];
+                } else {
+                    $new->rels = ['interface'];
+                }
+            }
+            $output[] = $new;
+        }
+
+        return $output;
     }
 
     private function load_settings()
