@@ -64,13 +64,10 @@ class Cds_mapper
         $story->collections = [];
         $story->profiles = $this->get_npr_cds_base_profiles($cds_version);
         $story->bylines = [];
-        // $story->publishDateTime = mysql2date('c', $post->post_modified_gmt);
-        // $story->editorialLastModifiedDateTime = mysql2date('c', $post->post_modified_gmt);
 
-        // $use_custom = get_option('npr_cds_push_use_custom_map');
-
-        // //get the list of metas available for this post
-        // $post_metas = get_post_custom_keys($post->ID);
+        $edit_date = date('c', $entry->edit_date);
+        $story->publishDateTime = $edit_date;
+        $story->editorialLastModifiedDateTime = $edit_date;
 
         // $teaser_text = '';
         // if (!empty($post->post_excerpt)) {
