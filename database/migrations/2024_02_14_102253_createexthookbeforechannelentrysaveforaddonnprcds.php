@@ -9,6 +9,10 @@ class CreateExtHookBeforeChannelEntrySaveForAddonNprCds extends Migration
             'hook' => 'before_channel_entry_save',
             'priority' => 10,
         ),
+        'push_story_via_entry_save' => array(
+            'hook' => 'before_channel_entry_save',
+            'priority' => 15,
+        ),
     );
 
     /**

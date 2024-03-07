@@ -16,4 +16,10 @@ class Npr_cds_ext extends Extension
         $runner = new BeforeChannelEntrySave();
         $runner->pull_story_via_entry_save($entry, $values);
     }
+
+    public function push_story_via_entry_save($entry, $values)
+    {
+        $runner = new BeforeChannelEntrySave();
+        $runner->push_story_via_entry_save($entry, $values);
+    }
 }

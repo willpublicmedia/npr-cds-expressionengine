@@ -115,6 +115,92 @@ class BeforeChannelEntrySave extends AbstractRoute
         // $story->save();
     }
 
+    public function push_story_via_entry_save($entry, $values)
+    {
+        $push_field = $this->fields['publish_to_npr'];
+        $push_story = array_key_exists($push_field, $values) ? $values[$push_field] : false;
+
+        if (!$push_story) {
+            return;
+        }
+
+        $abort = false;
+
+        $is_mapped_channel = $this->check_mapped_channel($entry->channel_id);
+        if ($is_mapped_channel === false) {
+            $abort = true;
+        }
+
+        $has_required_fields = $this->check_required_fields($entry->Channel->FieldGroups);
+        if ($has_required_fields === false) {
+            $abort = true;
+        }
+
+        // move api key check to api query setup
+        // $api_key = isset($this->settings['api_key']) ? $this->settings['api_key'] : '';
+        // if ($api_key === '') {
+        //     $abort = true;
+        //     ee('CP/Alert')->makeInline('story-push-api-key')
+        //         ->asIssue()
+        //         ->withTitle('NPR Stories')
+        //         ->addToBody("No API key set. Can't push story.")
+        //         ->defer();
+        // }
+
+        $push_url = isset($this->settings['push_url']) ? $this->settings['push_url'] : null;
+        if ($push_url === null) {
+            $abort = true;
+            ee('CP/Alert')->makeInline('story-push-push-url')
+                ->asIssue()
+                ->withTitle('NPR Stories')
+                ->addToBody("No push url set. Can't push story.")
+                ->defer();
+        }
+
+        if ($abort) {
+            return;
+        }
+
+        // $nprml = $this->create_nprml($entry, $values);
+
+        // $params = array(
+        //     'orgId' => $this->settings['org_id'],
+        //     // 'dateType' => 'story',
+        //     // 'output' => 'NPRML',
+        //     'apiKey' => $api_key,
+        //     'body' => $nprml,
+        // );
+
+        // // TODO: deduplicate request methods
+        // $api_service = new Npr_api_expressionengine();
+        // $api_service->request($params, 'story', $push_url, 'post');
+
+        // if (!property_exists($api_service, 'response') || !isset($api_service->response)) {
+        //     return;
+        // }
+
+        // if (property_exists($api_service->response, 'messages') && $api_service->response->messages !== null) {
+        //     ee('CP/Alert')->makeInline('story-push')
+        //         ->asIssue()
+        //         ->withTitle('NPR Stories')
+        //         ->addToBody("Error pushing to NPR")
+        //         ->defer();
+        // }
+
+        // $npr_story_id = $api_service->process_push_response();
+
+        // // don't assign npr_story_id if entry already has one
+        // if ($entry->{$this->fields['npr_story_id']} === '') {
+        //     $entry->{$this->fields['npr_story_id']} = $npr_story_id;
+        // }
+
+        ee('CP/Alert')->makeInline('story-push')
+            ->asSuccess()
+            ->withTitle('NPR Stories')
+            ->addToBody("Story pushed to NPR.")
+            ->defer();
+    }
+
     private function check_required_fields($field_groups, $display_error = true)
     {
         foreach ($field_groups as $group) {
