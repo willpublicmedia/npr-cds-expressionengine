@@ -6,6 +6,7 @@ require_once __DIR__ . '/../database/installation/fields/field_installer.php';
 require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
 require_once __DIR__ . '/../libraries/utilities/field_utils.php';
 require_once __DIR__ . '/../libraries/mapping/publish_form_mapper.php';
+require_once __DIR__ . '/../libraries/mapping/cds_mapper.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
@@ -14,6 +15,7 @@ use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
 use IllinoisPublicMedia\NprCds\Libraries\Mapping\Publish_form_mapper;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
+use IllinoisPublicMedia\NprCds\Libraries\Mapping\Cds_mapper;
 
 class BeforeChannelEntrySave extends AbstractRoute
 {
@@ -161,7 +163,7 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        // $nprml = $this->create_nprml($entry, $values);
+        $json = $this->create_json($entry, $values);
 
         // $params = array(
         //     'orgId' => $this->settings['org_id'],
@@ -262,6 +264,14 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         return $is_mapped;
+    }
+
+    private function create_json($entry, $values)
+    {
+        $parser = new Cds_mapper();
+        $json = $parser->create_json($entry, $values, 'document');
+
+        return $json;
     }
 
     private function display_error($errors)
