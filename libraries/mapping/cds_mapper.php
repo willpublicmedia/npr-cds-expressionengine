@@ -45,9 +45,9 @@ class Cds_mapper
         $cds_id = $prefix . '-' . $entry->entry_id;
         $story->id = $cds_id;
 
-        // $org_id = get_option('npr_cds_org_id');
-        // $npr_org = new stdClass;
-        // $npr_org->href = 'https://organization.api.npr.org/v4/services/' . $org_id;
+        $org_id = $this->settings['service_id'];
+        $npr_org = new stdClass;
+        $npr_org->href = 'https://organization.api.npr.org/v4/services/' . $org_id;
 
         // $webPage = new stdClass;
         // $webPage->href = get_permalink($post);
