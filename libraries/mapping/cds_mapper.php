@@ -148,13 +148,9 @@ class Cds_mapper
         /*
          * Attach images to the post
          */
-        $args = [
-            'order' => 'DESC',
-            'post_mime_type' => 'image',
-            'post_parent' => $entry->entry_id,
-            'post_status' => null,
-            'post_type' => 'attachment',
-        ];
+
+        // see story api nprml_mapper.php #667
+        $images = $this->get_media($entry, 'npr_images');
 
         // $images = get_children($args);
         // $primary_image = get_post_thumbnail_id($post->ID);
@@ -441,6 +437,68 @@ class Cds_mapper
         }
 
         return $bylines;
+    }
+
+    private function get_file_id($file_src)
+    {
+        $image_url_data = parse_url($file_src);
+        $image_path = ltrim($image_url_data['path'], '/');
+        $image_path_elements = explode('/', $image_path);
+        $filename = array_pop($image_path_elements);
+
+        $file_id = ee()->db->select('file_id')
+            ->from('files')
+            ->where(array(
+                'file_name' => $filename,
+            ))
+            ->limit(1)
+            ->get()
+            ->row()
+            ->file_id;
+
+        return $file_id;
+    }
+
+    private function get_media(ChannelEntry $entry, string $field_name)
+    {
+        $content_type = 'channel';
+        ee()->load->model('grid_model');
+        $media_field_id = $this->field_utils->get_field_id($field_name);
+
+        // map column names
+        $columns = ee()->grid_model->get_columns_for_field($media_field_id, $content_type);
+
+        // get entry data
+        $entry_data = ee()->grid_model->get_entry_rows($entry->entry_id, $media_field_id, $content_type, null);
+
+        // loop entry data rows
+        $media = array();
+        foreach ($entry_data[$entry->entry_id] as $row) {
+            $row_data = array();
+
+            // map column data to column names
+            foreach ($columns as $column_id => $column_details) {
+                $column_name = $column_details['col_name'];
+                $row_column = "col_id_$column_id";
+                $row_col_data = $row[$row_column];
+                $row_data[$column_name] = $row_col_data;
+            }
+
+            // get filename from possible url
+            $url_col = '';
+            if ($field_name === 'audio_files') {
+                $url_col = $row_data['audio_url'];
+            } elseif ($field_name === 'npr_images') {
+                $url_col = $row_data['crop_src'];
+            }
+
+            $file_id = $this->get_file_id($url_col);
+            $row_data['file_id'] = $file_id;
+
+            $media[] = $row_data;
+        }
+
+        return $media;
     }
 
     private function get_npr_cds_asset_profile($type, $cds_version = Npr_constants::NPR_CDS_VERSION): array
