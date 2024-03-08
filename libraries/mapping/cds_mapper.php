@@ -119,6 +119,7 @@ class Cds_mapper
         $parts = array_filter(
             array_map('trim', preg_split("/<\/?p>/", $content))
         );
+
         foreach ($parts as $part) {
             $para = new stdClass;
             $para_asset = new stdClass;
@@ -511,7 +512,7 @@ class Cds_mapper
         $future = date('c', $entry->edit_date);
         $future = date_add(date_create($future), new DateInterval('P7D'));
 
-        return date('c', $future);
+        return $future->format(\DateTime::ATOM);
     }
 
     private function get_text(ChannelEntry $entry, string $field_name, bool $strip_tags): string
