@@ -9,6 +9,7 @@ if (!defined('BASEPATH')) {
 require_once __DIR__ . '/../configuration/npr_constants.php';
 require_once __DIR__ . '/../utilities/field_utils.php';
 
+use DateInterval;
 use ExpressionEngine\Model\Channel\ChannelEntry;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
@@ -110,9 +111,9 @@ class Cds_mapper
             $story->collections[] = $collect;
         }
 
-        // // NPR One audio run-by date
-        // $datetime = npr_cds_get_post_expiry_datetime($post); // if expiry date is not set, returns publication date plus 7 days
-        // $story->recommendUntilDateTime = date_format($datetime, 'c');
+        // NPR One audio run-by date
+        // if expiry date is not set, returns publication date plus 7 days
+        $story->recommendUntilDateTime = $this->get_post_expiry_datetime($entry);
 
         // Parse through the paragraphs, add references to layout array, and paragraph text to assets
         $parts = array_filter(
@@ -477,6 +478,40 @@ class Cds_mapper
         }
 
         return $output;
+    }
+
+    /**
+     * Helper function to get the post expiry datetime
+     *
+     * The datetime is stored in post meta _nprone_expiry_8601
+     * This assumes that the post has been published
+     *
+     * @param int|WP_Post $post the post ID or WP_Post object
+     *
+     * @return DateTime the DateTime object created from the post expiry date
+     * @see note on DATE_ATOM and DATE_ISO8601 https://secure.php.net/manual/en/class.datetime.php#datetime.constants.types
+     * @uses npr_cds_get_datetimezone
+     * @since 1.7
+     * @todo rewrite this to use fewer queries, so it's using the WP_Post internally instead of the post ID
+     */
+    private function get_post_expiry_datetime(ChannelEntry $entry): string
+    {
+        if (!empty($entry->expiration_date)) {
+            return date('c', $entry->expiration_date);
+        }
+
+        $audio_runby_field = $this->field_utils->get_field_name('audio_runby_date');
+        $audio_runby_date = $entry->{$audio_runby_field};
+
+        if (!empty($audio_runby_date)) {
+            return date('c', $audio_runby_date);
+        }
+
+        // return DateTime for the publish date plus seven days
+        $future = date('c', $entry->edit_date);
+        $future = date_add(date_create($future), new DateInterval('P7D'));
+
+        return date('c', $future);
     }
 
     private function get_text(ChannelEntry $entry, string $field_name, bool $strip_tags): string
