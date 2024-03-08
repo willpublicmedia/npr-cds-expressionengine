@@ -94,32 +94,21 @@ class Cds_mapper
             $cds_count++;
         }
 
-        // /*
-        //  * Send to NPR One
-        //  *
-        //  * If the box is checked, the value here is '1'
-        //  * @see nprstory_save_send_to_one
-        //  */
-        // $nprapi = get_post_meta($post->ID, '_send_to_one', true); // 0 or 1
-        // if (!empty($nprapi) && ('1' === $nprapi || 1 === $nprapi)) {
-        //     $collect = new stdClass;
-        //     $collect->rels = ['collection'];
-        //     $collect->href = '/' . $cds_version . '/documents/319418027';
-        //     $story->collections[] = $collect;
-        // }
+        $send_to_one = $entry->{$this->field_utils->get_field_name('send_to_one')} === 1 ? true : false;
+        if ($send_to_one) {
+            $collect = new stdClass;
+            $collect->rels = ['collection'];
+            $collect->href = '/' . $cds_version . '/documents/319418027';
+            $story->collections[] = $collect;
+        }
 
-        // /*
-        //  * This story should be featured in NPR One
-        //  *
-        //  * @see nprstory_save_nprone_featured
-        //  */
-        // $nprapi = get_post_meta($post->ID, '_nprone_featured', true); // 0 or 1
-        // if (!empty($nprapi) && ('1' === $nprapi || 1 === $nprapi)) {
-        //     $collect = new stdClass;
-        //     $collect->rels = ['collection'];
-        //     $collect->href = '/' . $cds_version . '/documents/500549367';
-        //     $story->collections[] = $collect;
-        // }
+        $nprone_featured = $entry->{$this->field_utils->get_field_name('nprone_featured')} === 1 ? true : false;
+        if ($nprone_featured) {
+            $collect = new stdClass;
+            $collect->rels = ['collection'];
+            $collect->href = '/' . $cds_version . '/documents/500549367';
+            $story->collections[] = $collect;
+        }
 
         // // NPR One audio run-by date
         // $datetime = npr_cds_get_post_expiry_datetime($post); // if expiry date is not set, returns publication date plus 7 days
