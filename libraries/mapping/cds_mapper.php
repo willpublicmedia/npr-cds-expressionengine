@@ -79,52 +79,19 @@ class Cds_mapper
 
         $story->title = $entry->title;
 
-        // /*
-        //  * If there is a custom byline configured, send that.
-        //  *
-        //  * If the site is using the coauthors plugin, and get_coauthors exists, send the display names
-        //  * If no cool things are going on, just send the display name for the post_author field.
-        //  */
-        // $bylines = [];
-        // $custom_byline_meta = get_option('npr_cds_mapping_byline');
-        // // Custom field mapping byline
-        // if (
-        //     $use_custom
-        //     && !empty($custom_byline_meta)
-        //     && $custom_byline_meta != '#NONE#'
-        //     && in_array($custom_content_meta, $post_metas)
-        // ) {
-        //     $bylines[] = get_post_meta($post->ID, $custom_byline_meta, true);
-        // }
-
-        // // Co-Authors Plus support overrides the NPR custom byline
-        // if (function_exists('get_coauthors')) {
-        //     $coauthors = get_coauthors($post->ID);
-        //     if (!empty($coauthors)) {
-        //         foreach ($coauthors as $i => $co) {
-        //             $bylines[] = $co->display_name;
-        //         }
-        //     } else {
-        //         npr_cds_error_log('we do not have co authors');
-        //     }
-        // } else {
-        //     npr_cds_error_log('can not find get_coauthors');
-        // }
-        // if (empty($bylines)) {
-        //     $bylines[] = get_the_author_meta('display_name', $post->post_author);
-        // }
-        // foreach ($bylines as $byline) {
-        //     $byl = new stdClass;
-        //     $byl_asset = new stdClass;
-        //     $byline_id = $cds_id . '-' . $cds_count;
-        //     $byl->id = $byline_id;
-        //     $byl->name = $byline;
-        //     $byl->profiles = npr_cds_asset_profile('byline');
-        //     $story->assets->{$byline_id} = $byl;
-        //     $byl_asset->href = '#/assets/' . $byline_id;
-        //     $story->bylines[] = $byl_asset;
-        //     $cds_count++;
-        // }
+        $bylines = $this->get_bylines($entry);
+        foreach ($bylines as $byline) {
+            $byl = new stdClass;
+            $byl_asset = new stdClass;
+            $byline_id = $cds_id . '-' . $cds_count;
+            $byl->id = $byline_id;
+            $byl->name = $byline;
+            $byl->profiles = npr_cds_asset_profile('byline');
+            $story->assets->{$byline_id} = $byl;
+            $byl_asset->href = '#/assets/' . $byline_id;
+            $story->bylines[] = $byl_asset;
+            $cds_count++;
+        }
 
         // /*
         //  * Send to NPR One
@@ -451,6 +418,37 @@ class Cds_mapper
         $url = rtrim(ee()->config->item('site_url'), '/') . '/' . ltrim(implode('/', $url_segments), '/');
 
         return $url;
+    }
+
+    private function get_bylines(ChannelEntry $entry): array
+    {
+        /*
+         * If there is a custom byline configured, send that.
+         *
+         * If no cool things are going on, just send the display name for the post_author field.
+         */
+        $bylines = [];
+
+        $byline_field = $this->field_utils->get_field_name('byline');
+        if (!empty($entry->{$byline_field})) {
+            $bylines = explode(', ', $entry->{$byline_field});
+
+            $last = count($bylines) - 1;
+            $bylines[$last] = ltrim($bylines[$last], '&');
+
+            if (substr($bylines[$last], 0, strlen('and ') == 'and ')) {
+                $bylines[$last] = substr($bylines[$last], strlen('and '));
+            }
+        }
+
+        if (empty($bylines)) {
+            $author_id = $entry->author_id;
+            $member = ee('Model')->get('Member')->filter('member_id', $author_id)->first();
+
+            $bylines[] = $member->screen_name;
+        }
+
+        return $bylines;
     }
 
     private function get_npr_cds_base_profiles($cds_version): array
