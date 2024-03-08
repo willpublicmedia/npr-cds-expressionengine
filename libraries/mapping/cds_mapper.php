@@ -157,31 +157,31 @@ class Cds_mapper
         // $datetime = npr_cds_get_post_expiry_datetime($post); // if expiry date is not set, returns publication date plus 7 days
         // $story->recommendUntilDateTime = date_format($datetime, 'c');
 
-        // // Parse through the paragraphs, add references to layout array, and paragraph text to assets
-        // $parts = array_filter(
-        //     array_map('trim', preg_split("/<\/?p>/", $content))
-        // );
-        // foreach ($parts as $part) {
-        //     $para = new stdClass;
-        //     $para_asset = new stdClass;
-        //     $para_id = $cds_id . '-' . $cds_count;
-        //     $para->id = $para_id;
+        // Parse through the paragraphs, add references to layout array, and paragraph text to assets
+        $parts = array_filter(
+            array_map('trim', preg_split("/<\/?p>/", $content))
+        );
+        foreach ($parts as $part) {
+            $para = new stdClass;
+            $para_asset = new stdClass;
+            $para_id = $cds_id . '-' . $cds_count;
+            $para->id = $para_id;
 
-        //     $para_type = 'text';
-        //     if (preg_match('/^<(figure|div)/', $part)) {
-        //         $para_type = 'html';
-        //     }
-        //     if ($para_type == 'html') {
-        //         $para->profiles = npr_cds_asset_profile($para_type . '-block');
-        //     } else {
-        //         $para->profiles = npr_cds_asset_profile($para_type);
-        //     }
-        //     $para->{$para_type} = $part;
-        //     $story->assets->{$para_id} = $para;
-        //     $para_asset->href = '#/assets/' . $para_id;
-        //     $story->layout[] = $para_asset;
-        //     $cds_count++;
-        // }
+            $para_type = 'text';
+            if (preg_match('/^<(figure|div)/', $part)) {
+                $para_type = 'html';
+            }
+            if ($para_type == 'html') {
+                $para->profiles = npr_cds_asset_profile($para_type . '-block');
+            } else {
+                $para->profiles = npr_cds_asset_profile($para_type);
+            }
+            $para->{$para_type} = $part;
+            $story->assets->{$para_id} = $para;
+            $para_asset->href = '#/assets/' . $para_id;
+            $story->layout[] = $para_asset;
+            $cds_count++;
+        }
 
         // $custom_media_credit = get_option('npr_cds_mapping_media_credit');
         // $custom_media_agency = get_option('npr_cds_mapping_media_agency');
