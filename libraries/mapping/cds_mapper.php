@@ -74,48 +74,10 @@ class Cds_mapper
         $story->publishDateTime = $edit_date;
         $story->editorialLastModifiedDateTime = $edit_date;
 
-        $teaser_text = $this->get_teaser($entry);
+        $story->teaser = $this->get_text($entry, 'teaser', true);
+        $content = $this->get_text($entry, 'text', false);
 
-        // /*
-        //  * Clean up the content by applying shortcodes and then stripping any remaining shortcodes.
-        //  */
-        // // Let's see if there are any plugins that need to fix their shortcodes before we run do_shortcode
-        // if (has_filter('npr_cds_shortcode_filter')) {
-        //     $content = apply_filters('npr_cds_shortcode_filter', $content);
-        // }
-
-        // // Since we don't have a standard way to handle galleries across installs, let's just nuke them
-        // // Also, NPR is still trying to figure out how to handle galleries in CDS, so we can circle back when they do
-        // $content = preg_replace('/\[gallery(.*)\]/U', '', $content);
-
-        // // The [embed] shortcode also gets kinda hinky, along with the Twitter/YouTube oEmbed stuff
-        // // In lieu of removing them, let's just convert them into links
-        // $content = preg_replace('/\[embed\](.*)\[\/embed\]/', '<a href="$1">$1</a>', $content);
-        // $content = preg_replace('/<p>(https?:\/\/.+)<\/p>/U', '<p><a href="$1">$1</a></p>', $content);
-
-        // // Apply the usual filters from 'the_content', which should resolve any remaining shortcodes
-        // $content = apply_filters('the_content', $content);
-
-        // // for any remaining short codes, nuke 'em
-        // $content = strip_shortcodes($content);
-
-        // $story->teaser = $teaser_text;
-
-        // /*
-        //  * Custom title
-        //  */
-        // $custom_title_meta = get_option('npr_cds_mapping_title');
-        // if (
-        //     $use_custom
-        //     && !empty($custom_title_meta)
-        //     && $custom_title_meta != '#NONE#'
-        //     && in_array($custom_content_meta, $post_metas)
-        // ) {
-        //     $custom_title = get_post_meta($post->ID, $custom_title_meta, true);
-        //     $story->title = $custom_title;
-        // } else {
-        //     $story->title = $post->post_title;
-        // }
+        $story->title = $entry->title;
 
         // /*
         //  * If there is a custom byline configured, send that.
@@ -449,6 +411,33 @@ class Cds_mapper
         return json_encode($story);
     }
 
+    private function apply_shortcodes(string $text): string
+    {
+        // /*
+        //  * Clean up the content by applying shortcodes and then stripping any remaining shortcodes.
+        //  */
+        // // Let's see if there are any plugins that need to fix their shortcodes before we run do_shortcode
+        // if (has_filter('npr_cds_shortcode_filter')) {
+        //     $content = apply_filters('npr_cds_shortcode_filter', $content);
+        // }
+
+        // // Since we don't have a standard way to handle galleries across installs, let's just nuke them
+        // // Also, NPR is still trying to figure out how to handle galleries in CDS, so we can circle back when they do
+        // $content = preg_replace('/\[gallery(.*)\]/U', '', $content);
+
+        // // The [embed] shortcode also gets kinda hinky, along with the Twitter/YouTube oEmbed stuff
+        // // In lieu of removing them, let's just convert them into links
+        // $content = preg_replace('/\[embed\](.*)\[\/embed\]/', '<a href="$1">$1</a>', $content);
+        // $content = preg_replace('/<p>(https?:\/\/.+)<\/p>/U', '<p><a href="$1">$1</a></p>', $content);
+
+        // // Apply the usual filters from 'the_content', which should resolve any remaining shortcodes
+        // $content = apply_filters('the_content', $content);
+
+        // // for any remaining short codes, nuke 'em
+        // $content = strip_shortcodes($content);
+        return $text;
+    }
+
     private function construct_canonical_url(string $base_url, string $url_title)
     {
         $url_segments = explode('/', $base_url);
@@ -464,7 +453,7 @@ class Cds_mapper
         return $url;
     }
 
-    public function get_npr_cds_base_profiles($cds_version): array
+    private function get_npr_cds_base_profiles($cds_version): array
     {
         $profiles = [
             'v1' => ['story', 'publishable', 'document', 'renderable', 'buildout'],
@@ -487,18 +476,23 @@ class Cds_mapper
         return $output;
     }
 
-    private function get_teaser(ChannelEntry $entry): string
+    private function get_text(ChannelEntry $entry, string $field_name, bool $strip_tags): string
     {
-        $teaser_field = $this->field_utils->get_field_name('teaser');
+        $field = $this->field_utils->get_field_name($field_name);
 
-        if (empty($entry->{$teaser_field})) {
+        if (empty($entry->{$field})) {
             return '';
         }
 
-        $teaser_text = $entry->{$teaser_field};
-        $teaser_text = strip_tags($teaser_text);
+        $text = $entry->{$field};
 
-        return $teaser_text;
+        if ($strip_tags) {
+            $text = strip_tags($text);
+        } else {
+            $text = $this->apply_shortcodes($text);
+        }
+
+        return $text;
     }
 
     private function load_settings()
