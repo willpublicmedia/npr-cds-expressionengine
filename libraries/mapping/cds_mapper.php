@@ -7,13 +7,17 @@ if (!defined('BASEPATH')) {
 }
 
 require_once __DIR__ . '/../configuration/npr_constants.php';
+require_once __DIR__ . '/../utilities/field_utils.php';
 
 use ExpressionEngine\Model\Channel\ChannelEntry;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 use \stdClass;
 
 class Cds_mapper
 {
+    private $field_utils;
+
     private $settings = [
         'document_prefix' => '',
         'pull_url' => '',
@@ -30,6 +34,7 @@ class Cds_mapper
 
     public function __construct()
     {
+        $this->field_utils = new Field_utils();
         $this->settings = $this->load_settings();
     }
 
@@ -69,10 +74,7 @@ class Cds_mapper
         $story->publishDateTime = $edit_date;
         $story->editorialLastModifiedDateTime = $edit_date;
 
-        // $teaser_text = '';
-        // if (!empty($post->post_excerpt)) {
-        //     $teaser_text = $post->post_excerpt;
-        // }
+        $teaser_text = $this->get_teaser($entry);
 
         // /*
         //  * Custom content
@@ -506,6 +508,20 @@ class Cds_mapper
         }
 
         return $output;
+    }
+
+    private function get_teaser(ChannelEntry $entry): string
+    {
+        $teaser_field = $this->field_utils->get_field_name('teaser');
+
+        if (empty($entry->{$teaser_field})) {
+            return '';
+        }
+
+        $teaser_text = $entry->{$teaser_field};
+        $teaser_text = strip_tags($teaser_text);
+
+        return $teaser_text;
     }
 
     private function load_settings()
