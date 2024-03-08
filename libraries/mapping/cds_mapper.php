@@ -77,29 +77,6 @@ class Cds_mapper
         $teaser_text = $this->get_teaser($entry);
 
         // /*
-        //  * Custom content
-        //  */
-        // $custom_content_meta = get_option('npr_cds_mapping_body');
-        // if (
-        //     $use_custom
-        //     && !empty($custom_content_meta)
-        //     && $custom_content_meta != '#NONE#'
-        //     && in_array($custom_content_meta, $post_metas)
-        // ) {
-        //     $content = get_post_meta($post->ID, $custom_content_meta, true);
-        //     $post_for_teaser = $post;
-        //     $post_for_teaser->post_content = $content;
-        //     if (empty($teaser_text)) {
-        //         $teaser_text = get_the_excerpt($post_for_teaser);
-        //     }
-        // } else {
-        //     $content = $post->post_content;
-        //     if (empty($teaser_text)) {
-        //         $teaser_text = get_the_excerpt($post);
-        //     }
-        // }
-
-        // /*
         //  * Clean up the content by applying shortcodes and then stripping any remaining shortcodes.
         //  */
         // // Let's see if there are any plugins that need to fix their shortcodes before we run do_shortcode
@@ -466,10 +443,10 @@ class Cds_mapper
         //     }
         // }
 
-        // /*
-        //  * The story has been assembled; now we shall return it
-        //  */
-        // return json_encode($story);
+        /*
+         * The story has been assembled; now we shall return it
+         */
+        return json_encode($story);
     }
 
     private function construct_canonical_url(string $base_url, string $url_title)
