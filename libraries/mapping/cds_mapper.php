@@ -144,16 +144,16 @@ class Cds_mapper
         // $custom_media_credit = get_option('npr_cds_mapping_media_credit');
         // $custom_media_agency = get_option('npr_cds_mapping_media_agency');
 
-        // /*
-        //  * Attach images to the post
-        //  */
-        // $args = [
-        //     'order' => 'DESC',
-        //     'post_mime_type' => 'image',
-        //     'post_parent' => $post->ID,
-        //     'post_status' => null,
-        //     'post_type' => 'attachment',
-        // ];
+        /*
+         * Attach images to the post
+         */
+        $args = [
+            'order' => 'DESC',
+            'post_mime_type' => 'image',
+            'post_parent' => $entry->entry_id,
+            'post_status' => null,
+            'post_type' => 'attachment',
+        ];
 
         // $images = get_children($args);
         // $primary_image = get_post_thumbnail_id($post->ID);
