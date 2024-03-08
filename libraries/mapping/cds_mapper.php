@@ -46,6 +46,9 @@ class Cds_mapper
 
         $cds_version = Npr_constants::NPR_CDS_VERSION;
         $story = new stdClass;
+
+        $story->title = $entry->title;
+
         $prefix = $this->settings['document_prefix'];
         $cds_id = $prefix . '-' . $entry->entry_id;
         $story->id = $cds_id;
@@ -77,8 +80,6 @@ class Cds_mapper
         $story->teaser = $this->get_text($entry, 'teaser', true);
         $content = $this->get_text($entry, 'text', false);
 
-        $story->title = $entry->title;
-
         $bylines = $this->get_bylines($entry);
         foreach ($bylines as $byline) {
             $byl = new stdClass;
@@ -86,7 +87,7 @@ class Cds_mapper
             $byline_id = $cds_id . '-' . $cds_count;
             $byl->id = $byline_id;
             $byl->name = $byline;
-            $byl->profiles = npr_cds_asset_profile('byline');
+            $byl->profiles = $this->get_npr_cds_asset_profile('byline');
             $story->assets->{$byline_id} = $byl;
             $byl_asset->href = '#/assets/' . $byline_id;
             $story->bylines[] = $byl_asset;
@@ -449,6 +450,21 @@ class Cds_mapper
         }
 
         return $bylines;
+    }
+
+    private function get_npr_cds_asset_profile($type, $cds_version = Npr_constants::NPR_CDS_VERSION): array
+    {
+        $profiles = [$type, 'document'];
+        $output = [];
+        foreach ($profiles as $p) {
+            $new = new stdClass;
+            $new->href = '/' . $cds_version . '/profiles/' . $p;
+            if ($p == $type) {
+                $new->rels = ['type'];
+            }
+            $output[] = $new;
+        }
+        return $output;
     }
 
     private function get_npr_cds_base_profiles($cds_version): array
