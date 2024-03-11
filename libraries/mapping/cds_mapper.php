@@ -210,41 +210,39 @@ class Cds_mapper
             }
 
             // Is the image in the content?  If so, tell the API with a flag that CorePublisher knows.
-            // WordPress may add something like "-150X150" to the end of the filename, before the extension.
-            // Isn't that nice? Let's remove that.
             $in_body = $this->check_image_in_body($image, $content);
 
             //     $image_meta = wp_get_attachment_metadata($image->ID);
 
-            //     $new_image = new stdClass;
-            //     $image_asset = new stdClass;
+            $new_image = new stdClass;
+            $image_asset = new stdClass;
             //     $image_asset_id = $prefix . '-' . $image->ID;
             //     $image_asset->id = $image_asset_id;
-            //     $image_asset->profiles = npr_cds_asset_profile('image');
+            $image_asset->profiles = $this->get_npr_cds_asset_profile('image');
             //     $image_asset->title = $image->post_title;
             //     $image_asset->caption = $image->post_excerpt;
-            //     $image_asset->producer = $custom_credit;
-            //     $image_asset->provider = $custom_agency;
-            //     $image_asset->enclosures = [];
+            $image_asset->producer = $custom_credit;
+            $image_asset->provider = $custom_agency;
+            $image_asset->enclosures = [];
 
-            //     $image_enc = new stdClass;
-            //     $image_enc->href = $image_attach_url . $in_body;
-            //     $image_enc->rels = ['image-custom'];
-            //     if (!empty($image_type)) {
-            //         $image_enc->rels[] = 'primary';
-            //         $new_image->rels = $image_type;
-            //     }
+            $image_enc = new stdClass;
+            // $image_enc->href = $image_attach_url . $in_body;
+            $image_enc->rels = ['image-custom'];
+            if (!empty($image_type)) {
+                $image_enc->rels[] = 'primary';
+                $new_image->rels = $image_type;
+            }
             //     $image_enc->type = $image->post_mime_type;
             //     if (!empty($image_meta)) {
             //         $image_enc->width = $image_meta['width'];
             //         $image_enc->height = $image_meta['height'];
             //     }
 
-            //     $image_asset->enclosures[] = $image_enc;
-            //     $story->assets->{$image_asset_id} = $image_asset;
+            $image_asset->enclosures[] = $image_enc;
+            // $story->assets->{$image_asset_id} = $image_asset;
 
-            //     $new_image->href = '#/assets/' . $image_asset_id;
-            // $story->images[] = $new_image;
+            // $new_image->href = '#/assets/' . $image_asset_id;
+            $story->images[] = $new_image;
         }
 
         // /*
