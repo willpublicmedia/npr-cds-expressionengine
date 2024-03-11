@@ -152,13 +152,14 @@ class Cds_mapper
         // see story api nprml_mapper.php #667
         $images = $this->get_media($entry, 'npr_images');
         $image_credits = $this->process_image_credits($images);
-        $primary_image_index = array_walk($images, function ($image, $key) use (&$primary_image_index) {
+        $primary_image_index = null;
+        foreach ($images as $key => $image) {
             if ($image['crop_primary'] === 1) {
                 $primary_image_index = $key;
+                break;
             }
-        });
-        // $primary_image = get_post_thumbnail_id($post->ID);
-
+        }
+dd($primary_image_index);
         // if (!empty($images)) {
         //     $story->images = [];
         //     $image_profile = new stdClass;
@@ -473,7 +474,7 @@ class Cds_mapper
         $columns = ee()->grid_model->get_columns_for_field($media_field_id, $content_type);
 
         // get entry data
-        $entry_data = ee()->grid_model->get_entry_rows($entry->entry_id, $media_field_id, $content_type, null);
+        $entry_data = ee()->grid_model->get_entry_rows($entry->entry_id, $media_field_id, $content_type, []);
 
         // loop entry data rows
         $media = array();
