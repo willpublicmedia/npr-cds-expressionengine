@@ -170,6 +170,7 @@ class Cds_mapper
 
         foreach ($images as $image) {
             $manipulations = $this->get_manipulations($image);
+            $crops = $this->create_image_crops($manipulations);
             //     $custom_credit = '';
             //     $custom_agency = '';
             //     $image_metas = get_post_custom_keys($image->ID);
@@ -412,6 +413,24 @@ class Cds_mapper
         $url = rtrim(ee()->config->item('site_url'), '/') . '/' . ltrim(implode('/', $url_segments), '/');
 
         return $url;
+    }
+
+    private function create_image_crops(array $manipulations): array
+    {
+        $crops = array();
+        foreach ($manipulations as $manipulation) {
+            $crops[] = array(
+                'tag' => 'crop',
+                'attr' => array(
+                    'type' => $manipulation['type'],
+                    'src' => $manipulation['src'],
+                    // 'height' => $manipulation['height'],
+                    'width' => $manipulation['width'],
+                ),
+            );
+        }
+
+        return $crops;
     }
 
     private function get_bylines(ChannelEntry $entry): array
