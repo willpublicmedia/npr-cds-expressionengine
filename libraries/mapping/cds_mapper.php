@@ -168,84 +168,84 @@ class Cds_mapper
             $story->profiles[] = $image_profile;
         }
 
-        // foreach ($images as $image) {
-        //     $custom_credit = '';
-        //     $custom_agency = '';
-        //     $image_metas = get_post_custom_keys($image->ID);
-        //     if (
-        //         $use_custom &&
-        //         !empty($custom_media_credit) &&
-        //         $custom_media_credit != '#NONE#' &&
-        //         in_array($custom_media_credit, $image_metas)
-        //     ) {
-        //         $custom_credit = get_post_meta($image->ID, $custom_media_credit, true);
-        //     }
+        foreach ($images as $image) {
+            //     $custom_credit = '';
+            //     $custom_agency = '';
+            //     $image_metas = get_post_custom_keys($image->ID);
+            //     if (
+            //         $use_custom &&
+            //         !empty($custom_media_credit) &&
+            //         $custom_media_credit != '#NONE#' &&
+            //         in_array($custom_media_credit, $image_metas)
+            //     ) {
+            //         $custom_credit = get_post_meta($image->ID, $custom_media_credit, true);
+            //     }
 
-        //     if (
-        //         $use_custom &&
-        //         !empty($custom_media_agency) &&
-        //         $custom_media_agency != '#NONE#' &&
-        //         in_array($custom_media_agency, $image_metas)
-        //     ) {
-        //         $custom_agency = get_post_meta($image->ID, $custom_media_agency, true);
-        //     }
+            //     if (
+            //         $use_custom &&
+            //         !empty($custom_media_agency) &&
+            //         $custom_media_agency != '#NONE#' &&
+            //         in_array($custom_media_agency, $image_metas)
+            //     ) {
+            //         $custom_agency = get_post_meta($image->ID, $custom_media_agency, true);
+            //     }
 
-        //     // If the image field for distribute is set and polarity then send it.
-        //     // All kinds of other math when polarity is negative or the field isn't set.
-        //     $image_type = [];
-        //     if ($image->ID == $primary_image) {
-        //         $image_type = ['primary', 'promo-image-standard'];
-        //     }
+            //     // If the image field for distribute is set and polarity then send it.
+            //     // All kinds of other math when polarity is negative or the field isn't set.
+            //     $image_type = [];
+            //     if ($image->ID == $primary_image) {
+            //         $image_type = ['primary', 'promo-image-standard'];
+            //     }
 
-        //     // Is the image in the content?  If so, tell the API with a flag that CorePublisher knows.
-        //     // WordPress may add something like "-150X150" to the end of the filename, before the extension.
-        //     // Isn't that nice? Let's remove that.
-        //     $image_attach_url = wp_get_attachment_url($image->ID);
-        //     $image_url = parse_url($image_attach_url);
-        //     $image_name_parts = pathinfo($image_url['path']);
+            //     // Is the image in the content?  If so, tell the API with a flag that CorePublisher knows.
+            //     // WordPress may add something like "-150X150" to the end of the filename, before the extension.
+            //     // Isn't that nice? Let's remove that.
+            //     $image_attach_url = wp_get_attachment_url($image->ID);
+            //     $image_url = parse_url($image_attach_url);
+            //     $image_name_parts = pathinfo($image_url['path']);
 
-        //     $image_regex = "/" . $image_name_parts['filename'] . "\-[a-zA-Z0-9]*" . $image_name_parts['extension'] . "/";
-        //     $in_body = "";
-        //     if (preg_match($image_regex, $content)) {
-        //         if (str_contains($image_attach_url, '?')) {
-        //             $in_body = "&origin=body";
-        //         } else {
-        //             $in_body = "?origin=body";
-        //         }
-        //     }
+            //     $image_regex = "/" . $image_name_parts['filename'] . "\-[a-zA-Z0-9]*" . $image_name_parts['extension'] . "/";
+            //     $in_body = "";
+            //     if (preg_match($image_regex, $content)) {
+            //         if (str_contains($image_attach_url, '?')) {
+            //             $in_body = "&origin=body";
+            //         } else {
+            //             $in_body = "?origin=body";
+            //         }
+            //     }
 
-        //     $image_meta = wp_get_attachment_metadata($image->ID);
+            //     $image_meta = wp_get_attachment_metadata($image->ID);
 
-        //     $new_image = new stdClass;
-        //     $image_asset = new stdClass;
-        //     $image_asset_id = $prefix . '-' . $image->ID;
-        //     $image_asset->id = $image_asset_id;
-        //     $image_asset->profiles = npr_cds_asset_profile('image');
-        //     $image_asset->title = $image->post_title;
-        //     $image_asset->caption = $image->post_excerpt;
-        //     $image_asset->producer = $custom_credit;
-        //     $image_asset->provider = $custom_agency;
-        //     $image_asset->enclosures = [];
+            //     $new_image = new stdClass;
+            //     $image_asset = new stdClass;
+            //     $image_asset_id = $prefix . '-' . $image->ID;
+            //     $image_asset->id = $image_asset_id;
+            //     $image_asset->profiles = npr_cds_asset_profile('image');
+            //     $image_asset->title = $image->post_title;
+            //     $image_asset->caption = $image->post_excerpt;
+            //     $image_asset->producer = $custom_credit;
+            //     $image_asset->provider = $custom_agency;
+            //     $image_asset->enclosures = [];
 
-        //     $image_enc = new stdClass;
-        //     $image_enc->href = $image_attach_url . $in_body;
-        //     $image_enc->rels = ['image-custom'];
-        //     if (!empty($image_type)) {
-        //         $image_enc->rels[] = 'primary';
-        //         $new_image->rels = $image_type;
-        //     }
-        //     $image_enc->type = $image->post_mime_type;
-        //     if (!empty($image_meta)) {
-        //         $image_enc->width = $image_meta['width'];
-        //         $image_enc->height = $image_meta['height'];
-        //     }
+            //     $image_enc = new stdClass;
+            //     $image_enc->href = $image_attach_url . $in_body;
+            //     $image_enc->rels = ['image-custom'];
+            //     if (!empty($image_type)) {
+            //         $image_enc->rels[] = 'primary';
+            //         $new_image->rels = $image_type;
+            //     }
+            //     $image_enc->type = $image->post_mime_type;
+            //     if (!empty($image_meta)) {
+            //         $image_enc->width = $image_meta['width'];
+            //         $image_enc->height = $image_meta['height'];
+            //     }
 
-        //     $image_asset->enclosures[] = $image_enc;
-        //     $story->assets->{$image_asset_id} = $image_asset;
+            //     $image_asset->enclosures[] = $image_enc;
+            //     $story->assets->{$image_asset_id} = $image_asset;
 
-        //     $new_image->href = '#/assets/' . $image_asset_id;
-        //     $story->images[] = $new_image;
-        // }
+            //     $new_image->href = '#/assets/' . $image_asset_id;
+            // $story->images[] = $new_image;
+        }
 
         // /*
         //  * Attach audio to the post
