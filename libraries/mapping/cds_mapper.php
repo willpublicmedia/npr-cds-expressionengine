@@ -19,6 +19,8 @@ class Cds_mapper
 {
     private $field_utils;
 
+    private $file_manager_compatibility_mode = true;
+
     private $settings = [
         'document_prefix' => '',
         'pull_url' => '',
@@ -37,6 +39,13 @@ class Cds_mapper
     {
         $this->field_utils = new Field_utils();
         $this->settings = $this->load_settings();
+
+        if (APP_VER >= 7) {
+            $compatibility_mode = ee()->config->item('file_manager_compatibility_mode');
+            if ($compatibility_mode === 'n') {
+                $this->file_manager_compatibility_mode = false;
+            }
+        }
     }
 
     public function create_json(ChannelEntry $entry, array $values, string $profile)
@@ -200,22 +209,10 @@ class Cds_mapper
                 $image_type = ['primary', 'promo-image-standard'];
             }
 
-            //     // Is the image in the content?  If so, tell the API with a flag that CorePublisher knows.
-            //     // WordPress may add something like "-150X150" to the end of the filename, before the extension.
-            //     // Isn't that nice? Let's remove that.
-            //     $image_attach_url = wp_get_attachment_url($image->ID);
-            //     $image_url = parse_url($image_attach_url);
-            //     $image_name_parts = pathinfo($image_url['path']);
-
-            //     $image_regex = "/" . $image_name_parts['filename'] . "\-[a-zA-Z0-9]*" . $image_name_parts['extension'] . "/";
-            //     $in_body = "";
-            //     if (preg_match($image_regex, $content)) {
-            //         if (str_contains($image_attach_url, '?')) {
-            //             $in_body = "&origin=body";
-            //         } else {
-            //             $in_body = "?origin=body";
-            //         }
-            //     }
+            // Is the image in the content?  If so, tell the API with a flag that CorePublisher knows.
+            // WordPress may add something like "-150X150" to the end of the filename, before the extension.
+            // Isn't that nice? Let's remove that.
+            $in_body = $this->check_image_in_body($image, $content);
 
             //     $image_meta = wp_get_attachment_metadata($image->ID);
 
@@ -401,6 +398,25 @@ class Cds_mapper
         return $text;
     }
 
+    private function check_image_in_body(array $image, string $content): string
+    {
+        $image_attach_url = $this->get_filename($image['file']);
+        $image_url = parse_url($image_attach_url);
+        $image_name_parts = pathinfo($image_url['path']);
+
+        $image_regex = "/" . $image_name_parts['filename'] . "\-[a-zA-Z0-9]*" . $image_name_parts['extension'] . "/";
+        $in_body = "";
+        if (preg_match($image_regex, $content)) {
+            if (str_contains($image_attach_url, '?')) {
+                $in_body = "&origin=body";
+            } else {
+                $in_body = "?origin=body";
+            }
+        }
+
+        return $in_body;
+    }
+
     private function construct_canonical_url(string $base_url, string $url_title)
     {
         $url_segments = explode('/', $base_url);
@@ -483,6 +499,13 @@ class Cds_mapper
             ->file_id;
 
         return $file_id;
+    }
+
+    private function get_filename(string $file_src): string
+    {
+        $filename = $file_src;
+
+        return $filename;
     }
 
     private function get_manipulations(array $image_data): array
