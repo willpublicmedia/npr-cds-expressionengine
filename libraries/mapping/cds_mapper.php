@@ -216,11 +216,11 @@ class Cds_mapper
 
             $new_image = new stdClass;
             $image_asset = new stdClass;
-            //     $image_asset_id = $prefix . '-' . $image->ID;
-            //     $image_asset->id = $image_asset_id;
+            $image_asset_id = $prefix . '-' . $image['file_id'];
+            $image_asset->id = $image_asset_id;
             $image_asset->profiles = $this->get_npr_cds_asset_profile('image');
-            //     $image_asset->title = $image->post_title;
-            //     $image_asset->caption = $image->post_excerpt;
+            $image_asset->title = $entry->title;
+            $image_asset->caption = $entry->{$this->field_utils->get_field_name('teaser')};
             $image_asset->producer = $custom_credit;
             $image_asset->provider = $custom_agency;
             $image_asset->enclosures = [];
