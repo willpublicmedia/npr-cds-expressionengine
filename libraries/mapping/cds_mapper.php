@@ -398,14 +398,14 @@ class Cds_mapper
 
     private function check_image_in_body(array $image, string $content): string
     {
-        $image_attach_url = $this->get_filename($image['file']);
-        $image_url = parse_url($image_attach_url);
+        $image_attach_url = $this->get_filemanager_parts($image['file']);
+        $image_url = parse_url($image_attach_url['filename']);
         $image_name_parts = pathinfo($image_url['path']);
 
         $image_regex = "/" . $image_name_parts['filename'] . "\-[a-zA-Z0-9]*" . $image_name_parts['extension'] . "/";
         $in_body = "";
         if (preg_match($image_regex, $content)) {
-            if (str_contains($image_attach_url, '?')) {
+            if (str_contains($image_attach_url['filename'], '?')) {
                 $in_body = "&origin=body";
             } else {
                 $in_body = "?origin=body";
@@ -481,10 +481,17 @@ class Cds_mapper
 
     private function get_file_id($file_src)
     {
-        $image_url_data = parse_url($file_src);
-        $image_path = ltrim($image_url_data['path'], '/');
-        $image_path_elements = explode('/', $image_path);
-        $filename = array_pop($image_path_elements);
+        $filename = '';
+
+        if (str_starts_with($file_src, '{')) {
+            $parts = $this->get_filemanager_parts($file_src);
+            $filename = $parts['filename'];
+        } else {
+            $image_url_data = parse_url($file_src);
+            $image_path = ltrim($image_url_data['path'], '/');
+            $image_path_elements = explode('/', $image_path);
+            $filename = array_pop($image_path_elements);
+        }
 
         $file_id = ee()->db->select('file_id')
             ->from('files')
@@ -499,11 +506,28 @@ class Cds_mapper
         return $file_id;
     }
 
-    private function get_filename(string $file_src): string
+    private function get_filemanager_parts(string $file_src): array
     {
-        $filename = $file_src;
+        $parts = [
+            'location' => '',
+            'filename' => '',
+        ];
 
-        return $filename;
+        if ($this->file_manager_compatibility_mode === true) {
+            $file_src = ltrim($file_src, '{');
+            $file_src = str_replace('}', ':', $file_src);
+            $split = explode(':', $file_src);
+            $parts['location'] = $split[0];
+            $parts['filename'] = $split[1];
+        } else {
+            $file_src = ltrim($file_src, '{');
+            $file_src = rtrim($file_src, '}');
+            $split = explode(':', $file_src);
+            $parts['location'] = $split[1];
+            $parts['filename'] = $split[2];
+        }
+
+        return $parts;
     }
 
     private function get_manipulations(array $image_data): array
@@ -563,6 +587,10 @@ class Cds_mapper
                 $url_col = $row_data['audio_url'];
             } elseif ($field_name === 'npr_images') {
                 $url_col = $row_data['crop_src'];
+            }
+
+            if (empty($url_col)) {
+                $url_col = $row_data['file'];
             }
 
             $file_id = $this->get_file_id($url_col);
