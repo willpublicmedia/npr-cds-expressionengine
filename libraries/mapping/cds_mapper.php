@@ -225,8 +225,9 @@ class Cds_mapper
             $image_asset->provider = $custom_agency;
             $image_asset->enclosures = [];
 
+            $image_attach_url = $image['url'];
             $image_enc = new stdClass;
-            // $image_enc->href = $image_attach_url . $in_body;
+            $image_enc->href = $image_attach_url . $in_body;
             $image_enc->rels = ['image-custom'];
             if (!empty($image_type)) {
                 $image_enc->rels[] = 'primary';
@@ -596,10 +597,26 @@ class Cds_mapper
             $file_id = $this->get_file_id($url_col);
             $row_data['file_id'] = $file_id;
 
+            $url = $this->get_media_url($file_id);
+            $row_data['url'] = $url;
+
             $media[] = $row_data;
         }
 
         return $media;
+    }
+
+    private function get_media_url($file_id): string
+    {
+        ee()->load->helper('url');
+
+        $file = ee('Model')->get('FileSystemEntity')->filter('file_id', $file_id)->first();
+        $base_url = rtrim(base_url(), '/');
+        $path = rtrim($file->getBaseUrl(), '/');
+        $filename = ltrim($file->file_name, '/');
+        $url = $base_url . $path . $filename;
+
+        return $url;
     }
 
     private function get_npr_cds_asset_profile($type, $cds_version = Npr_constants::NPR_CDS_VERSION): array
