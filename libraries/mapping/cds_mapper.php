@@ -159,14 +159,14 @@ class Cds_mapper
                 break;
             }
         }
-dd($primary_image_index);
-        // if (!empty($images)) {
-        //     $story->images = [];
-        //     $image_profile = new stdClass;
-        //     $image_profile->href = '/' . $cds_version . '/profiles/has-images';
-        //     $image_profile->rels = ['interface'];
-        //     $story->profiles[] = $image_profile;
-        // }
+
+        if (!empty($images)) {
+            $story->images = [];
+            $image_profile = new stdClass;
+            $image_profile->href = '/' . $cds_version . '/profiles/has-images';
+            $image_profile->rels = ['interface'];
+            $story->profiles[] = $image_profile;
+        }
 
         // foreach ($images as $image) {
         //     $custom_credit = '';
