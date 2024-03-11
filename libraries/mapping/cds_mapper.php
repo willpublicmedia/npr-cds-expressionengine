@@ -171,33 +171,34 @@ class Cds_mapper
         foreach ($images as $image) {
             $manipulations = $this->get_manipulations($image);
             $crops = $this->create_image_crops($manipulations);
-            //     $custom_credit = '';
-            //     $custom_agency = '';
-            //     $image_metas = get_post_custom_keys($image->ID);
-            //     if (
-            //         $use_custom &&
-            //         !empty($custom_media_credit) &&
-            //         $custom_media_credit != '#NONE#' &&
-            //         in_array($custom_media_credit, $image_metas)
-            //     ) {
-            //         $custom_credit = get_post_meta($image->ID, $custom_media_credit, true);
-            //     }
 
-            //     if (
-            //         $use_custom &&
-            //         !empty($custom_media_agency) &&
-            //         $custom_media_agency != '#NONE#' &&
-            //         in_array($custom_media_agency, $image_metas)
-            //     ) {
-            //         $custom_agency = get_post_meta($image->ID, $custom_media_agency, true);
-            //     }
+            $custom_credit = '';
+            $custom_agency = '';
+            // $image_metas = get_post_custom_keys($image->ID);
+            // if (
+            //     $use_custom &&
+            //     !empty($custom_media_credit) &&
+            //     $custom_media_credit != '#NONE#' &&
+            //     in_array($custom_media_credit, $image_metas)
+            // ) {
+            //     $custom_credit = get_post_meta($image->ID, $custom_media_credit, true);
+            // }
 
-            //     // If the image field for distribute is set and polarity then send it.
-            //     // All kinds of other math when polarity is negative or the field isn't set.
-            //     $image_type = [];
-            //     if ($image->ID == $primary_image) {
-            //         $image_type = ['primary', 'promo-image-standard'];
-            //     }
+            // if (
+            //     $use_custom &&
+            //     !empty($custom_media_agency) &&
+            //     $custom_media_agency != '#NONE#' &&
+            //     in_array($custom_media_agency, $image_metas)
+            // ) {
+            //     $custom_agency = get_post_meta($image->ID, $custom_media_agency, true);
+            // }
+
+            // If the image field for distribute is set and polarity then send it.
+            // All kinds of other math when polarity is negative or the field isn't set.
+            $image_type = [];
+            if ($image['crop_primary'] === 1) {
+                $image_type = ['primary', 'promo-image-standard'];
+            }
 
             //     // Is the image in the content?  If so, tell the API with a flag that CorePublisher knows.
             //     // WordPress may add something like "-150X150" to the end of the filename, before the extension.
