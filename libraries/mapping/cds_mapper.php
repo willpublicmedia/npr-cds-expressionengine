@@ -169,6 +169,7 @@ class Cds_mapper
         }
 
         foreach ($images as $image) {
+            $manipulations = $this->get_manipulations($image);
             //     $custom_credit = '';
             //     $custom_agency = '';
             //     $image_metas = get_post_custom_keys($image->ID);
@@ -462,6 +463,32 @@ class Cds_mapper
             ->file_id;
 
         return $file_id;
+    }
+
+    private function get_manipulations(array $image_data): array
+    {
+        $file = ee('Model')->get('File')->filter('file_id', $image_data['file_id'])->first();
+        if ($file === null) {
+            return array();
+        }
+
+        $destinations = $file->UploadDestination;
+        $dimensions = $destinations->FileDimensions;
+
+        $manipulations = array();
+        foreach ($dimensions as $dimension) {
+            $src = rtrim($destinations->url, '/') . "/_" . $dimension->short_name . "/" . $file->file_name;
+            $manipulation = [
+                'type' => $dimension->short_name,
+                'src' => $src,
+                'height' => $dimension->height,
+                'width' => $dimension->width,
+            ];
+
+            $manipulations[] = $manipulation;
+        }
+
+        return $manipulations;
     }
 
     private function get_media(ChannelEntry $entry, string $field_name)
