@@ -131,9 +131,9 @@ class Cds_mapper
                 $para_type = 'html';
             }
             if ($para_type == 'html') {
-                $para->profiles = npr_cds_asset_profile($para_type . '-block');
+                $para->profiles = $this->get_npr_cds_asset_profile($para_type . '-block');
             } else {
-                $para->profiles = npr_cds_asset_profile($para_type);
+                $para->profiles = $this->get_npr_cds_asset_profile($para_type);
             }
             $para->{$para_type} = $part;
             $story->assets->{$para_id} = $para;
@@ -152,6 +152,11 @@ class Cds_mapper
         // see story api nprml_mapper.php #667
         $images = $this->get_media($entry, 'npr_images');
         $image_credits = $this->process_image_credits($images);
+        $primary_image_index = array_walk($images, function ($image, $key) use (&$primary_image_index) {
+            if ($image['crop_primary'] === 1) {
+                $primary_image_index = $key;
+            }
+        });
         // $primary_image = get_post_thumbnail_id($post->ID);
 
         // if (!empty($images)) {
