@@ -196,19 +196,36 @@ class Cds_mapper
             $image_attach_url = $image['url'];
             $image_enc = new stdClass;
             $image_enc->href = $image_attach_url . $in_body;
+
             $image_enc->rels = ['image-custom'];
             if (!empty($image_type)) {
                 $image_enc->rels[] = 'primary';
                 $new_image->rels = $image_type;
             }
-            $image_enc->type = $image->post_mime_type;
+
             if (!empty($image_meta)) {
+                $image_enc->type = $image_meta->mime_type;
                 $image_enc->width = $image_meta->width;
                 $image_enc->height = $image_meta->height;
             }
 
             $image_asset->enclosures[] = $image_enc;
             $story->assets->{$image_asset_id} = $image_asset;
+
+            foreach ($crops as $data) {
+                $crop = $data['attr'];
+                $enclosure = new stdClass;
+                $enclosure->href = base_url() . $crop['src'];
+                $enclosure->rels = [
+                    'image-' . $crop['type'],
+                ];
+                $new_image->rels[] = $crop['type'];
+                $enclosure->type = $image_meta->mime_type;
+                $enclosure->width = $crop['width'];
+                // $enclosure->height = $crop['height'];
+
+                $image_asset->enclosures[] = $enclosure;
+            }
 
             $new_image->href = '#/assets/' . $image_asset_id;
             $story->images[] = $new_image;
