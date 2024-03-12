@@ -181,27 +181,6 @@ class Cds_mapper
             $manipulations = $this->get_manipulations($image);
             $crops = $this->create_image_crops($manipulations);
 
-            $custom_credit = '';
-            $custom_agency = '';
-            // $image_metas = get_post_custom_keys($image->ID);
-            // if (
-            //     $use_custom &&
-            //     !empty($custom_media_credit) &&
-            //     $custom_media_credit != '#NONE#' &&
-            //     in_array($custom_media_credit, $image_metas)
-            // ) {
-            //     $custom_credit = get_post_meta($image->ID, $custom_media_credit, true);
-            // }
-
-            // if (
-            //     $use_custom &&
-            //     !empty($custom_media_agency) &&
-            //     $custom_media_agency != '#NONE#' &&
-            //     in_array($custom_media_agency, $image_metas)
-            // ) {
-            //     $custom_agency = get_post_meta($image->ID, $custom_media_agency, true);
-            // }
-
             // If the image field for distribute is set and polarity then send it.
             // All kinds of other math when polarity is negative or the field isn't set.
             $image_type = [];
@@ -220,8 +199,8 @@ class Cds_mapper
             $image_asset->profiles = $this->get_npr_cds_asset_profile('image');
             $image_asset->title = $entry->title;
             $image_asset->caption = $entry->{$this->field_utils->get_field_name('teaser')};
-            $image_asset->producer = $custom_credit;
-            $image_asset->provider = $custom_agency;
+            $image_asset->producer = $image_credits['media_credit'];
+            $image_asset->provider = $image_credits['media_agency'];
             $image_asset->enclosures = [];
 
             $image_attach_url = $image['url'];
