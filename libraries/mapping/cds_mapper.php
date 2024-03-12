@@ -255,7 +255,7 @@ class Cds_mapper
         }
 
         foreach ($audios as $audio) {
-            $audio_meta = ee('Model')->get('FileSystemEntity')->filter('file_id', $audio['file_id']);
+            $audio_meta = ee('Model')->get('FileSystemEntity')->filter('file_id', $audio['file_id'])->first();
             $audio_guid = $audio['url'];
             $audio_files[] = $audio['file_id'];
 
