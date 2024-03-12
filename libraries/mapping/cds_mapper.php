@@ -216,10 +216,11 @@ class Cds_mapper
                 $crop = $data['attr'];
                 $enclosure = new stdClass;
                 $enclosure->href = base_url() . $crop['src'];
+                $image_format = 'image-' . $crop['type'];
                 $enclosure->rels = [
-                    'image-' . $crop['type'],
+                    $image_format,
                 ];
-                $new_image->rels[] = $crop['type'];
+                $new_image->rels[] = $image_format;
                 $enclosure->type = $image_meta->mime_type;
                 $enclosure->width = $crop['width'];
                 // $enclosure->height = $crop['height'];
