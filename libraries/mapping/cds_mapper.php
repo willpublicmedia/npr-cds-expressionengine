@@ -232,64 +232,57 @@ class Cds_mapper
             $story->images[] = $new_image;
         }
 
-        // /*
-        //  * Attach audio to the post
-        //  *
-        //  * Should be able to do the same as image for audio, with post_mime_type = 'audio' or something.
-        //  */
-        // $args = [
-        //     'order' => 'DESC',
-        //     'post_mime_type' => 'audio',
-        //     'post_parent' => $post->ID,
-        //     'post_status' => null,
-        //     'post_type' => 'attachment',
-        // ];
-        // $audios = get_children($args);
-        // $audio_files = [];
+        /*
+         * Attach audio to the post
+         *
+         * Should be able to do the same as image for audio, with post_mime_type = 'audio' or something.
+         */
+        $audios = $this->get_media($entry, 'audio_files');
+        $audio_files = [];
 
-        // if (!empty($audios)) {
-        //     $story->audio = [];
-        //     $audio_has = new stdClass;
-        //     $audio_has->href = '/' . $cds_version . '/profiles/has-audio';
-        //     $audio_has->rels = ['interface'];
-        //     $story->profiles[] = $audio_has;
-        //     $audio_listen = new stdClass;
-        //     $audio_listen->href = '/' . $cds_version . '/profiles/listenable';
-        //     $audio_listen->rels = ['interface'];
-        //     $story->profiles[] = $audio_listen;
-        // }
+        if (!empty($audios)) {
+            $story->audio = [];
+            $audio_has = new stdClass;
+            $audio_has->href = '/' . $cds_version . '/profiles/has-audio';
+            $audio_has->rels = ['interface'];
+            $story->profiles[] = $audio_has;
+            $audio_listen = new stdClass;
+            $audio_listen->href = '/' . $cds_version . '/profiles/listenable';
+            $audio_listen->rels = ['interface'];
+            $story->profiles[] = $audio_listen;
+        }
 
-        // foreach ($audios as $audio) {
-        //     $audio_meta = wp_get_attachment_metadata($audio->ID);
-        //     $audio_guid = wp_get_attachment_url($audio->ID);
-        //     $audio_files[] = $audio->ID;
+        foreach ($audios as $audio) {
+            $audio_meta = ee('Model')->get('File')->filter('file_id', $audio['file_id']);
+            $audio_guid = $audio['url'];
+            $audio_files[] = $audio['file_id'];
 
-        //     $new_audio = new stdClass;
-        //     $audio_asset = new stdClass;
-        //     $audio_asset_id = $prefix . '-' . $audio->ID;
-        //     $audio_asset->id = $audio_asset_id;
-        //     $audio_asset->profiles = npr_cds_asset_profile('audio');
-        //     $audio_asset->title = $audio->post_title;
-        //     $audio_asset->isAvailable = true;
-        //     $audio_asset->isDownloadable = true;
-        //     $audio_asset->isEmbeddable = false;
-        //     $audio_asset->isStreamable = false;
-        //     $audio_asset->duration = $audio_meta['length'];
+            $new_audio = new stdClass;
+            $audio_asset = new stdClass;
+            $audio_asset_id = $prefix . '-' . $audio['file_id'];
+            $audio_asset->id = $audio_asset_id;
+            $audio_asset->profiles = $this->get_npr_cds_asset_profile('audio');
+            $audio_asset->title = $entry->title;
+            $audio_asset->isAvailable = true;
+            $audio_asset->isDownloadable = true;
+            $audio_asset->isEmbeddable = false;
+            $audio_asset->isStreamable = false;
+            $audio_asset->duration = $audio['audio_duration'];
 
-        //     $audio_enc = new stdClass;
-        //     $audio_enc->href = $audio_guid;
-        //     $audio_enc->type = $audio->post_mime_type;
+            $audio_enc = new stdClass;
+            $audio_enc->href = $audio_guid;
+            $audio_enc->type = $audio_meta->mime_type;
 
-        //     $audio_asset->enclosures = [$audio_enc];
-        //     $story->assets->{$audio_asset_id} = $audio_asset;
+            $audio_asset->enclosures = [$audio_enc];
+            $story->assets->{$audio_asset_id} = $audio_asset;
 
-        //     $new_audio->href = '#/assets/' . $audio_asset_id;
-        //     if (count($audio_files) == 1) {
-        //         $new_audio->rels = ['headline', 'primary'];
-        //     }
+            $new_audio->href = '#/assets/' . $audio_asset_id;
+            if (count($audio_files) == 1) {
+                $new_audio->rels = ['headline', 'primary'];
+            }
 
-        //     $story->audio[] = $new_audio;
-        // }
+            $story->audio[] = $new_audio;
+        }
 
         // /*
         //  * Support for Powerpress enclosures
