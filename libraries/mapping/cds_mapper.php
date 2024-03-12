@@ -270,7 +270,7 @@ class Cds_mapper
             $audio_asset->isEmbeddable = false;
             $audio_asset->isStreamable = false;
 
-            $file_path = $audio_meta->server_path;
+            $file_path = $audio_meta->getBaseServerPath() . $audio_meta->file_name;
             $audio_asset->duration = $audio['audio_duration'] === '' ?
             $this->get_audio_duration($file_path) :
             $audio['audio_duration'];
