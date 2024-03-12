@@ -211,8 +211,7 @@ class Cds_mapper
 
             // Is the image in the content?  If so, tell the API with a flag that CorePublisher knows.
             $in_body = $this->check_image_in_body($image, $content);
-
-            //     $image_meta = wp_get_attachment_metadata($image->ID);
+            $image_meta = ee('Model')->get('File')->filter('file_id', $image['file_id'])->first();
 
             $new_image = new stdClass;
             $image_asset = new stdClass;
@@ -233,16 +232,16 @@ class Cds_mapper
                 $image_enc->rels[] = 'primary';
                 $new_image->rels = $image_type;
             }
-            //     $image_enc->type = $image->post_mime_type;
-            //     if (!empty($image_meta)) {
-            //         $image_enc->width = $image_meta['width'];
-            //         $image_enc->height = $image_meta['height'];
-            //     }
+            $image_enc->type = $image->post_mime_type;
+            if (!empty($image_meta)) {
+                $image_enc->width = $image_meta->width;
+                $image_enc->height = $image_meta->height;
+            }
 
             $image_asset->enclosures[] = $image_enc;
-            // $story->assets->{$image_asset_id} = $image_asset;
+            $story->assets->{$image_asset_id} = $image_asset;
 
-            // $new_image->href = '#/assets/' . $image_asset_id;
+            $new_image->href = '#/assets/' . $image_asset_id;
             $story->images[] = $new_image;
         }
 
