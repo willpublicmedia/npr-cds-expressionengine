@@ -151,9 +151,6 @@ class Cds_mapper
             $cds_count++;
         }
 
-        // $custom_media_credit = get_option('npr_cds_mapping_media_credit');
-        // $custom_media_agency = get_option('npr_cds_mapping_media_agency');
-
         /*
          * Attach images to the post
          */
@@ -161,13 +158,6 @@ class Cds_mapper
         // see story api nprml_mapper.php #667
         $images = $this->get_media($entry, 'npr_images');
         $image_credits = $this->process_image_credits($images);
-        $primary_image_index = null;
-        foreach ($images as $key => $image) {
-            if ($image['crop_primary'] === 1) {
-                $primary_image_index = $key;
-                break;
-            }
-        }
 
         if (!empty($images)) {
             $story->images = [];
