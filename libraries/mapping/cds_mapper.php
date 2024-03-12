@@ -290,65 +290,6 @@ class Cds_mapper
             $story->audio[] = $new_audio;
         }
 
-        // /*
-        //  * Support for Powerpress enclosures
-        //  *
-        //  * This logic is specifically driven by enclosure metadata items that are
-        //  * created by the PowerPress podcasting plug-in. It will likely have to be
-        //  * re-worked if we need to accomodate other plug-ins that use enclosures.
-        //  */
-        // if ($enclosures = get_metadata('post', $post->ID, 'enclosure')) {
-        //     foreach ($enclosures as $enclosure) {
-        //         $pieces = explode("\n", $enclosure);
-
-        //         $audio_guid = trim($pieces[0]);
-        //         $attach_id = attachment_url_to_postid($audio_guid);
-        //         if (!in_array($attach_id, $audio_files)) {
-        //             $audio_files[] = $attach_id;
-
-        //             $audio_meta = wp_get_attachment_metadata($attach_id);
-        //             $duration = 0;
-        //             if (!empty($audio_meta['length'])) {
-        //                 $duration = $audio_meta['length'];
-        //             } elseif (!empty($audio_meta['length_formatted'])) {
-        //                 $duration = npr_cds_convert_duration_to_seconds($audio_meta['length_formatted']);
-        //             } elseif (!empty($pieces[3])) {
-        //                 $metadata = unserialize(trim($pieces[3]));
-        //                 $duration = (!empty($metadata['duration'])) ? npr_cds_convert_duration_to_seconds($metadata['duration']) : 0;
-        //             }
-        //             $audio_type = 'audio/mpeg';
-        //             if (!empty($audio_meta['mime_type'])) {
-        //                 $audio_type = $audio_meta['mime_type'];
-        //             }
-
-        //             $new_audio = new stdClass;
-        //             $audio_asset = new stdClass;
-        //             $audio_asset_id = $prefix . '-' . $attach_id;
-        //             $audio_asset->id = $audio_asset_id;
-        //             $audio_asset->profiles = npr_cds_asset_profile('audio');
-        //             $audio_asset->isAvailable = true;
-        //             $audio_asset->isDownloadable = true;
-        //             $audio_asset->isEmbeddable = false;
-        //             $audio_asset->isStreamable = false;
-        //             $audio_asset->duration = $duration;
-
-        //             $audio_enc = new stdClass;
-        //             $audio_enc->href = wp_get_attachment_url($attach_id);
-        //             $audio_enc->type = $audio_type;
-
-        //             $audio_asset->enclosures = [$audio_enc];
-        //             $story->assets->{$attach_id} = $audio_asset;
-
-        //             $new_audio->href = '#/assets/' . $audio_asset_id;
-        //             if (count($audio_files) == 1) {
-        //                 $new_audio->rels = ['headline', 'primary'];
-        //             }
-
-        //             $story->audio[] = $new_audio;
-        //         }
-        //     }
-        // }
-
         /*
          * The story has been assembled; now we shall return it
          */
