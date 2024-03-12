@@ -8,11 +8,13 @@ if (!defined('BASEPATH')) {
 
 require_once __DIR__ . '/../configuration/npr_constants.php';
 require_once __DIR__ . '/../utilities/field_utils.php';
+require_once __DIR__ . '/../utilities/mp3file.php';
 
 use DateInterval;
 use ExpressionEngine\Model\Channel\ChannelEntry;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\MP3File;
 use \stdClass;
 
 class Cds_mapper
@@ -253,7 +255,7 @@ class Cds_mapper
         }
 
         foreach ($audios as $audio) {
-            $audio_meta = ee('Model')->get('File')->filter('file_id', $audio['file_id']);
+            $audio_meta = ee('Model')->get('FileSystemEntity')->filter('file_id', $audio['file_id']);
             $audio_guid = $audio['url'];
             $audio_files[] = $audio['file_id'];
 
@@ -267,7 +269,11 @@ class Cds_mapper
             $audio_asset->isDownloadable = true;
             $audio_asset->isEmbeddable = false;
             $audio_asset->isStreamable = false;
-            $audio_asset->duration = $audio['audio_duration'];
+
+            $file_path = $audio_meta->server_path;
+            $audio_asset->duration = $audio['audio_duration'] === '' ?
+            $this->get_audio_duration($file_path) :
+            $audio['audio_duration'];
 
             $audio_enc = new stdClass;
             $audio_enc->href = $audio_guid;
@@ -426,6 +432,13 @@ class Cds_mapper
         }
 
         return $crops;
+    }
+
+    private function get_audio_duration(string $absolute_path): int | float
+    {
+        $mp3 = new MP3File($absolute_path);
+        $duration = $mp3->getDurationEstimate();
+        return $duration;
     }
 
     private function get_bylines(ChannelEntry $entry): array
