@@ -215,14 +215,37 @@ class Cds_mapper
             $story->assets->{$image_asset_id} = $image_asset;
 
             foreach ($crops as $data) {
+                // check whether image will be rejected by CDS.
+                $allowed = ['primary', 'logo', 'premium-logo', 'headshot', 'thumbnail', 'brick', 'wide', 'square', 'standard'];
                 $crop = $data['attr'];
+
+                if (!in_array($crop['type'], $allowed) && $crop['type'] !== 'large') {
+                    continue;
+                }
+
                 $enclosure = new stdClass;
                 $enclosure->href = base_url() . $crop['src'];
-                $image_format = 'image-' . $crop['type'];
+
+                $image_format = '';
+                switch ($crop['type']) {
+                    case ($crop['type'] === 'large'):
+                        $image_format = 'promo-image-standard';
+                        break;
+                    case ($crop['type'] === 'brick' || $crop['type'] === 'wide' || $crop['type'] === 'square' || $crop['type'] === 'standard'):
+                        $image_format = 'promo-image-' . $crop['type'];
+                        break;
+                    default:
+                        $image_format = $crop['type'];
+                }
+
                 $enclosure->rels = [
                     $image_format,
                 ];
-                $new_image->rels[] = $image_format;
+
+                if (!in_array($image_format, $new_image->rels)) {
+                    $new_image->rels[] = $image_format;
+                }
+
                 $enclosure->type = $image_meta->mime_type;
                 $enclosure->width = $crop['width'];
                 // $enclosure->height = $crop['height'];
