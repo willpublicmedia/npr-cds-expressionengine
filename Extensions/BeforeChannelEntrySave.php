@@ -167,18 +167,17 @@ class BeforeChannelEntrySave extends AbstractRoute
 
         $json = $this->create_json($entry, $values);
 
-        // $params = array(
-        //     'orgId' => $this->settings['org_id'],
-        //     // 'dateType' => 'story',
-        //     // 'output' => 'NPRML',
-        //     'apiKey' => $api_key,
-        //     'body' => $nprml,
-        // );
+        if ($json === false) {
+            ee('CP/Alert')->makeInline('story-json-encode')
+                ->asError()
+                ->withTitle('NPR Stories')
+                ->addToBody("A JSON error occurred while preparing the entry for distribution.")
+                ->defer();
 
-        // // TODO: deduplicate request methods
-        // $api_service = new Npr_api_expressionengine();
-        // $api_service->request($params, 'story', $push_url, 'post');
+            return;
+        }
 
+        $response = $this->push_story($json);
         // if (!property_exists($api_service, 'response') || !isset($api_service->response)) {
         //     return;
         // }
@@ -339,6 +338,26 @@ class BeforeChannelEntrySave extends AbstractRoute
         $request->params = $params;
         $request->path = 'documents';
         $request->method = 'get';
+
+        $api_service = new Npr_cds_expressionengine();
+        $response = $api_service->request($request);
+
+        return $response;
+    }
+
+    private function push_story(string $json): ?Api_response
+    {
+        $params = [
+            'json' => $json,
+        ];
+
+        $push_url = isset($this->settings['push_url']) ? $this->settings['push_url'] : null;
+
+        $request = new Api_request();
+        $request->base_url = $push_url;
+        $request->params = $params;
+        $request->path = 'documents';
+        $request->method = 'put';
 
         $api_service = new Npr_cds_expressionengine();
         $response = $api_service->request($request);
