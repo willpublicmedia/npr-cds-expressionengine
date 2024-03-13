@@ -19,7 +19,7 @@ class Npr_cds_expressionengine
 {
     public function request(Api_request $request): Api_response
     {
-        $response = $this->query_by_url($request);
+        $response = $this->connect_as_curl($request);
         return $response;
     }
 
@@ -123,12 +123,6 @@ class Npr_cds_expressionengine
             $response->json = $json;
         }
 
-        return $response;
-    }
-
-    private function query_by_url(Api_request $request): ?Api_response
-    {
-        $response = $this->connect_as_curl($request);
         return $response;
     }
 
