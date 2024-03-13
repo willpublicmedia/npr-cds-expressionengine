@@ -50,6 +50,11 @@ class BeforeChannelEntrySave extends AbstractRoute
         $this->map_model_fields(array_keys($this->fields));
     }
 
+    public function autofill_media_fields($entry, $values)
+    {
+        throw new \Exception('not implemented');
+    }
+
     public function pull_story_via_entry_save($entry, $values)
     {
         $source_field = $this->fields['channel_entry_source'];
