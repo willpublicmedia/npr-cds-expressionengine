@@ -196,11 +196,10 @@ class BeforeChannelEntrySave extends AbstractRoute
                 ->defer();
         }
 
-        $response_items = $this->process_push_response($entry);
-        $npr_story_id = $response_items['npr_story_id'];
-
-        // don't assign npr_story_id if entry already has one
+        // assign story id if not present
         if ($entry->{$this->fields['npr_story_id']} === '') {
+            $response_items = $this->process_push_response($entry);
+            $npr_story_id = $response_items['npr_story_id'];
             $entry->{$this->fields['npr_story_id']} = $npr_story_id;
         }
 
