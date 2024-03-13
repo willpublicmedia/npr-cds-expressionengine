@@ -25,54 +25,7 @@ class Npr_cds_expressionengine
 
     private function connect_as_curl(Api_request $request)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $request->request_url());
-
-        $headers = [];
-
-        switch ($request->method) {
-            case ($request->method === 'get'):
-                break; // empty case for most common/default method.
-            case ($request->method === 'put'):
-                $put_headers = [
-                    'Cache-Control: no-cache',
-                    'Content-Type: application/json;charset=UTF-8',
-                    'Connection: Keep-Alive',
-                    'Vary: Accept-Encoding',
-                ];
-
-                array_merge($headers, $put_headers);
-                curl_setopt($ch, CURLOPT_HEADER, true);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $field_count = count($request->params);
-                curl_setopt($ch, CURLOPT_PUT, $field_count);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($request->postfields));
-                break;
-            case ($request->method === 'post'):
-                $post_headers = [
-                    'Content-Type: application/json;charset=UTF-8',
-                    'Connection: Keep-Alive',
-                    'Vary: Accept-Encoding',
-                ];
-                array_merge($headers, $post_headers);
-                curl_setopt($ch, CURLOPT_HEADER, true);
-                $field_count = count($request->params);
-                curl_setopt($ch, CURLOPT_POST, $field_count);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $request->postfields);
-                break;
-            case ($request->method === 'delete'):
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-                break;
-        }
-
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
-
-        $cds_token = $this->request_auth_token();
-        $headers[] = 'Authorization: Bearer ' . $cds_token;
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $ch = $this->prepare_curl_handle($request);
 
         $raw = curl_exec($ch);
 
@@ -142,6 +95,60 @@ class Npr_cds_expressionengine
         }
 
         return $response;
+    }
+
+    private function prepare_curl_handle(Api_request $request): \CurlHandle  | false
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $request->request_url());
+
+        $headers = [];
+
+        switch ($request->method) {
+            case ($request->method === 'get'):
+                break; // empty case for most common/default method.
+            case ($request->method === 'put'):
+                $put_headers = [
+                    'Cache-Control: no-cache',
+                    'Content-Type: application/json;charset=UTF-8',
+                    'Connection: Keep-Alive',
+                    'Vary: Accept-Encoding',
+                ];
+
+                array_merge($headers, $put_headers);
+                curl_setopt($ch, CURLOPT_HEADER, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $field_count = count($request->params);
+                curl_setopt($ch, CURLOPT_PUT, $field_count);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($request->postfields));
+                break;
+            case ($request->method === 'post'):
+                $post_headers = [
+                    'Content-Type: application/json;charset=UTF-8',
+                    'Connection: Keep-Alive',
+                    'Vary: Accept-Encoding',
+                ];
+                array_merge($headers, $post_headers);
+                curl_setopt($ch, CURLOPT_HEADER, true);
+                $field_count = count($request->params);
+                curl_setopt($ch, CURLOPT_POST, $field_count);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $request->postfields);
+                break;
+            case ($request->method === 'delete'):
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                break;
+        }
+
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+        $cds_token = $this->request_auth_token();
+        $headers[] = 'Authorization: Bearer ' . $cds_token;
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        return $ch;
     }
 
     private function request_auth_token(): string
