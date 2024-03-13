@@ -178,17 +178,23 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         $response = $this->push_story($json);
-        // if (!property_exists($api_service, 'response') || !isset($api_service->response)) {
-        //     return;
-        // }
+        if (is_null($response)) {
+            ee('CP/Alert')->makeInline('story-push')
+                ->asIssue()
+                ->withTitle('NPR CDS')
+                ->addToBody("Error pushing to NPR")
+                ->defer();
+            return;
+        }
 
-        // if (property_exists($api_service->response, 'messages') && $api_service->response->messages !== null) {
-        //     ee('CP/Alert')->makeInline('story-push')
-        //         ->asIssue()
-        //         ->withTitle('NPR Stories')
-        //         ->addToBody("Error pushing to NPR")
-        //         ->defer();
-        // }
+        if (!empty($response->messages)) {
+            $message = $response->messages[0];
+            ee('CP/Alert')->makeInline('story-push')
+                ->asIssue()
+                ->withTitle('NPR CDS')
+                ->addToBody($message)
+                ->defer();
+        }
 
         // $npr_story_id = $api_service->process_push_response();
 
