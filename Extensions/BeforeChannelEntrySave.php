@@ -52,7 +52,12 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     public function autofill_media_fields($entry, $values)
     {
-        throw new \Exception('not implemented');
+        $is_mapped_channel = $this->check_mapped_channel($entry->channel_id, false);
+        if ($is_mapped_channel === false) {
+            return;
+        }
+
+        $this->autofill_media_values($entry, $values);
     }
 
     public function pull_story_via_entry_save($entry, $values)
