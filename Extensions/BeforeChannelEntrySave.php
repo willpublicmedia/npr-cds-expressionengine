@@ -5,6 +5,7 @@ namespace IllinoisPublicMedia\NprCds\Extensions;
 require_once __DIR__ . '/../database/installation/fields/field_installer.php';
 require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
 require_once __DIR__ . '/../libraries/utilities/field_utils.php';
+require_once __DIR__ . '/../libraries/mapping/field_autofiller.php';
 require_once __DIR__ . '/../libraries/mapping/publish_form_mapper.php';
 require_once __DIR__ . '/../libraries/mapping/cds_mapper.php';
 
@@ -15,6 +16,7 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
 use IllinoisPublicMedia\NprCds\Libraries\Mapping\Cds_mapper;
+use IllinoisPublicMedia\NprCds\Libraries\Mapping\Field_autofiller;
 use IllinoisPublicMedia\NprCds\Libraries\Mapping\Publish_form_mapper;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
@@ -57,7 +59,9 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        $this->autofill_media_values($entry, $values);
+        $autofiller = new Field_autofiller();
+        $autofiller->autofill_audio('audio_files', $entry);
+        $autofiller->autofill_images('npr_images', $entry);
     }
 
     public function pull_story_via_entry_save($entry, $values)
