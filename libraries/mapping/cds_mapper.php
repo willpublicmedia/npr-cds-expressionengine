@@ -61,8 +61,7 @@ class Cds_mapper
 
         $story->title = $entry->title;
 
-        $prefix = $this->settings['document_prefix'];
-        $cds_id = $prefix . '-' . $entry->entry_id;
+        $cds_id = $this->create_story_id($entry);
         $story->id = $cds_id;
 
         $org_id = $this->settings['service_id'];
@@ -297,6 +296,13 @@ class Cds_mapper
          * The story has been assembled; now we shall return it
          */
         return json_encode($story);
+    }
+
+    public function create_story_id(ChannelEntry $entry): string
+    {
+        $prefix = $this->settings['document_prefix'];
+        $cds_id = $prefix . '-' . $entry->entry_id;
+        return $cds_id;
     }
 
     private function apply_shortcodes(string $text): string

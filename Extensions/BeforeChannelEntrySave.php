@@ -196,12 +196,13 @@ class BeforeChannelEntrySave extends AbstractRoute
                 ->defer();
         }
 
-        // $npr_story_id = $api_service->process_push_response();
+        $response_items = $this->process_push_response($entry);
+        $npr_story_id = $response_items['npr_story_id'];
 
-        // // don't assign npr_story_id if entry already has one
-        // if ($entry->{$this->fields['npr_story_id']} === '') {
-        //     $entry->{$this->fields['npr_story_id']} = $npr_story_id;
-        // }
+        // don't assign npr_story_id if entry already has one
+        if ($entry->{$this->fields['npr_story_id']} === '') {
+            $entry->{$this->fields['npr_story_id']} = $npr_story_id;
+        }
 
         ee('CP/Alert')->makeInline('story-push')
             ->asSuccess()
@@ -329,6 +330,17 @@ class BeforeChannelEntrySave extends AbstractRoute
         $objects = $mapper->map($entry, $values, $story);
 
         return $objects;
+    }
+
+    private function process_push_response(ChannelEntry $entry): array
+    {
+        $items = [];
+
+        // this is overkill, but ensures that entry and outgoing json get the same ID.
+        $mapper = new Cds_mapper();
+        $items['npr_story_id'] = $mapper->create_story_id($entry);
+
+        return [];
     }
 
     private function pull_npr_story($npr_story_id): ?Api_response
