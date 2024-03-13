@@ -49,8 +49,12 @@ class Npr_cds_expressionengine
         // $body = $is_json ? $raw : substr($raw, $header_size);
 
         // parser expects an object, not json string.
-        $response = curl_errno($ch) ?
-        $this->create_response($raw, $request->request_url(), $http_status, curl_error($ch)) : $this->create_response($raw, $request->request_url(), $http_status, null);
+        $response = null;
+        if (curl_errno($ch) || !str_starts_with($http_status, 2)) {
+            $response = $this->create_response($raw, $request->request_url(), $http_status, curl_error($ch));
+        } else {
+            $response = $this->create_response($raw, $request->request_url(), $http_status, null);
+        }
 
         curl_close($ch);
 
@@ -87,6 +91,12 @@ class Npr_cds_expressionengine
         }
 
         $json = json_decode($raw);
+
+        if (!$json) {
+            $message = "Something went wrong. HTTP status code $status.";
+            $response->messages = [$message];
+            return $response;
+        }
 
         if (property_exists($json, 'Message') && !empty($json->Message)) {
             $response->messages[] = $json->Message;
