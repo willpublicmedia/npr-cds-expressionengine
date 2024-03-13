@@ -207,8 +207,8 @@ class Cds_mapper
 
             if (!empty($image_meta)) {
                 $image_enc->type = $image_meta->mime_type;
-                $image_enc->width = $image_meta->width;
-                $image_enc->height = $image_meta->height;
+                $image_enc->width = intval($image_meta->width);
+                $image_enc->height = intval($image_meta->height);
             }
 
             $image_asset->enclosures[] = $image_enc;
@@ -247,8 +247,8 @@ class Cds_mapper
                 }
 
                 $enclosure->type = $image_meta->mime_type;
-                $enclosure->width = $crop['width'];
-                // $enclosure->height = $crop['height'];
+                $enclosure->width = intval($crop['width']);
+                // $enclosure->height = intval($crop['height']);
 
                 $image_asset->enclosures[] = $enclosure;
             }
@@ -389,8 +389,8 @@ class Cds_mapper
                 'attr' => array(
                     'type' => $manipulation['type'],
                     'src' => $manipulation['src'],
-                    // 'height' => $manipulation['height'],
-                    'width' => $manipulation['width'],
+                    'height' => array_key_exists('height', $manipulation) ? intval($manipulation['height']) : null,
+                    'width' => intval($manipulation['width']),
                 ),
             );
         }
