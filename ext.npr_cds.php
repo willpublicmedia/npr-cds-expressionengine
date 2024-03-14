@@ -5,6 +5,7 @@ if (!defined('BASEPATH')) {
 }
 
 use ExpressionEngine\Service\Addon\Extension;
+use IllinoisPublicMedia\NprCds\Extensions\BeforeChannelEntryDelete;
 use IllinoisPublicMedia\NprCds\Extensions\BeforeChannelEntrySave;
 
 class Npr_cds_ext extends Extension
@@ -15,6 +16,12 @@ class Npr_cds_ext extends Extension
     {
         $runner = new BeforeChannelEntrySave();
         $runner->autofill_media_fields($entry, $values);
+    }
+
+    public function delete_from_cds($entry, $values)
+    {
+        $runner = new BeforeChannelEntryDelete();
+        $runner->delete_from_cds($entry, $values);
     }
 
     public function pull_story_via_entry_save($entry, $values)

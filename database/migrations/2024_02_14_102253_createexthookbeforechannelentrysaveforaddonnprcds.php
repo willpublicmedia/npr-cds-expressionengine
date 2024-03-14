@@ -9,6 +9,10 @@ class CreateExtHookBeforeChannelEntrySaveForAddonNprCds extends Migration
             'hook' => 'before_channel_entry_save',
             'priority' => 5,
         ),
+        'delete_from_cds' => array(
+            'hook' => 'before_channel_entry_delete',
+            'priority' => 10,
+        ),
         'pull_story_via_entry_save' => array(
             'hook' => 'before_channel_entry_save',
             'priority' => 10,
