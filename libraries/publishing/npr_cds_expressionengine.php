@@ -130,6 +130,7 @@ class Npr_cds_expressionengine
                 array_merge($headers, $put_headers);
                 curl_setopt($ch, CURLOPT_HEADER, true);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
                 $field_count = count($request->params);
                 curl_setopt($ch, CURLOPT_PUT, $field_count);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($request->postfields));
