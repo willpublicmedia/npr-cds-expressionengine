@@ -380,15 +380,12 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function push_story(string $json): ?Api_response
     {
-        $params = [
-            'json' => $json,
-        ];
-
         $push_url = isset($this->settings['push_url']) ? $this->settings['push_url'] : null;
 
         $request = new Api_request();
         $request->base_url = $push_url;
-        $request->params = $params;
+        $request->data = $json;
+        $request->params = [];
         $request->path = 'documents';
         $request->method = 'put';
 

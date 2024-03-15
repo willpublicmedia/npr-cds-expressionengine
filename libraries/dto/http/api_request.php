@@ -53,9 +53,8 @@ class Api_request
             $request_url = $request_url . '/' . $this->id;
         }
 
-        if ($this->method === 'post') {
-            $this->postfields = $this->params['body'];
-            unset($this->params['body']);
+        if ($this->method === 'post' || $this->method === 'put') {
+            $this->postfields[] = $this->data;
         }
 
         $queries = $this->build_query_params($this->params);
