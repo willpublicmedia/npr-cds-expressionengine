@@ -363,17 +363,14 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function pull_npr_story($npr_story_id): ?Api_response
     {
-        $params = array(
-            'id' => $npr_story_id,
-        );
-
         $pull_url = isset($this->settings['pull_url']) ? $this->settings['pull_url'] : null;
 
         $request = new Api_request();
         $request->base_url = $pull_url;
-        $request->params = $params;
-        $request->path = 'documents';
+        $request->id = $npr_story_id;
         $request->method = 'get';
+        $request->params = [];
+        $request->path = 'documents';
 
         $api_service = new Npr_cds_expressionengine();
         $response = $api_service->request($request);

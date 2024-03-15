@@ -15,6 +15,8 @@ class Api_request
 
     public ?string $data = null;
 
+    public ?string $id = null;
+
     public string $method;
 
     public array $params;
@@ -47,8 +49,8 @@ class Api_request
         }
         $request_url = $request_url . '/' . ltrim($this->path, '/');
 
-        if (array_key_exists('id', $this->params)) {
-            $request_url = $request_url . '/' . $this->params['id'];
+        if (!empty($this->id)) {
+            $request_url = $request_url . '/' . $this->id;
         }
 
         if ($this->method === 'post') {
@@ -68,9 +70,6 @@ class Api_request
     {
         $queries = array();
         foreach ($params as $k => $v) {
-            if ($k === 'id') {
-                continue;
-            }
             $queries[] = "$k=$v";
             $param[$k] = $v;
         }
