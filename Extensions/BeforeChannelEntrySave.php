@@ -193,12 +193,11 @@ class BeforeChannelEntrySave extends AbstractRoute
 
         // assign story id if not present
         if ($entry->{$this->fields['npr_story_id']} === '') {
-            $response_items = $this->create_story_id($entry);
-            $npr_story_id = $response_items['npr_story_id'];
+            $npr_story_id = $this->create_story_id($entry);
             $entry->{$this->fields['npr_story_id']} = $npr_story_id;
         }
 
-        $response = $this->push_story($json);
+        $response = $this->push_story($json, $entry->{$this->fields['npr_story_id']});
         if (is_null($response)) {
             ee('CP/Alert')->makeInline('story-push')
                 ->asIssue()
@@ -376,13 +375,14 @@ class BeforeChannelEntrySave extends AbstractRoute
         return $response;
     }
 
-    private function push_story(string $json): ?Api_response
+    private function push_story(string $json, string $npr_story_id): ?Api_response
     {
         $push_url = isset($this->settings['push_url']) ? $this->settings['push_url'] : null;
 
         $request = new Api_request();
         $request->base_url = $push_url;
         $request->data = $json;
+        $request->id = $npr_story_id;
         $request->params = [];
         $request->path = 'documents';
         $request->method = 'put';
