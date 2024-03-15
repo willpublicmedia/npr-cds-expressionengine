@@ -191,6 +191,13 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
+        // assign story id if not present
+        if ($entry->{$this->fields['npr_story_id']} === '') {
+            $response_items = $this->create_story_id($entry);
+            $npr_story_id = $response_items['npr_story_id'];
+            $entry->{$this->fields['npr_story_id']} = $npr_story_id;
+        }
+
         $response = $this->push_story($json);
         if (is_null($response)) {
             ee('CP/Alert')->makeInline('story-push')
@@ -213,13 +220,6 @@ class BeforeChannelEntrySave extends AbstractRoute
 
         if (!str_starts_with($response->code, 2)) {
             return;
-        }
-
-        // assign story id if not present
-        if ($entry->{$this->fields['npr_story_id']} === '') {
-            $response_items = $this->process_push_response($entry);
-            $npr_story_id = $response_items['npr_story_id'];
-            $entry->{$this->fields['npr_story_id']} = $npr_story_id;
         }
 
         ee('CP/Alert')->makeInline('story-push')
@@ -300,6 +300,15 @@ class BeforeChannelEntrySave extends AbstractRoute
         return $json;
     }
 
+    private function create_story_id(ChannelEntry $entry): string
+    {
+        // this is overkill, but ensures that entry and outgoing json get the same ID.
+        $mapper = new Cds_mapper();
+        $npr_story_id = $mapper->create_story_id($entry);
+
+        return $npr_story_id;
+    }
+
     private function display_error($errors)
     {
         foreach ($errors->getAllErrors() as $field => $results) {
@@ -348,17 +357,6 @@ class BeforeChannelEntrySave extends AbstractRoute
         $objects = $mapper->map($entry, $values, $story);
 
         return $objects;
-    }
-
-    private function process_push_response(ChannelEntry $entry): array
-    {
-        $items = [];
-
-        // this is overkill, but ensures that entry and outgoing json get the same ID.
-        $mapper = new Cds_mapper();
-        $items['npr_story_id'] = $mapper->create_story_id($entry);
-
-        return [];
     }
 
     private function pull_npr_story($npr_story_id): ?Api_response
