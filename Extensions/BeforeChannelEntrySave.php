@@ -208,6 +208,11 @@ class BeforeChannelEntrySave extends AbstractRoute
                 ->withTitle('NPR CDS')
                 ->addToBody($message)
                 ->defer();
+
+        }
+
+        if (!str_starts_with($response->code, 2)) {
+            return;
         }
 
         // assign story id if not present
