@@ -135,18 +135,6 @@ class Npr_cds_expressionengine
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
                 break;
-            //     case ($request->method === 'post'):
-            //         $post_headers = [
-            //             'Content-Type: application/json;charset=UTF-8',
-            //             'Connection: Keep-Alive',
-            //             'Vary: Accept-Encoding',
-            //         ];
-            //         array_merge($headers, $post_headers);
-            //         curl_setopt($ch, CURLOPT_HEADER, true);
-            //         $field_count = count($request->params);
-            //         curl_setopt($ch, CURLOPT_POST, $field_count);
-            //         curl_setopt($ch, CURLOPT_POSTFIELDS, $request->postfields);
-            //         break;
             case ($request->method === 'delete'):
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
                 break;
