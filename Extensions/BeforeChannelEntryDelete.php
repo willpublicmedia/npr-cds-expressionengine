@@ -40,15 +40,12 @@ class BeforeChannelEntryDelete extends AbstractRoute
         }
 
         $request = new Api_request();
-        $params = array(
-            'id' => $npr_story_id,
-        );
-
         $push_url = isset($this->settings['push_url']) ? $this->settings['push_url'] : null;
 
         $request = new Api_request();
         $request->base_url = $push_url;
-        $request->params = $params;
+        $request->id = $npr_story_id;
+        $request->params = [];
         $request->path = 'documents';
         $request->method = 'delete';
 
