@@ -185,7 +185,7 @@ class Cds_mapper
 
             $new_image = new stdClass;
             $image_asset = new stdClass;
-            $image_asset_id = $prefix . '-' . $image['file_id'];
+            $image_asset_id = $this->settings['document_prefix'] . '-' . $image['file_id'];
             $image_asset->id = $image_asset_id;
             $image_asset->profiles = $this->get_npr_cds_asset_profile('image');
             $image_asset->title = $entry->title;
@@ -263,7 +263,7 @@ class Cds_mapper
 
             $new_audio = new stdClass;
             $audio_asset = new stdClass;
-            $audio_asset_id = $prefix . '-' . $audio['file_id'];
+            $audio_asset_id = $this->settings['document_prefix'] . '-' . $audio['file_id'];
             $audio_asset->id = $audio_asset_id;
             $audio_asset->profiles = $this->get_npr_cds_asset_profile('audio');
             $audio_asset->title = $entry->title;
