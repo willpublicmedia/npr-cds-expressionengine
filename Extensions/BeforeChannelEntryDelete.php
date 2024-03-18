@@ -6,6 +6,7 @@ require_once __DIR__ . '/../libraries/dto/http/api_request.php';
 require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
 require_once __DIR__ . '/../libraries/utilities/field_utils.php';
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
+use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
@@ -51,6 +52,22 @@ class BeforeChannelEntryDelete extends AbstractRoute
 
         $api_service = new Npr_cds_expressionengine();
         $response = $api_service->request($request);
+
+        $story_id_field = $this->settings['npr_story_id'];
+        $document_id = $entry->{$story_id_field};
+
+        $alert = ee('CP/Alert')->makeInline('npr-delete');
+        if ($response->code === Npr_constants::NPR_CDS_DELETE_OK) {
+            $alert = $alert->asSuccess()
+                ->withTitle('NPR CDS')
+                ->addToBody('Document ' . $document_id . ' successfully deleted from CDS.');
+        } else {
+            $alert = $alert->asIssue()
+                ->withTitle('NPR CDS')
+                ->addToBody('Document ' . $document_id . ' not deleted from CDS.');
+        }
+
+        $alert->defer();
 
         return;
     }
