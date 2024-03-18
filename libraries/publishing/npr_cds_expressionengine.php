@@ -43,15 +43,14 @@ class Npr_cds_expressionengine
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 
-        // may not be necessary
-        // $body = json_decode($raw);
-        // $is_json = json_last_error() === JSON_ERROR_NONE;
-        // $body = $is_json ? $raw : substr($raw, $header_size);
+        $body = json_decode($raw);
+        $is_json = json_last_error() === JSON_ERROR_NONE;
+        $body = $is_json ? $raw : substr($raw, $header_size);
 
         // parser expects an object, not json string.
         $response = null;
         if (curl_errno($ch) || !str_starts_with($http_status, 2)) {
-            $response = $this->create_response($raw, $request->request_url(), $http_status, curl_error($ch));
+            $response = $this->create_response($body, $request->request_url(), $http_status, curl_error($ch));
         } else {
             $response = $this->create_response($raw, $request->request_url(), $http_status, null);
         }
@@ -98,8 +97,8 @@ class Npr_cds_expressionengine
             return $response;
         }
 
-        if (property_exists($json, 'Message') && !empty($json->Message)) {
-            $response->messages[] = $json->Message;
+        if (property_exists($json, 'meta') && !empty($json->meta)) {
+            $response->messages[] = $json->meta->messages[0];
         } else {
             $response->json = $json;
         }
