@@ -105,6 +105,28 @@ class Cds_mapper
             $cds_count++;
         }
 
+        $corrections = $this->get_corrections($entry);
+        if (!empty($corrections)) {
+            $story->corrections = [];
+            $correction_profile = new stdClass;
+            $correction_profile->href = '/' . $cds_version . '/profiles/has-corrections';
+            $correction_profile->rels = ['interface'];
+            $story->profiles[] = $correction_profile;
+        }
+
+        foreach ($corrections as $correction) {
+            $cor = new stdClass;
+            $cor_asset = new stdClass;
+            $cor_id = $cds_id . '-' . $cds_count;
+            $cor->text = $correction['correction_text'];
+            $cor->dateTime = $correction['correction_date'];
+            $cor->profiles = $this->get_npr_cds_asset_profile('correction');
+            $story->assets->{$cor_id} = $cor;
+            $cor_asset->href = '#/assets/' . $cor_id;
+            $story->corrections[] = $cor_asset;
+            $cds_count++;
+        }
+
         $send_to_one = $entry->{$this->field_utils->get_field_name('send_to_one')} === 1 ? true : false;
         if ($send_to_one) {
             $collect = new stdClass;
@@ -292,10 +314,9 @@ class Cds_mapper
             $story->audio[] = $new_audio;
         }
 
-        /*
-         * The story has been assembled; now we shall return it
-         */
-        return json_encode($story);
+        $json = json_encode($story);
+dd($json);
+        return $json;
     }
 
     public function create_story_id(ChannelEntry $entry): string
@@ -420,6 +441,37 @@ class Cds_mapper
         }
 
         return $bylines;
+    }
+
+    private function get_corrections(ChannelEntry $entry): array
+    {
+        $content_type = 'channel';
+        ee()->load->model('grid_model');
+        $media_field_id = $this->field_utils->get_field_id('corrections');
+
+        // map column names
+        $columns = ee()->grid_model->get_columns_for_field($media_field_id, $content_type);
+
+        // get entry data
+        $entry_data = ee()->grid_model->get_entry_rows($entry->entry_id, $media_field_id, $content_type, []);
+
+        // loop entry data rows
+        $corrections = [];
+        foreach ($entry_data[$entry->entry_id] as $row) {
+            $row_data = [];
+
+            // map column data to column names
+            foreach ($columns as $column_id => $column_details) {
+                $column_name = $column_details['col_name'];
+                $row_column = "col_id_$column_id";
+                $row_col_data = $row[$row_column];
+                $row_data[$column_name] = $row_col_data;
+            }
+
+            $corrections[] = $row_data;
+        }
+
+        return $corrections;
     }
 
     private function get_file_id($file_src)
@@ -573,6 +625,7 @@ class Cds_mapper
             }
             $output[] = $new;
         }
+
         return $output;
     }
 
@@ -605,13 +658,11 @@ class Cds_mapper
      * The datetime is stored in post meta _nprone_expiry_8601
      * This assumes that the post has been published
      *
-     * @param int|WP_Post $post the post ID or WP_Post object
+     * @param ChannelEntry $entry the ChannelEntry object
      *
      * @return DateTime the DateTime object created from the post expiry date
      * @see note on DATE_ATOM and DATE_ISO8601 https://secure.php.net/manual/en/class.datetime.php#datetime.constants.types
      * @uses npr_cds_get_datetimezone
-     * @since 1.7
-     * @todo rewrite this to use fewer queries, so it's using the WP_Post internally instead of the post ID
      */
     private function get_post_expiry_datetime(ChannelEntry $entry): string
     {
