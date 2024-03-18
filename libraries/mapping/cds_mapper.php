@@ -118,6 +118,7 @@ class Cds_mapper
             $cor = new stdClass;
             $cor_asset = new stdClass;
             $cor_id = $cds_id . '-' . $cds_count;
+            $cor->id = $cor_id;
             $cor->text = $correction['correction_text'];
 
             $cor->dateTime = (new \DateTime($correction['correction_date']))->format(\DateTime::ATOM);
