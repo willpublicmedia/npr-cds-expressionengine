@@ -110,6 +110,7 @@ class Npr_cds_expressionengine
     private function prepare_curl_handle(Api_request $request): \CurlHandle  | false
     {
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $request->request_url());
@@ -120,33 +121,33 @@ class Npr_cds_expressionengine
             case ($request->method === 'get'):
                 break; // empty case for most common/default method.
             case ($request->method === 'put'):
+                $body = $request->data;
+
                 $put_headers = [
                     'Cache-Control: no-cache',
                     'Content-Type: application/json;charset=UTF-8',
+                    'Content-Length: ' . strlen($body),
                     'Connection: Keep-Alive',
                     'Vary: Accept-Encoding',
                 ];
 
                 array_merge($headers, $put_headers);
                 curl_setopt($ch, CURLOPT_HEADER, true);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-                $field_count = count($request->params);
-                curl_setopt($ch, CURLOPT_PUT, $field_count);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($request->postfields));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
                 break;
-            case ($request->method === 'post'):
-                $post_headers = [
-                    'Content-Type: application/json;charset=UTF-8',
-                    'Connection: Keep-Alive',
-                    'Vary: Accept-Encoding',
-                ];
-                array_merge($headers, $post_headers);
-                curl_setopt($ch, CURLOPT_HEADER, true);
-                $field_count = count($request->params);
-                curl_setopt($ch, CURLOPT_POST, $field_count);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $request->postfields);
-                break;
+            //     case ($request->method === 'post'):
+            //         $post_headers = [
+            //             'Content-Type: application/json;charset=UTF-8',
+            //             'Connection: Keep-Alive',
+            //             'Vary: Accept-Encoding',
+            //         ];
+            //         array_merge($headers, $post_headers);
+            //         curl_setopt($ch, CURLOPT_HEADER, true);
+            //         $field_count = count($request->params);
+            //         curl_setopt($ch, CURLOPT_POST, $field_count);
+            //         curl_setopt($ch, CURLOPT_POSTFIELDS, $request->postfields);
+            //         break;
             case ($request->method === 'delete'):
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
                 break;
