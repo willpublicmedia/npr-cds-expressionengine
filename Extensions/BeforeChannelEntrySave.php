@@ -207,16 +207,6 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        if (!empty($response->messages)) {
-            $message = $response->messages[0];
-            ee('CP/Alert')->makeInline('story-push')
-                ->asIssue()
-                ->withTitle('NPR CDS')
-                ->addToBody($message)
-                ->defer();
-
-        }
-
         if (!str_starts_with($response->code, 2)) {
             return;
         }
