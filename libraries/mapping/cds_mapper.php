@@ -119,7 +119,8 @@ class Cds_mapper
             $cor_asset = new stdClass;
             $cor_id = $cds_id . '-' . $cds_count;
             $cor->text = $correction['correction_text'];
-            $cor->dateTime = $correction['correction_date'];
+
+            $cor->dateTime = (new \DateTime($correction['correction_date']))->format(\DateTime::ATOM);
             $cor->profiles = $this->get_npr_cds_asset_profile('correction');
             $story->assets->{$cor_id} = $cor;
             $cor_asset->href = '#/assets/' . $cor_id;
@@ -315,7 +316,7 @@ class Cds_mapper
         }
 
         $json = json_encode($story);
-dd($json);
+
         return $json;
     }
 
@@ -467,6 +468,10 @@ dd($json);
                 $row_col_data = $row[$row_column];
                 $row_data[$column_name] = $row_col_data;
             }
+
+            $date_info = explode('|', $row_data['correction_date']);
+            $date = date('c', $date_info[0]);
+            $row_data['correction_date'] = $date;
 
             $corrections[] = $row_data;
         }
