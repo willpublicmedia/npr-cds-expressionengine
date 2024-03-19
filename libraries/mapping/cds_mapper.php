@@ -630,8 +630,6 @@ class Cds_mapper
 
     private function get_media_url($file_id): string
     {
-        ee()->load->helper('url');
-
         $file = ee('Model')->get('FileSystemEntity')->filter('file_id', $file_id)->first();
         $base_url = rtrim(base_url(), '/');
         $path = rtrim($file->getBaseUrl(), '/');
