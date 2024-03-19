@@ -336,12 +336,21 @@ class Cds_mapper
         /**
          * Known ee shortcodes
          * - {base_url}
-         * - {file:123:url}
          * - {C} - possible junk
+         * - {file:123:url}
          * - {filedir_1}
          */
         $base_url = base_url();
         $text = preg_replace('/{base_url}/', $base_url, $text);
+
+        $new_style_files = preg_grep('/{file:\d+:url}/', $text);
+        if (is_array($new_style_files)) {
+            foreach ($new_style_files as $match) {
+                $file_id = explode(':', $match)[1];
+                $path = $this->get_media_url($file_id);
+                $text = preg_replace("/$match/", $path, $text);
+            }
+        }
 
         // /*
         //  * Clean up the content by applying shortcodes and then stripping any remaining shortcodes.
