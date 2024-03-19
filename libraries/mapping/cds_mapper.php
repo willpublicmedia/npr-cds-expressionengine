@@ -352,28 +352,16 @@ class Cds_mapper
             }
         }
 
-        // /*
-        //  * Clean up the content by applying shortcodes and then stripping any remaining shortcodes.
-        //  */
-        // // Let's see if there are any plugins that need to fix their shortcodes before we run do_shortcode
-        // if (has_filter('npr_cds_shortcode_filter')) {
-        //     $content = apply_filters('npr_cds_shortcode_filter', $content);
-        // }
+        $filedirs = preg_grep('/{filedir_\d+}/', $text);
+        if (is_array($new_style_files)) {
+            foreach ($filedirs as $match) {
+                $dir_id = str_replace(['{filedir_', '}'], '', $match);
+                $dir = ee('Model')->get('FileSystemEntity')->filter('directory_id', $dir_id)->first();
+                $path = $dir->getBaseUrl();
+                $text = preg_replace("/$match/", $path, $text);
+            }
+        }
 
-        // // Since we don't have a standard way to handle galleries across installs, let's just nuke them
-        // // Also, NPR is still trying to figure out how to handle galleries in CDS, so we can circle back when they do
-        // $content = preg_replace('/\[gallery(.*)\]/U', '', $content);
-
-        // // The [embed] shortcode also gets kinda hinky, along with the Twitter/YouTube oEmbed stuff
-        // // In lieu of removing them, let's just convert them into links
-        // $content = preg_replace('/\[embed\](.*)\[\/embed\]/', '<a href="$1">$1</a>', $content);
-        // $content = preg_replace('/<p>(https?:\/\/.+)<\/p>/U', '<p><a href="$1">$1</a></p>', $content);
-
-        // // Apply the usual filters from 'the_content', which should resolve any remaining shortcodes
-        // $content = apply_filters('the_content', $content);
-
-        // // for any remaining short codes, nuke 'em
-        // $content = strip_shortcodes($content);
         return $text;
     }
 
