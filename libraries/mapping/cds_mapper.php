@@ -48,6 +48,9 @@ class Cds_mapper
                 $this->file_manager_compatibility_mode = false;
             }
         }
+
+        // load helpers for shortcode expansion.
+        ee()->load->helper('url');
     }
 
     public function create_json(ChannelEntry $entry, array $values, string $profile)
@@ -337,6 +340,9 @@ class Cds_mapper
          * - {C} - possible junk
          * - {filedir_1}
          */
+        $base_url = base_url();
+        $text = preg_replace('/{base_url}/', $base_url, $text);
+
         // /*
         //  * Clean up the content by applying shortcodes and then stripping any remaining shortcodes.
         //  */
