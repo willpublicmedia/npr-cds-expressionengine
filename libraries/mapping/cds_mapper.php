@@ -330,6 +330,13 @@ class Cds_mapper
 
     private function apply_shortcodes(string $text): string
     {
+        /**
+         * Known ee shortcodes
+         * - {base_url}
+         * - {file:123:url}
+         * - {C} - possible junk
+         * - {filedir_1}
+         */
         // /*
         //  * Clean up the content by applying shortcodes and then stripping any remaining shortcodes.
         //  */
