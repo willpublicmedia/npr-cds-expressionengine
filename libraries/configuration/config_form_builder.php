@@ -15,80 +15,80 @@ use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
  */
 class Config_form_builder
 {
-    private $api_settings_form = array(
-        array(
+    private $api_settings_form = [
+        [
             // mapped_channels added dynamically
             // npr_image_destination added dynamically
-            array(
+            [
                 'title' => 'CDS Token',
-                'fields' => array(
-                    'cds_token' => array(
+                'fields' => [
+                    'cds_token' => [
                         'type' => 'text',
                         'value' => '',
                         'required' => true,
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'title' => 'Document Prefix',
-                'fields' => array(
-                    'document_prefix' => array(
+                'fields' => [
+                    'document_prefix' => [
                         'type' => 'text',
                         'value' => '',
                         'required' => true,
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'title' => 'Service ID',
-                'fields' => array(
-                    'service_id' => array(
+                'fields' => [
+                    'service_id' => [
                         'type' => 'text',
                         'value' => '',
-                    ),
-                    'service_name' => array(
+                    ],
+                    'service_name' => [
                         'type' => 'text',
                         'value' => '',
                         'disabled' => true,
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'title' => 'Pull URL',
-                'fields' => array(
-                    'pull_url' => array(
+                'fields' => [
+                    'pull_url' => [
                         'type' => 'radio',
-                        'choices' => array(
+                        'choices' => [
                             Npr_constants::NPR_STAGING_URL => 'Staging',
                             Npr_constants::NPR_PRODUCTION_URL => 'Production',
-                        ),
+                        ],
                         'default_value' => 0,
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'title' => 'Push URL',
-                'fields' => array(
-                    'push_url' => array(
+                'fields' => [
+                    'push_url' => [
                         'type' => 'radio',
-                        'choices' => array(
+                        'choices' => [
                             Npr_constants::NPR_STAGING_URL => 'Staging',
                             Npr_constants::NPR_PRODUCTION_URL => 'Production',
-                        ),
+                        ],
                         'default_value' => 0,
-                    ),
-                ),
-            ),
-            array(
+                    ],
+                ],
+            ],
+            [
                 'title' => 'Theme Uses Featured Image',
-                'fields' => array(
-                    'theme_uses_featured_image' => array(
+                'fields' => [
+                    'theme_uses_featured_image' => [
                         'type' => 'toggle',
-                    ),
-                ),
-            ),
-        ),
-    );
+                    ],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * Build control panel form for API settings.
@@ -131,18 +131,18 @@ class Config_form_builder
             $mappable[$channel->channel_id] = $channel->channel_title;
         }
 
-        $channel_field = array(
+        $channel_field = [
             'title' => 'Map channels to CDS',
             'desc' => 'Select channels to use with NPR CDS. You must create a valid channel entry form for each mapped channel.',
-            'fields' => array(
-                'mapped_channels' => array(
+            'fields' => [
+                'mapped_channels' => [
                     'type' => 'checkbox',
                     'choices' => $mappable,
                     'value' => '',
-                ),
-            ),
+                ],
+            ],
             'required' => false,
-        );
+        ];
 
         return $channel_field;
     }
@@ -154,7 +154,7 @@ class Config_form_builder
             ->filter('module_id', 0) // limit selection to user-defined destinations
             ->all();
 
-        $file_choices = array();
+        $file_choices = [];
         foreach ($destinations as $dest) {
             $file_choices[$dest->id] = $dest->name;
         }
@@ -163,13 +163,13 @@ class Config_form_builder
             'title' => 'Image Upload Destination',
             // should be able to use BASE here, but url swaps session token and uri.
             'desc' => 'Choose an appropriate image gallery from the <a href="/admin.php?cp/files">Files</a> menu.',
-            'fields' => array(
-                'npr_image_destination' => array(
+            'fields' => [
+                'npr_image_destination' => [
                     'type' => 'radio',
                     'choices' => $file_choices,
                     'value' => '',
-                ),
-            ),
+                ],
+            ],
             'required' => true,
         );
 
