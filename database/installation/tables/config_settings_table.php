@@ -14,10 +14,7 @@ class config_settings_table extends Table
     protected $_defaults = array(
         'cds_token' => '',
         'document_prefix' => '',
-        // 'pull_url' => '',
-        // 'push_url' => ''
         'service_id' => null,
-        // 'document_prefix' => '',
         'theme_uses_featured_image' => false,
         // 'max_image_width' => 1200,
         // 'image_quality' => 75,
