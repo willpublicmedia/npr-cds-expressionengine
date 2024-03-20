@@ -53,7 +53,7 @@ class BeforeChannelEntryDelete extends AbstractRoute
         $api_service = new Npr_cds_expressionengine();
         $response = $api_service->request($request);
 
-        $story_id_field = $this->settings['npr_story_id'];
+        $story_id_field = $this->fields['npr_story_id'];
         $document_id = $entry->{$story_id_field};
 
         $alert = ee('CP/Alert')->makeInline('npr-delete');
