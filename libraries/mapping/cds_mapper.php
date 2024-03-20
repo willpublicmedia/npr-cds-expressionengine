@@ -320,8 +320,7 @@ class Cds_mapper
         }
 
         $json = json_encode($story);
-file_put_contents(__DIR__ . '/foo.json', $json);
-dd($json);
+
         return $json;
     }
 
@@ -344,17 +343,27 @@ dd($json);
         $base_url = base_url();
         $text = preg_replace('/{base_url}/', $base_url, $text);
 
-        $new_style_files = preg_grep('/{file:\d+:url}/', [$text]);
-        if (is_array($new_style_files)) {
-            foreach ($new_style_files as $match) {
+        $new_style_files = [];
+        preg_match('/{file:\d+:url}/', $text, $new_style_files);
+        if (count($new_style_files) > 0) {
+            if (!is_array($new_style_files[0])) {
+                $new_style_files[0] = [$new_style_files[0]];
+            }
+
+            foreach ($new_style_files[0] as $match) {
                 $file_id = explode(':', $match)[1];
                 $path = $this->get_media_url($file_id);
                 $text = preg_replace("/$match/", $path, $text);
             }
         }
 
-        $filedirs = preg_grep('/{filedir_\d+}/', [$text]);
-        if (is_array($new_style_files)) {
+        $filedirs = [];
+        preg_match('/{filedir_\d+}/', $text, $filedirs);
+        if (count($filedirs) > 0) {
+            if (!is_array($filedirs[0])) {
+                $filedirs[0] = [$filedirs[0]];
+            }
+
             foreach ($filedirs as $match) {
                 $dir_id = str_replace(['{filedir_', '}'], '', $match);
                 $dir = ee('Model')->get('FileSystemEntity')->filter('directory_id', $dir_id)->first();
