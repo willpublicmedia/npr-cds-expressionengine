@@ -20,6 +20,7 @@ class Publish_form_mapper
 {
     private $settings = [
         'pull_url' => '',
+        'theme_uses_featured_image' => false,
     ];
 
     public function __construct()
@@ -204,9 +205,7 @@ class Publish_form_mapper
         $returnary = ['has_image' => false, 'has_video' => false, 'has_external' => false, 'has_slideshow' => false, 'has_video_streaming' => false];
         $body_with_layout = "";
 
-        // todo: add "use featured" setting
-        // $use_npr_featured = !empty(get_option('npr_cds_query_use_featured'));
-        $use_npr_featured = true;
+        $use_npr_featured = $this->settings['theme_uses_featured_image'];
 
         $profiles = count($profiles) > 0 ? $profiles : $this->extract_profiles($story->profiles);
 
