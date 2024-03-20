@@ -320,7 +320,8 @@ class Cds_mapper
         }
 
         $json = json_encode($story);
-
+file_put_contents(__DIR__ . '/foo.json', $json);
+dd($json);
         return $json;
     }
 
@@ -343,7 +344,7 @@ class Cds_mapper
         $base_url = base_url();
         $text = preg_replace('/{base_url}/', $base_url, $text);
 
-        $new_style_files = preg_grep('/{file:\d+:url}/', $text);
+        $new_style_files = preg_grep('/{file:\d+:url}/', [$text]);
         if (is_array($new_style_files)) {
             foreach ($new_style_files as $match) {
                 $file_id = explode(':', $match)[1];
@@ -352,7 +353,7 @@ class Cds_mapper
             }
         }
 
-        $filedirs = preg_grep('/{filedir_\d+}/', $text);
+        $filedirs = preg_grep('/{filedir_\d+}/', [$text]);
         if (is_array($new_style_files)) {
             foreach ($filedirs as $match) {
                 $dir_id = str_replace(['{filedir_', '}'], '', $match);

@@ -1,0 +1,431 @@
+{
+    "title": "How Ramadan is impacted by the war between Isreal and Hamas",
+    "id": "ipmee-68620",
+    "brandings": [
+        {
+            "href": "https:\/\/organization.api.npr.org\/v4\/services\/s1172"
+        }
+    ],
+    "owners": [
+        {
+            "href": "https:\/\/organization.api.npr.org\/v4\/services\/s1172"
+        }
+    ],
+    "authorizedOrgServiceIds": [
+        "s1172"
+    ],
+    "webPages": [
+        {
+            "href": "https:\/\/localhost\/21stshow\/story\/how-ramadan-is-impacted-by-the-war-between-isreal-and-hamas",
+            "rels": [
+                "canonical"
+            ]
+        }
+    ],
+    "layout": [
+        {
+            "href": "#\/assets\/ipmee-68620-1"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-2"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-3"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-4"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-5"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-6"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-7"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-8"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-9"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-10"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-11"
+        },
+        {
+            "href": "#\/assets\/ipmee-68620-12"
+        }
+    ],
+    "assets": {
+        "ipmee-68620-0": {
+            "id": "ipmee-68620-0",
+            "name": "Produced by Jose Zepeda",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/byline",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ]
+        },
+        "ipmee-68620-1": {
+            "id": "ipmee-68620-1",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "This past Sunday at Sunset, Muslims around the world began observing the Islamic Holy Month of Ramadan."
+        },
+        "ipmee-68620-2": {
+            "id": "ipmee-68620-2",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "Compared to a traditional Ramadan, the feelings shared during this one are different, as tens of thousands of Palestinians have been killed during the ongoing war between Isreal and Hamas."
+        },
+        "ipmee-68620-3": {
+            "id": "ipmee-68620-3",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "The discussion today on The 21st will focus on these events and the responses from the Champaign-Urbana communities. Guests include Dua Aldasouqi, a Palestinian activist and member of the CU Muslim Action Committee, and Bara Saada, a Psychiatry Resident at Carle Hospital who has lived in Champaign-Urbana for 20 years."
+        },
+        "ipmee-68620-4": {
+            "id": "ipmee-68620-4",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "<strong>GUESTS:<\/strong>"
+        },
+        "ipmee-68620-5": {
+            "id": "ipmee-68620-5",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "<strong>Dua Aldasouqi<\/strong>"
+        },
+        "ipmee-68620-6": {
+            "id": "ipmee-68620-6",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "Palestinian Activist"
+        },
+        "ipmee-68620-7": {
+            "id": "ipmee-68620-7",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "Member, CU Muslim Action Committee"
+        },
+        "ipmee-68620-8": {
+            "id": "ipmee-68620-8",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "<strong>Bara Saada<\/strong>"
+        },
+        "ipmee-68620-9": {
+            "id": "ipmee-68620-9",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "Psychiatry Resident, Carle Hospital"
+        },
+        "ipmee-68620-10": {
+            "id": "ipmee-68620-10",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "Champaign-Urbana Resident for Past 20 Years"
+        },
+        "ipmee-68620-11": {
+            "id": "ipmee-68620-11",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/html-block",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "html": "<div data-oembed-url=\"https:\/\/ipmnewsroom.org\/unfiltered-local-diverse-opinions-on-a-ceasefire-for-gaza\/\">\n<div>\n<div style=\"left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%; padding-top: 120px;\"><iframe allowfullscreen=\"\" src=\"\/\/if-cdn.com\/wHc8aXm?app=1\" style=\"top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;\" tabindex=\"-1\"><\/iframe><\/div>\n<\/div>\n<script async=\"\" charset=\"utf-8\" src=\"\/\/if-cdn.com\/embed.js\"><\/script><\/div>\n\n<div data-oembed-url=\"https:\/\/localhost\/\/21stshow\/story\/war-in-the-holy-land-perspective-from-a-palestinian-american-in-illinois\">\n<div>\n<div style=\"left: 0; width: 100%; height: 0; position: relative; padding-bottom: 66.6105%; padding-top: 120px;\"><iframe allowfullscreen=\"\" src=\"\/\/if-cdn.com\/nhkXI01?app=1\" style=\"top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;\" tabindex=\"-1\"><\/iframe><\/div>\n<\/div>\n<script async=\"\" charset=\"utf-8\" src=\"\/\/if-cdn.com\/embed.js\"><\/script><\/div>"
+        },
+        "ipmee-68620-12": {
+            "id": "ipmee-68620-12",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/text",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "text": "&nbsp;"
+        },
+        "ipmee-13543": {
+            "id": "ipmee-13543",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/image",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "title": "How Ramadan is impacted by the war between Isreal and Hamas",
+            "caption": "",
+            "producer": "AP Photo",
+            "provider": "Mahmoud Illean",
+            "enclosures": [
+                {
+                    "href": "https:\/\/localhost\/images\/uploadsIsrael_Palestinians_Ramadan_24070635309068.jpg",
+                    "rels": [
+                        "image-custom",
+                        "primary"
+                    ],
+                    "type": "image\/jpeg",
+                    "width": 1024,
+                    "height": 683
+                },
+                {
+                    "href": "https:\/\/localhost\/\/images\/uploads\/_small\/Israel_Palestinians_Ramadan_24070635309068.jpg",
+                    "rels": [
+                        "image-custom"
+                    ],
+                    "type": "image\/jpeg",
+                    "width": 480
+                },
+                {
+                    "href": "https:\/\/localhost\/\/images\/uploads\/_medium\/Israel_Palestinians_Ramadan_24070635309068.jpg",
+                    "rels": [
+                        "image-custom"
+                    ],
+                    "type": "image\/jpeg",
+                    "width": 700
+                },
+                {
+                    "href": "https:\/\/localhost\/\/images\/uploads\/_large\/Israel_Palestinians_Ramadan_24070635309068.jpg",
+                    "rels": [
+                        "image-custom"
+                    ],
+                    "type": "image\/jpeg",
+                    "width": 1024
+                },
+                {
+                    "href": "https:\/\/localhost\/\/images\/uploads\/_square\/Israel_Palestinians_Ramadan_24070635309068.jpg",
+                    "rels": [
+                        "image-custom"
+                    ],
+                    "type": "image\/jpeg",
+                    "width": 700
+                },
+                {
+                    "href": "https:\/\/localhost\/\/images\/uploads\/_portrait\/Israel_Palestinians_Ramadan_24070635309068.jpg",
+                    "rels": [
+                        "image-custom"
+                    ],
+                    "type": "image\/jpeg",
+                    "width": 480
+                }
+            ]
+        },
+        "ipmee-13546": {
+            "id": "ipmee-13546",
+            "profiles": [
+                {
+                    "href": "\/v1\/profiles\/audio",
+                    "rels": [
+                        "type"
+                    ]
+                },
+                {
+                    "href": "\/v1\/profiles\/document"
+                }
+            ],
+            "title": "How Ramadan is impacted by the war between Isreal and Hamas",
+            "isAvailable": true,
+            "isDownloadable": true,
+            "isEmbeddable": false,
+            "isStreamable": false,
+            "duration": "2035",
+            "enclosures": [
+                {
+                    "href": "https:\/\/localhost\/nfs21st-2024-03-13-segaandb.mp3",
+                    "type": "audio\/mpeg"
+                }
+            ]
+        }
+    },
+    "collections": [],
+    "profiles": [
+        {
+            "href": "\/v1\/profiles\/story",
+            "rels": [
+                "type"
+            ]
+        },
+        {
+            "href": "\/v1\/profiles\/publishable",
+            "rels": [
+                "interface"
+            ]
+        },
+        {
+            "href": "\/v1\/profiles\/document"
+        },
+        {
+            "href": "\/v1\/profiles\/renderable",
+            "rels": [
+                "interface"
+            ]
+        },
+        {
+            "href": "\/v1\/profiles\/buildout",
+            "rels": [
+                "interface"
+            ]
+        },
+        {
+            "href": "\/v1\/profiles\/has-images",
+            "rels": [
+                "interface"
+            ]
+        },
+        {
+            "href": "\/v1\/profiles\/has-audio",
+            "rels": [
+                "interface"
+            ]
+        },
+        {
+            "href": "\/v1\/profiles\/listenable",
+            "rels": [
+                "interface"
+            ]
+        }
+    ],
+    "bylines": [
+        {
+            "href": "#\/assets\/ipmee-68620-0"
+        }
+    ],
+    "publishDateTime": "2024-03-20T10:31:44-05:00",
+    "editorialLastModifiedDateTime": "2024-03-20T10:31:44-05:00",
+    "teaser": "",
+    "recommendUntilDateTime": "2024-03-27T10:31:44-05:00",
+    "images": [
+        {
+            "rels": [
+                "primary",
+                "promo-image-standard"
+            ],
+            "href": "#\/assets\/ipmee-13543"
+        }
+    ],
+    "audio": [
+        {
+            "href": "#\/assets\/ipmee-13546",
+            "rels": [
+                "headline",
+                "primary"
+            ]
+        }
+    ]
+}
