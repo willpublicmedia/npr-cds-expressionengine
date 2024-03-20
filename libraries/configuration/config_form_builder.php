@@ -79,6 +79,14 @@ class Config_form_builder
                     ),
                 ),
             ),
+            array(
+                'title' => 'Theme Uses Featured Image',
+                'fields' => array(
+                    'theme_uses_featured_image' => array(
+                        'type' => 'toggle',
+                    ),
+                ),
+            ),
         ),
     );
 
