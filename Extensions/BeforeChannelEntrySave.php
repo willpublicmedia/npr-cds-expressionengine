@@ -259,13 +259,7 @@ class BeforeChannelEntrySave extends AbstractRoute
 
     private function check_mapped_channel($channel_id, $display_error = true)
     {
-        $results = ee()->db->
-            select('mapped_channels')->
-            from('npr_story_api_settings')->
-            get()->
-            result_array();
-
-        $mapped_channels = (array_pop($results))['mapped_channels'];
+        $mapped_channels = $this->settings['mapped_channels'];
         $mapped_channels = explode("|", $mapped_channels);
 
         $is_mapped = in_array($channel_id, $mapped_channels);
