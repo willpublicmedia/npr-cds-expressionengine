@@ -20,7 +20,9 @@ class Story_api_compatibility_mapper
 
     private $file_manager_compatibility_mode = true;
 
-    private $settings;
+    private $settings = [
+        'npr_image_destination' => '',
+    ];
 
     public function __construct()
     {
@@ -33,10 +35,7 @@ class Story_api_compatibility_mapper
             }
         }
 
-        $this->settings = ee()->db
-            ->limit(1)
-            ->get('npr_story_api_settings')
-            ->row();
+        $this->settings = $this->load_settings();
     }
 
     public function map_cds_to_story(array $cds_data): array
@@ -124,6 +123,22 @@ class Story_api_compatibility_mapper
         }
 
         return $api_audio;
+    }
+
+    private function load_settings()
+    {
+        $fields = array_keys($this->settings);
+
+        $settings = ee()->db->select(implode(',', $fields))
+            ->limit(1)
+            ->get('npr_cds_settings')
+            ->result_array();
+
+        if (isset($settings[0])) {
+            $settings = $settings[0];
+        }
+
+        return $settings;
     }
 
     private function map_image_credit(array $data): string
@@ -221,13 +236,13 @@ class Story_api_compatibility_mapper
 
         // see if file has already been uploaded
         $file = ee('Model')->get('File')
-            ->filter('upload_location_id', $this->settings->npr_image_destination)
+            ->filter('upload_location_id', $this->settings['npr_image_destination'])
             ->filter('file_name', $filename)
             ->first();
 
         if ($file != null) {
             $dir = $this->file_manager_compatibility_mode ?
-            '{filedir_' . $this->settings->npr_image_destination . '}' :
+            '{filedir_' . $this->settings['npr_image_destination'] . '}' :
             'file';
 
             return array(
@@ -237,7 +252,7 @@ class Story_api_compatibility_mapper
         }
 
         $destination = ee('Model')->get('UploadDestination')
-            ->filter('id', $this->settings->npr_image_destination)
+            ->filter('id', $this->settings['npr_image_destination'])
             ->filter('site_id', ee()->config->item('site_id'))
             ->first();
 

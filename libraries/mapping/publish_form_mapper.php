@@ -18,6 +18,15 @@ use \stdClass;
 
 class Publish_form_mapper
 {
+    private $settings = [
+        'pull_url' => '',
+    ];
+
+    public function __construct()
+    {
+        $this->settings = $this->load_settings();
+    }
+
     public function map($entry, $values, $story)
     {
         $profiles = $this->extract_profiles($story->profiles);
@@ -488,10 +497,7 @@ class Publish_form_mapper
 
     private function get_document($href): ?stdClass
     {
-        $pull_url = ee()->db->select('pull_url')
-            ->limit(1)
-            ->get('npr_cds_settings')
-            ->result_array()[0]['pull_url'];
+        $pull_url = $this->settings['pull_url'];
 
         $request = new Api_request();
         $request->base_url = $pull_url;
@@ -695,6 +701,22 @@ class Publish_form_mapper
         }
 
         return $videos;
+    }
+
+    private function load_settings()
+    {
+        $fields = array_keys($this->settings);
+
+        $settings = ee()->db->select(implode(',', $fields))
+            ->limit(1)
+            ->get('npr_cds_settings')
+            ->result_array();
+
+        if (isset($settings[0])) {
+            $settings = $settings[0];
+        }
+
+        return $settings;
     }
 
     private function parse_credits($asset): string
