@@ -49,6 +49,14 @@ class config_settings_table extends Table
             'type' => 'varchar',
             'constraint' => 64,
         ),
+        'pull_url' => array(
+            'type' => 'text',
+            'constraint' => 128,
+        ),
+        'push_url' => array(
+            'type' => 'text',
+            'constraint' => 128,
+        ),
         'service_id' => array(
             'type' => 'varchar',
             'null' => true,
@@ -59,26 +67,9 @@ class config_settings_table extends Table
             'null' => true,
             'constraint' => 128,
         ),
-        'pull_url' => array(
-            'type' => 'text',
-            'constraint' => 128,
+        'theme_uses_featured_image' => array(
+            'type' => 'tinyint',
         ),
-        'push_url' => array(
-            'type' => 'text',
-            'constraint' => 128,
-        ),
-        // 'npr_permissions' => array(
-        //     'type' => 'varchar',
-        //     'constraint' => 256
-        // ),
-        // 'pull_url' => array(
-        //     'type' => 'varchar',
-        //     'constraint' => 64,
-        // ),
-        // 'push_url' => array(
-        //     'type' => 'varchar',
-        //     'constraint' => 64
-        // )
     );
 
     protected $_keys = array(

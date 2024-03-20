@@ -28,7 +28,7 @@ class Cds_mapper
         'pull_url' => '',
         'push_url' => '',
         'service_id' => null,
-        // 'theme_uses_featured_image' => false,
+        'theme_uses_featured_image' => false,
         // 'max_image_width' => 1200,
         // 'image_quality' => 75,
         // 'image_format' => 'jpeg',
