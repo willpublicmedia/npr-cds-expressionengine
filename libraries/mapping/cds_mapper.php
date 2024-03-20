@@ -632,7 +632,7 @@ class Cds_mapper
         $base_url = rtrim(base_url(), '/');
         $path = rtrim($file->getBaseUrl(), '/');
         $filename = ltrim($file->file_name, '/');
-        $url = $base_url . $path . $filename;
+        $url = $base_url . $path . '/' . $filename;
 
         return $url;
     }
