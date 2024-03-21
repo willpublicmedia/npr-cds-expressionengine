@@ -138,6 +138,10 @@ class Story_api_compatibility_mapper
             $settings = $settings[0];
         }
 
+        if (in_array('theme_uses_featured_image', $settings)) {
+            $settings['theme_uses_featured_image'] = (bool) $settings['theme_uses_featured_image'];
+        }
+
         return $settings;
     }
 
