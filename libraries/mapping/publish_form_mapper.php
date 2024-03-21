@@ -38,8 +38,8 @@ class Publish_form_mapper
         $bylines = property_exists($story, 'bylines') ? $this->get_bylines($story) : null;
 
         $npr_layout = $this->get_body_with_layout($story, $profiles);
-        dd($npr_layout);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
+
         /**
          * @see https://npr.github.io/content-distribution-service/getting-started/story-api-migration-guide/table-of-fields.html
          */
