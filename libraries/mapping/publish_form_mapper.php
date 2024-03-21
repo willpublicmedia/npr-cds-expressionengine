@@ -38,6 +38,7 @@ class Publish_form_mapper
         $bylines = property_exists($story, 'bylines') ? $this->get_bylines($story) : null;
 
         $npr_layout = $this->get_body_with_layout($story, $profiles);
+        dd($npr_layout);
         $text = array_key_exists('body', $npr_layout) ? $npr_layout['body'] : '';
         /**
          * @see https://npr.github.io/content-distribution-service/getting-started/story-api-migration-guide/table-of-fields.html
@@ -256,7 +257,7 @@ class Publish_form_mapper
                         }
                         break;
                     case 'pull-quote':
-                        $body_with_layout .= '<blockquote class="npr-pull-quote"><h2>' . $asset_current->quote . '</h2>';
+                        $body_with_layout .= '<blockquote class="npr-pull-quote">' . $asset_current->quote;
                         if (!empty($asset_current->attributionParty)) {
                             $body_with_layout .= '<p>' . $asset_current->attributionParty;
                             if (!empty($asset_current->attributionContext)) {
