@@ -81,6 +81,7 @@ class Config_form_builder
             ],
             [
                 'title' => 'Theme Uses Featured Image',
+                'desc' => 'Enable if a story\'s featured image will be displayed by the page template as a hero image. Disable if the featured image should be displayed inline in the story body.',
                 'fields' => [
                     'theme_uses_featured_image' => [
                         'type' => 'toggle',
