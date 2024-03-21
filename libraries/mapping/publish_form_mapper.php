@@ -668,7 +668,7 @@ class Publish_form_mapper
             'subheadline' => property_exists($asset, 'subheadline') ? $asset->subheadline : null,
         ];
 
-        $video['embed_code'] = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' . $$asset->videoId . '" title="' . $video['title'] . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+        $video['embed_code'] = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset->videoId . '" title="' . $video['title'] . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 
         return $video;
     }
