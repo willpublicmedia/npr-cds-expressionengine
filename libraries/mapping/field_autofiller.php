@@ -159,6 +159,10 @@ class Field_autofiller
 
     private function get_file_model($entry_filepath)
     {
+        if (empty($entry_filepath)) {
+            return;
+        }
+
         $split = explode('}', $entry_filepath);
 
         if (!$split || sizeof($split) < 2) {
