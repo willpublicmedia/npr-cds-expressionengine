@@ -426,7 +426,7 @@ class Publish_form_mapper
                 date(ee()->config->get('date_format'), strtotime($correct_current->dateTime)) .
                 '</em></strong><br />' . strip_tags($correct_current->text) . '</li>';
             }
-            $body_with_layout .= '<figure class="wp-block-embed npr-correction"><div class="wp-block-embed__wrapper"><h3>Corrections:</h3><ul>' . $correction_text . '</ul></div></figure>';
+            $body_with_layout .= '<div class="wp-block-embed__wrapper"><h3>Corrections:</h3><ul>' . $correction_text . '</ul></div>';
         }
         if (!empty($story->audio)) {
             $audio_file = '';
