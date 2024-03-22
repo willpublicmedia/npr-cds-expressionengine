@@ -386,7 +386,7 @@ class Publish_form_mapper
                                         $video_url = $v_enclose->href;
                                     }
                                 }
-                                $video_asset = '[video mp4="' . $video_url . '"' . $poster . '][/video]';
+                                $video_asset = '<video controls poster="' . $poster . '" width="640" height="360"><source src="' . $video_url . '"</source></video>';
                             } elseif ($asset_profile == 'stream-player-video') {
                                 if (in_array('hls', $asset_current->enclosures[0]->rels)) {
                                     $returnary['has_video_streaming'] = true;
