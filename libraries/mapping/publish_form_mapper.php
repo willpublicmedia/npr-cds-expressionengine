@@ -246,7 +246,7 @@ class Publish_form_mapper
                     case 'audio':
                         if ($asset_current->isAvailable) {
                             if ($asset_current->isEmbeddable) {
-                                $body_with_layout .= '<p><iframe class="npr-embed-audio" style="width: 100%; height: 239px;" src="' . $asset_current->embeddedPlayerLink->href . '"></iframe></p>';
+                                $body_with_layout .= '<div class="ratio ratio-21x9"><iframe class="npr-embed-audio" src="' . $asset_current->embeddedPlayerLink->href . '"></iframe></div>';
                             } elseif ($asset_current->isDownloadable) {
                                 foreach ($asset_current->enclosures as $enclose) {
                                     if ($enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
@@ -273,7 +273,7 @@ class Publish_form_mapper
                             $asset_title = $asset_current->headline;
                         }
                         $returnary['has_video'] = true;
-                        $body_with_layout .= '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
+                        $body_with_layout .= '<figure class="figure wp-block-embed is-type-video"><div class="ratio ratio-16x9 wp-block-embed__wrapper"><iframe src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
                         break;
                     case 'internal-link':
                         $link_url = '';
@@ -436,7 +436,7 @@ class Publish_form_mapper
                     $audio_current = $story->assets->{$audio_id};
                     if ($audio_current->isAvailable) {
                         if ($audio_current->isEmbeddable) {
-                            $audio_file = '<p><iframe class="npr-embed-audio" style="width: 100%; height: 235px;" src="' . $audio_current->embeddedPlayerLink->href . '"></iframe></p>';
+                            $audio_file = '<div class="ratio ratio-21x9"><iframe class="npr-embed-audio" src="' . $audio_current->embeddedPlayerLink->href . '"></iframe></div>';
                         } elseif ($audio_current->isDownloadable) {
                             foreach ($audio_current->enclosures as $enclose) {
                                 if (!empty($enclose->rels) && $enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
@@ -669,7 +669,7 @@ class Publish_form_mapper
             'subheadline' => property_exists($asset, 'subheadline') ? $asset->subheadline : null,
         ];
 
-        $video['embed_code'] = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset->videoId . '" title="' . $video['title'] . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+        $video['embed_code'] = '<div class="ratio ratio-16x9"><iframe src="https://www.youtube.com/embed/' . $asset->videoId . '" title="' . $video['title'] . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
 
         return $video;
     }
