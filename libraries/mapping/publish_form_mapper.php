@@ -246,7 +246,7 @@ class Publish_form_mapper
                     case 'audio':
                         if ($asset_current->isAvailable) {
                             if ($asset_current->isEmbeddable) {
-                                $body_with_layout .= '<div class="ratio ratio-21x9"><iframe class="npr-embed-audio" src="' . $asset_current->embeddedPlayerLink->href . '"></iframe></div>';
+                                $body_with_layout .= '<div class=""><iframe class="npr-embed-audio" style="width: 100%; height: 290px;" src="' . $asset_current->embeddedPlayerLink->href . '"></iframe></div>';
                             } elseif ($asset_current->isDownloadable) {
                                 foreach ($asset_current->enclosures as $enclose) {
                                     if ($enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
@@ -436,7 +436,7 @@ class Publish_form_mapper
                     $audio_current = $story->assets->{$audio_id};
                     if ($audio_current->isAvailable) {
                         if ($audio_current->isEmbeddable) {
-                            $audio_file = '<div class="ratio ratio-21x9"><iframe class="npr-embed-audio" src="' . $audio_current->embeddedPlayerLink->href . '"></iframe></div>';
+                            $audio_file = '<div class=""><iframe class="npr-embed-audio" style="width: 100%; height: 290px;" src="' . $audio_current->embeddedPlayerLink->href . '"></iframe></div>';
                         } elseif ($audio_current->isDownloadable) {
                             foreach ($audio_current->enclosures as $enclose) {
                                 if (!empty($enclose->rels) && $enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
