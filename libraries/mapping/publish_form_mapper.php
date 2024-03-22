@@ -231,7 +231,7 @@ class Publish_form_mapper
                                 }
                             }
                         }
-                        $body_with_layout .= '<figure class="wp-block-embed npr-promo-card ' . strtolower($asset_current->cardStyle) . '"><div class="wp-block-embed__wrapper">' . (!empty($asset_current->eyebrowText) ? '<h3>' . $asset_current->eyebrowText . '</h3>' : '') .
+                        $body_with_layout .= '<figure class="figure wp-block-embed npr-promo-card ' . strtolower($asset_current->cardStyle) . '"><div class="wp-block-embed__wrapper">' . (!empty($asset_current->eyebrowText) ? '<h3>' . $asset_current->eyebrowText . '</h3>' : '') .
                         '<p><a href="' . $promo_card_url . '">' . $asset_current->linkText . '</a></p></div></figure>';
                         break;
                     case 'html-block':
@@ -273,7 +273,7 @@ class Publish_form_mapper
                             $asset_title = $asset_current->headline;
                         }
                         $returnary['has_video'] = true;
-                        $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
+                        $body_with_layout .= '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/' . $asset_current->videoId . '" title="' . $asset_title . '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></figure>';
                         break;
                     case 'internal-link':
                         $link_url = '';
@@ -310,7 +310,7 @@ class Publish_form_mapper
                                 $thisimg = $img_enclose;
                             }
                         }
-                        $figclass = "wp-block-image size-large";
+                        $figclass = "figure wp-block-image size-large";
                         $image_href = $this->get_image_url($thisimg);
                         $fightml = '<img src="' . $image_href . '"';
                         if (in_array('image-vertical', $thisimg->rels)) {
@@ -320,13 +320,13 @@ class Publish_form_mapper
                         $thiscaption = (!empty(trim($asset_current->caption)) ? trim($asset_current->caption) : '');
                         $fightml .= (!empty($fightml) && !empty($thiscaption) ? ' alt="' . str_replace('"', '\'', strip_tags($thiscaption)) . '"' : '');
                         $fightml .= (!empty($fightml) ? '>' : '');
-                        $thiscaption .= (!empty($cites) ? " <cite>" . $this->parse_credits($asset_current) . "</cite>" : '');
-                        $figcaption = (!empty($fightml) && !empty($thiscaption) ? "<figcaption>$thiscaption</figcaption>" : '');
+                        $thiscaption .= (!empty($cites) ? " <cite class=\"photocredit\">" . $this->parse_credits($asset_current) . "</cite>" : '');
+                        $figcaption = (!empty($fightml) && !empty($thiscaption) ? "<figcaption class=\"caption\">$thiscaption</figcaption>" : '');
                         $fightml .= (!empty($fightml) && !empty($figcaption) ? $figcaption : '');
                         $body_with_layout .= (!empty($fightml) ? "<figure class=\"$figclass\">$fightml</figure>\n\n" : '');
                         break;
                     case 'image-gallery':
-                        $fightml = '<figure class="wp-block-image"><div class="splide"><div class="splide__track"><ul class="splide__list">';
+                        $fightml = '<figure class="figure wp-block-image"><div class="splide"><div class="splide__track"><ul class="splide__list">';
                         $returnary['has_slideshow'] = true;
                         foreach ($asset_current->layout as $ig_layout) {
                             $ig_asset_id = $this->extract_asset_id($ig_layout->href);
@@ -406,7 +406,7 @@ class Publish_form_mapper
                                         '</script>';
                                 }
                             }
-                            $body_with_layout .= '<figure class="wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
+                            $body_with_layout .= '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
                         }
                         break;
                     default:
