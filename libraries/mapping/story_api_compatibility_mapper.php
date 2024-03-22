@@ -54,6 +54,9 @@ class Story_api_compatibility_mapper
                 case ($key === 'bylines'):
                     $story_api_compatible_data['byline'] = is_null($value) ? '' : implode(', ', $value);
                     break;
+                case ($key === 'corrections'):
+                    $story_api_compatible_data['corrections'] = is_null($value) ? [] : $this->map_corrections($value);
+                    break;
                 case ($key === 'images'):
                     $story_api_compatible_data['npr_images'] = is_null($value) ? [] : $this->map_images($value);
                     break;
@@ -143,6 +146,22 @@ class Story_api_compatibility_mapper
         }
 
         return $settings;
+    }
+
+    private function map_corrections(array $data): array
+    {
+        $corrections = [];
+
+        foreach ($data as $item) {
+            $correction = [
+                'correction_date' => $item['date'],
+                'correction_text' => $item['text'],
+            ];
+
+            $corrections[] = $correction;
+        }
+
+        return $corrections;
     }
 
     private function map_image_credit(array $data): string
