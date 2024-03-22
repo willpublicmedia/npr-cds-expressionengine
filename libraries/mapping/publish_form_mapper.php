@@ -250,7 +250,7 @@ class Publish_form_mapper
                             } elseif ($asset_current->isDownloadable) {
                                 foreach ($asset_current->enclosures as $enclose) {
                                     if ($enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
-                                        $body_with_layout .= '[audio mp3="' . $enclose->href . '"][/audio]';
+                                        $body_with_layout .= '<audio controls src="' . $enclose->href . '" preload="metadata">';
                                     }
                                 }
                             }
@@ -440,7 +440,7 @@ class Publish_form_mapper
                         } elseif ($audio_current->isDownloadable) {
                             foreach ($audio_current->enclosures as $enclose) {
                                 if (!empty($enclose->rels) && $enclose->type == 'audio/mpeg' && !in_array('premium', $enclose->rels)) {
-                                    $audio_file = '[audio mp3="' . $enclose->href . '"][/audio]';
+                                    $audio_file = '<audio src="' . $enclose->href . '" controls preload="metadata">';
                                 }
                             }
                         }
