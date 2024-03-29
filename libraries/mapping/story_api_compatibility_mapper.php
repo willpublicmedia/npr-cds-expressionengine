@@ -54,6 +54,9 @@ class Story_api_compatibility_mapper
                 case ($key === 'bylines'):
                     $story_api_compatible_data['byline'] = is_null($value) ? '' : implode(', ', $value);
                     break;
+                case ($key) === 'collections':
+                    $story_api_compatible_data['keywords'] = is_null($value) ? [] : $this->map_collections($value);
+                    break;
                 case ($key === 'corrections'):
                     $story_api_compatible_data['corrections'] = is_null($value) ? [] : $this->map_corrections($value);
                     break;
@@ -146,6 +149,19 @@ class Story_api_compatibility_mapper
         }
 
         return $settings;
+    }
+
+    private function map_collections(array $data): array
+    {
+        $keywords = [
+            'tags' => [],
+        ];
+
+        foreach ($data as $collection) {
+            $keywords['tags'][] = $collection['title'];
+        }
+
+        return $keywords;
     }
 
     private function map_corrections(array $data): array
