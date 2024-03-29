@@ -32,8 +32,13 @@ class Channel_entry_builder
                 $field = $this->field_utils->get_field_name($field);
             }
 
-            $values[$field] = $value;
             $entry->{$field} = $value;
+
+            if ($name === 'keywords') {
+                $value = implode(',', array_values($value['tags']));
+            }
+
+            $values[$field] = $value;
 
             if ($this->field_is_grid($name)) {
                 // Grid_ft->post_save stomps data values with cache.
