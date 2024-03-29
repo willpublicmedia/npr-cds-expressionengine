@@ -20,11 +20,31 @@ The WordPress plugin was originally developed as an Open Source plugin by NPR an
 
 ## Installation & Configuration
 
-WIP
+**Pre-release warning:** As of version 0.0.0, field and pulish layout creation has not been implemented. Install the [Story API addon](https://github.org/willpublicmedia/npr-api-expressionengine), then install this addon and follow the migration instructions.
+
+1. Copy addon files to `{system_dir}/user/addons/npr_cds/`.
+2. Activate plugin from control panel Addons screen.
+3. From the CDS settings screen, configure the following:
+    - CDS token as provided by NPR
+    - document prefix as provided by NPR
+    - org/service ID as provided by NPR
+    - and your push and pull urls.
+4. Select "Theme uses featured image" if your page templates pull a hero image from the story's image field.
+5. Select a suitable file storage location for pulled images.
+6. Select channels that may be used by the CDS addon. These channels must use the field group "NPR Story API", which was created by the installer.
 
 ### Migrating from Story API
 
-WIP
+If the [Story API addon](https://github.org/willpublicmedia/npr-api-expressionengine) is already installed, this addon will attempt to migrate existing settings and make a clean switch from the Story API to CDS.
+
+0. Upgrade to the latest version of the story api addon to prevent data loss.
+1. Follow installation instructions 1 and 2, above.
+    - The installer will attempt to convert your Org ID to a Service ID if possible.
+    - Channels mapped for the story api will be used in CDS.
+    - CDS will use the same file storage location as CDS.
+    - The story api extensions will be deactivated.
+2. Follow CDS configuration instructions as above.
+3. Remove the story api addon when convenient.
 
 ## Usage
 
