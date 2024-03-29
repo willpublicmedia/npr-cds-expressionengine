@@ -31,6 +31,7 @@ class Publish_form_mapper
     public function map($entry, $values, $story)
     {
         $profiles = $this->extract_profiles($story->profiles);
+        $collections = $this->get_collections($story);
         $corrections = $this->get_corrections($story);
         $audio = in_array('has-audio', $profiles) || property_exists($story, 'audio') ? $this->get_audio($story) : null;
         $images = in_array('has-images', $profiles) || property_exists($story, 'images') ? $this->get_images($story) : null;
@@ -47,6 +48,7 @@ class Publish_form_mapper
         $data = [
             'audio' => $audio,
             'bylines' => $bylines,
+            'collections' => $collections,
             'corrections' => $corrections,
             'last_modified_date' => !empty($story->editorialLastModifiedDateTime) ? strtotime($story->editorialLastModifiedDateTime) : null,
             'images' => $images,
@@ -67,6 +69,7 @@ class Publish_form_mapper
         $entry_builder = new Channel_entry_builder();
         $objects = $entry_builder->assign_data_to_entry($data, $entry, $values);
         $objects['story'] = $story;
+
         return $objects;
     }
 
@@ -474,6 +477,29 @@ class Publish_form_mapper
         }
 
         return $bylines;
+    }
+
+    private function get_collections(stdClass $story): ?array
+    {
+        if (empty($story->collections)) {
+            return null;
+        }
+
+        $collections = [];
+        foreach ($story->collections as $item) {
+            $collect_id = $this->extract_asset_id($item->href);
+            $doc = $this->get_document($item->href);
+
+            $collections[] = [
+                'id' => $collect_id,
+                'href' => $item->href,
+                'rels' => $item->rels,
+                'title' => $doc->title,
+                'authorizedOrgServiceIds' => $doc->authorizedOrgServiceIds,
+            ];
+        }
+
+        return $collections;
     }
 
     private function get_corrections(stdClass $story): ?array
