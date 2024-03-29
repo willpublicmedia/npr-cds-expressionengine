@@ -153,12 +153,27 @@ class Story_api_compatibility_mapper
 
     private function map_collections(array $data): array
     {
+        ee()->load->library('../../tagger/libraries/tagger_helper');
+        $site_id = ee()->config->item('site_id');
+
         $keywords = [
             'tags' => [],
         ];
 
         foreach ($data as $collection) {
-            $keywords['tags'][] = $collection['title'];
+            $tag = $collection['title'];
+            $query = ee()->db->select('tag_id')
+                ->from('exp_tagger')
+                ->where('tag_name', $tag)
+                ->where('site_id', $site_id)
+                ->limit(1)
+                ->get();
+
+            if ($query->num_rows() == 0) {
+                ee()->tagger_helper->create_tag($tag);
+            }
+
+            $keywords['tags'][] = $tag;
         }
 
         return $keywords;
