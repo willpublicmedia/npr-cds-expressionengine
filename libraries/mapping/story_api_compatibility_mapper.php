@@ -151,14 +151,15 @@ class Story_api_compatibility_mapper
         return $settings;
     }
 
-    private function map_collections(array $data): string
+    private function map_collections(array $data): array
     {
-        $titles = [];
-        foreach ($data as $collection) {
-            $titles[] = $collection['title'];
-        }
+        $keywords = [
+            'tags' => [],
+        ];
 
-        $keywords = implode(',', $titles);
+        foreach ($data as $collection) {
+            $keywords['tags'][] = $collection['title'];
+        }
 
         return $keywords;
     }
