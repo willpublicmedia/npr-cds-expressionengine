@@ -20,6 +20,7 @@ class Publish_form_mapper
 {
     private $settings = [
         'pull_url' => '',
+        'service_id' => '',
         'theme_uses_featured_image' => false,
     ];
 
@@ -495,7 +496,7 @@ class Publish_form_mapper
                 'href' => $item->href,
                 'rels' => $item->rels,
                 'title' => $doc->title,
-                'authorizedOrgServiceIds' => $doc->authorizedOrgServiceIds,
+                'authorized' => in_array($this->settings['service_id'], $doc->authorizedOrgServiceIds),
             ];
         }
 
