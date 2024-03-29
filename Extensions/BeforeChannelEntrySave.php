@@ -221,18 +221,8 @@ class BeforeChannelEntrySave extends AbstractRoute
     private function check_required_fields($field_groups, $display_error = true)
     {
         foreach ($field_groups as $group) {
-            if ($group->group_name === Field_installer::DEFAULT_FIELD_GROUP['group_name']) {
-                return true;
-            }
-
-            if ($group->group_name === Field_installer::LEGACY_FIELD_GROUP['group_name']) {
-                ee('CP/Alert')->makeInline('legacy-field-group')
-                    ->asWarning()
-                    ->withTitle('NPR CDS Mapping Issue')
-                    ->addToBody('Legacy Story API fields detected.')
-                    ->addToBody('Channel should use the ' . Field_installer::DEFAULT_FIELD_GROUP['group_name'] . ' field group for accurate content mapping.')
-                    ->defer();
-
+            if ($group->group_name === Field_installer::DEFAULT_FIELD_GROUP['group_name'] ||
+                $group->group_name === Field_installer::LEGACY_FIELD_GROUP['group_name']) {
                 return true;
             }
         }
