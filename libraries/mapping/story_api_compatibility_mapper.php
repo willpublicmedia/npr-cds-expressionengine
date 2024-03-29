@@ -120,7 +120,7 @@ class Story_api_compatibility_mapper
             ];
 
             // this is a cheat, not a valid column
-            if (!is_null($data['transcript'])) {
+            if (array_key_exists('transcript', $data) && !is_null($data['transcript'])) {
                 $api_audio['transcripts'][] = $data['transcript'];
             }
 
