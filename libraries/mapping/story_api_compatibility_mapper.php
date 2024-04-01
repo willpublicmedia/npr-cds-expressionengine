@@ -3,6 +3,7 @@
 namespace IllinoisPublicMedia\NprCds\Libraries\Mapping;
 
 require_once __DIR__ . '/../utilities/field_utils.php';
+use EEHarbor\Tagger\FluxCapacitor\Conduit\StaticCache;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
 // see /ee/ExpressionEngine/Config/constants.php
@@ -151,9 +152,8 @@ class Story_api_compatibility_mapper
         return $settings;
     }
 
-    private function map_collections(array $data): array
+    private function map_collections(array $data, $field_name = 'keywords'): array
     {
-        ee()->load->library('../../tagger/libraries/tagger_helper');
         $site_id = ee()->config->item('site_id');
 
         $keywords = [
@@ -162,19 +162,14 @@ class Story_api_compatibility_mapper
 
         foreach ($data as $collection) {
             $tag = $collection['title'];
-            $query = ee()->db->select('tag_id')
-                ->from('exp_tagger')
-                ->where('tag_name', $tag)
-                ->where('site_id', $site_id)
-                ->limit(1)
-                ->get();
-
-            if ($query->num_rows() == 0) {
-                ee()->tagger_helper->create_tag($tag);
-            }
 
             $keywords['tags'][] = $tag;
         }
+
+        $field_id = $this->field_utils->get_field_id($field_name);
+
+        // store keywords so they can be picked up by tagger's post-save hook.
+        StaticCache::set('Tagger/FieldData/' . $field_id, $keywords);
 
         return $keywords;
     }
