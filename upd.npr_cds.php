@@ -83,7 +83,7 @@ class Npr_cds_upd extends Installer
             $this->delete_legacy_extensions();
         }
 
-        // $this->create_required_fields();
+        $this->create_required_fields();
         $this->create_required_statuses();
         // $this->create_required_channels();
 
