@@ -74,9 +74,10 @@ class Story_api_settings_migrator
         }
 
         $service = $json->services[0];
+
         $settings = [
-            'service_id' => $service->id,
-            'service_name' => $service->name,
+            'service_id' => property_exists($service, 'id') ? $service->id : '',
+            'service_name' => property_exists($service, 'name') ? $service->name : '',
         ];
 
         return $settings;
