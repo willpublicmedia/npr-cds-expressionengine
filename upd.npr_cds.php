@@ -3,7 +3,7 @@
 }
 
 require_once __DIR__ . '/constants.php';
-require_once __DIR__ . '/database/installation/dependency_manager.php';
+require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
 require_once __DIR__ . '/database/installation/fields/field_installer.php';
 require_once __DIR__ . '/database/installation/channel_installer.php';
@@ -14,13 +14,13 @@ require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 
 use ExpressionEngine\Service\Addon\Installer;
+use IllinoisPublicMedia\NprCds\Database\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Legacy_extension_installer;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
-use IllinoisPublicMedia\NprCds\Libraries\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 

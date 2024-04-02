@@ -6,7 +6,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
-require_once __DIR__ . '/../../utilities/autoloader.php';
+require_once __DIR__ . '/../../libraries/utilities/autoloader.php';
 require_once __DIR__ . '/fields/field_installer.php';
 require_once __DIR__ . '/layout_customizer.php';
 use ExpressionEngine\Model\Channel\Channel;
