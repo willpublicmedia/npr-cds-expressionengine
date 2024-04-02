@@ -17,6 +17,7 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
         'audio_files' => null,
         'npr_images' => null,
         'text' => null,
+        'videoembed_grid' => null,
         // date
         'audio_runby_date' => null,
         'last_modified_date' => null,
@@ -80,6 +81,11 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
                 ],
                 [
                     'field' => $this->custom_options_fields['npr_images'],
+                    'visible' => true,
+                    'collapsed' => false,
+                ],
+                [
+                    'field' => $this->custom_options_fields['videoembed_grid'],
                     'visible' => true,
                     'collapsed' => false,
                 ],
