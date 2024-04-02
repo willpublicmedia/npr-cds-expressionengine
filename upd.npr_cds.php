@@ -5,6 +5,7 @@
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
+require_once __DIR__ . '/database/migrations/pre_install/field_group_migrator.php';
 require_once __DIR__ . '/database/installation/fields/field_installer.php';
 require_once __DIR__ . '/database/installation/channel_installer.php';
 require_once __DIR__ . '/database/installation/status_installer.php';
@@ -19,6 +20,7 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
+use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Field_group_migrator;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Legacy_extension_installer;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
@@ -81,7 +83,8 @@ class Npr_cds_upd extends Installer
 
             // to do: migrate story api fields
 
-            // to do: apply cds field group to mapped channels
+            $this->migrate_mapped_channel_field_groups();
+
             // to do: apply layouts to mapped channels
 
             $this->delete_legacy_extensions();
@@ -130,6 +133,12 @@ class Npr_cds_upd extends Installer
         $has_dependencies = $manager->check_dependencies();
 
         return $has_dependencies;
+    }
+
+    private function migrate_mapped_channel_field_groups(): void
+    {
+        $migrator = new Field_group_migrator();
+        $migrator->migrate();
     }
 
     private function migrate_story_api_settings(): void
