@@ -24,5 +24,10 @@ return array(
     'namespace' => Constants::NAMESPACE,
     'version' => Constants::VERSION,
     'settings_exist' => true,
+    'models' => [
+        'DefaultNprStoryLayout'    => 'Model\DefaultNprStoryLayout',
+
+    ],
+ 
 )
 ?>

@@ -6,9 +6,9 @@ if (!defined('BASEPATH')) {
     exit('No direct script access.');
 }
 
-require_once __DIR__ . '/../model/channel/default_npr_story_layout.php';
+require_once __DIR__ . '/../../Model/DefaultNprStoryLayout.php';
 use ExpressionEngine\Model\Channel\Channel;
-use IllinoisPublicMedia\NprCds\Model\Channel\Default_npr_story_layout;
+use IllinoisPublicMedia\NprCds\Model\DefaultNprStoryLayout;
 
 class Layout_customizer
 {
@@ -62,7 +62,7 @@ class Layout_customizer
         $channel_layout = ee('Model')->make('ChannelLayout');
         $channel_layout->Channel = $this->channel;
 
-        $default_layout = new Default_npr_story_layout($this->channel->channel_id, null);
+        $default_layout = new DefaultNprStoryLayout($this->channel->channel_id, null);
         $field_layout = $default_layout->getLayout();
 
         $channel_layout->layout_name = $layout_name;
