@@ -81,6 +81,9 @@ class Npr_cds_upd extends Installer
 
             // to do: migrate story api fields
 
+            // to do: apply cds field group to mapped channels
+            // to do: apply layouts to mapped channels
+
             $this->delete_legacy_extensions();
         }
 
