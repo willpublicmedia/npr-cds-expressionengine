@@ -40,9 +40,9 @@ class Story_source_definitions
                 'field_default_value' => 0,
             ),
         ),
-        'npr_document_id' => array(
-            'field_name' => 'npr_document_id',
-            'field_label' => 'NPR Document ID',
+        'npr_story_id' => array(
+            'field_name' => 'npr_story_id',
+            'field_label' => 'NPR Story ID',
             'field_instructions' => 'Enter an NPR Document ID as described in https://npr.github.io/content-distribution-service.',
             'field_type' => 'text',
             'field_maxl' => '64',
