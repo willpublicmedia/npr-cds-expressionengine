@@ -3,10 +3,10 @@
 }
 
 require_once __DIR__ . '/constants.php';
-require_once __DIR__ . '/libraries/installation/dependency_manager.php';
+require_once __DIR__ . '/database/installation/dependency_manager.php';
 require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
 require_once __DIR__ . '/database/installation/fields/field_installer.php';
-// require_once __DIR__ . '/libraries/installation/channel_installer.php';
+require_once __DIR__ . '/database/installation/channel_installer.php';
 require_once __DIR__ . '/database/installation/status_installer.php';
 require_once __DIR__ . '/database/migrations/pre_install/legacy_extension_installer.php';
 require_once __DIR__ . '/database/installation/tables/table_loader.php';
@@ -19,36 +19,33 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Legacy_extension_installer;
-// use IllinoisPublicMedia\NprStoryApi\Libraries\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
+use IllinoisPublicMedia\NprCds\Libraries\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 
-/**
- * NPR CDS updater.
- */
 class Npr_cds_upd extends Installer
 {
     public $has_cp_backend = 'y';
 
     public $has_publish_fields = 'n';
 
-    private $channels = array(
+    private $channels = [
         'npr_stories',
-    );
+    ];
 
     private $publish_layout = 'NPR CDS';
 
-    private $tables = array(
+    private $tables = [
         // table order matters for column relationships
-        'config' => array(
+        'config' => [
             'config_settings',
             // 'config_field_mappings',
-        ),
-        'story' => array(
+        ],
+        'story' => [
             //     'pushed_stories',
-        ),
-    );
+        ],
+    ];
 
     /**
      * NPR CDS updater constructor.
@@ -85,7 +82,7 @@ class Npr_cds_upd extends Installer
 
         $this->create_required_fields();
         $this->create_required_statuses();
-        // $this->create_required_channels();
+        $this->create_required_channels();
 
         parent::install();
 
@@ -145,11 +142,11 @@ class Npr_cds_upd extends Installer
         return $installed;
     }
 
-    // private function create_required_channels()
-    // {
-    //     $installer = new Channel_installer();
-    //     $installer->install($this->channels, $this->publish_layout);
-    // }
+    private function create_required_channels()
+    {
+        $installer = new Channel_installer();
+        $installer->install($this->channels, $this->publish_layout);
+    }
 
     private function create_required_fields()
     {
@@ -159,9 +156,9 @@ class Npr_cds_upd extends Installer
 
     private function create_required_statuses()
     {
-        $statuses = array(
+        $statuses = [
             'draft',
-        );
+        ];
 
         $installer = new Status_installer();
         $installer->install($statuses);
@@ -169,7 +166,7 @@ class Npr_cds_upd extends Installer
 
     private function create_tables(array $table_names)
     {
-        $tables = array();
+        $tables = [];
         foreach ($table_names as $name) {
             $data = $this->load_table_config($name);
             array_push($tables, $data);
@@ -193,7 +190,7 @@ class Npr_cds_upd extends Installer
 
     private function delete_tables(array $table_names)
     {
-        $tables = array();
+        $tables = [];
         foreach ($table_names as $name) {
             $data = $this->load_table_config($name);
             $table_name = $data->table_name();
