@@ -72,6 +72,10 @@ class Npr_cds_upd extends Installer
         // create and/or migrate settings
         $this->create_tables($this->tables['config']);
 
+        $this->create_required_fields();
+        $this->create_required_statuses();
+        $this->create_required_channels();
+
         if ($this->npr_story_api_installed() === true) {
             $this->migrate_story_api_settings();
 
@@ -79,10 +83,6 @@ class Npr_cds_upd extends Installer
 
             $this->delete_legacy_extensions();
         }
-
-        $this->create_required_fields();
-        $this->create_required_statuses();
-        $this->create_required_channels();
 
         parent::install();
 
