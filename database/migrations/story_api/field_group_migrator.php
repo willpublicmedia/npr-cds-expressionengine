@@ -35,12 +35,14 @@ class Field_group_migrator
             }
 
             // assign cds field group
-            $channel->FieldGroups->add($cds_field_group->group_id);
+            $channel->FieldGroups->add($cds_field_group);
 
             // remove api field group
-            $channel->FieldGroups->remove($legacy_field_group->group_id);
+            $channel->FieldGroups->remove($legacy_field_group);
 
             $channel->save();
+            $cds_field_group->save();
+            $legacy_field_group->save();
         }
     }
 
