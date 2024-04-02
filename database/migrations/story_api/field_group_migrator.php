@@ -1,6 +1,6 @@
 <?php
 
-namespace IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall;
+namespace IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');

@@ -4,12 +4,12 @@
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/libraries/installation/dependency_manager.php';
-require_once __DIR__ . '/database/migrations/pre_install/story_api_settings_migrator.php';
-require_once __DIR__ . '/database/migrations/pre_install/field_group_migrator.php';
+require_once __DIR__ . '/database/migrations/story_api/story_api_settings_migrator.php';
+require_once __DIR__ . '/database/migrations/story_api/field_group_migrator.php';
 require_once __DIR__ . '/database/installation/fields/field_installer.php';
 require_once __DIR__ . '/database/installation/channel_installer.php';
 require_once __DIR__ . '/database/installation/status_installer.php';
-require_once __DIR__ . '/database/migrations/pre_install/legacy_extension_installer.php';
+require_once __DIR__ . '/database/migrations/story_api/legacy_extension_installer.php';
 require_once __DIR__ . '/database/installation/tables/table_loader.php';
 require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
@@ -20,9 +20,9 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
-use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Field_group_migrator;
-use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Legacy_extension_installer;
-use IllinoisPublicMedia\NprCds\Database\Migrations\PreInstall\Story_api_settings_migrator;
+use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Field_group_migrator;
+use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Legacy_extension_installer;
+use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Story_api_settings_migrator;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 
