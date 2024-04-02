@@ -29,6 +29,8 @@ class Field_installer
 
     private $preferred_wysiwyg_editor = 'wyvern';
 
+    private $reused_fields = [];
+
     private $validation_errors;
 
     public function __construct($field_definitions = null)
@@ -65,9 +67,11 @@ class Field_installer
                 }
 
                 $this->assign_field_group($model);
-                $this->notify_field_reuse($model->field_name, $model->field_type);
+                $this->reused_fields[$model->field_name] = $model->field_type;
             }
         }
+
+        $this->notify_field_reuse($this->reused_fields);
     }
 
     public function uninstall()
@@ -196,15 +200,22 @@ class Field_installer
         ee()->grid_lib->settings_form_field_name = 'grid';
     }
 
-    private function notify_field_reuse($field_name, $field_type)
+    private function notify_field_reuse(array $reused_fields)
     {
-        ee('CP/Alert')->makeInline("npr-api-field-creation-$field_name")
+        $message = "The following addon-compatible fields were discovered and assigned to the " .
+        Field_installer::DEFAULT_FIELD_GROUP['group_name'] . " group:\n <ul>";
+
+        foreach ($reused_fields as $name => $type) {
+            $message = $message . "<li>$name ($type)</li>";
+        }
+
+        $message = $message . "</ul>";
+
+        ee('CP/Alert')->makeInline("npr-api-field-reuse-notice")
             ->asAttention()
             ->canClose()
             ->withTitle('NPR field creation notice.')
-            ->addToBody(
-                "A field with the name $field_name and compatible type $field_type was found and assigned to the " .
-                Field_installer::DEFAULT_FIELD_GROUP['group_name'] . " group.")
+            ->addToBody($message)
             ->defer();
     }
 
