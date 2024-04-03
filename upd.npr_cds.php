@@ -17,6 +17,7 @@ require_once __DIR__ . '/libraries/installation/table_installer.php';
 use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Channel_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
+use IllinoisPublicMedia\NprCds\Database\Installation\Layout_customizer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
@@ -86,6 +87,7 @@ class Npr_cds_upd extends Installer
             $this->migrate_mapped_channel_field_groups();
 
             // to do: apply layouts to mapped channels
+            $this->update_publish_form_layouts();
 
             $this->delete_legacy_extensions();
         }
@@ -219,5 +221,29 @@ class Npr_cds_upd extends Installer
         $data = $loader->load($table_name);
 
         return $data;
+    }
+
+    private function update_publish_form_layouts(): void
+    {
+        $settings = ee()->db->select('mapped_channels')
+            ->limit(1)
+            ->get('npr_cds_settings')
+            ->result_array();
+
+        if (isset($settings[0])) {
+            $settings = $settings[0];
+        }
+
+        $layout_name = '';
+        $channel_ids = explode('|', $settings);
+        foreach ($channel_ids as $channel_id) {
+            $channel = ee('Model')->get('Channel')->filter('channel_id', $channel_id)->first();
+            if ($channel == null) {
+                continue;
+            }
+
+            $customizer = new Layout_customizer($channel);
+            $customizer->install($layout_name);
+        }
     }
 }
