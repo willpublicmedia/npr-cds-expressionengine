@@ -74,7 +74,7 @@ class Channel_installer
             'channel_name' => $channel_name,
             'channel_title' => 'NPR Stories',
             'channel_url' => "/$channel_name/",
-            'channel_description' => 'Stories pulled from the NPR Story API.',
+            'channel_description' => 'Stories pulled from the NPR Content Distribution System.',
             'comment_url' => "/$channel_name/story/",
             'preview_url' => "/$channel_name/story/{entry_id}",
             'rss_url' => "/$channel_name/rss",

@@ -39,7 +39,7 @@ class Npr_cds_upd extends Installer
         'npr_stories',
     ];
 
-    private $publish_layout = 'NPR CDS';
+    private $publish_layout = DefaultNprStoryLayout::LAYOUT_NAME;
 
     private $tables = [
         // table order matters for column relationships
@@ -232,11 +232,7 @@ class Npr_cds_upd extends Installer
             ->get('npr_cds_settings')
             ->result_array();
 
-        if (isset($settings[0])) {
-            $settings = $settings[0];
-        }
-
-        $channel_ids = explode('|', $settings);
+        $channel_ids = explode('|', $settings[0]['mapped_channels']);
         foreach ($channel_ids as $channel_id) {
             $channel = ee('Model')->get('Channel')->filter('channel_id', $channel_id)->first();
             if ($channel == null) {
