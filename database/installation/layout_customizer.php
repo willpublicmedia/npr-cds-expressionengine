@@ -44,6 +44,16 @@ class Layout_customizer
     {
         $layout = ee('Model')->get('ChannelLayout')->filter('layout_name', '==', $layout_name)->first();
 
+        // get channel assigned member groups and layouts
+        $assigned_roles = $channel->AssignedRoles;
+        $old_layouts = $channel->ChannelLayouts->pluck('layout_id');
+
+        // unassign old member layout assignments
+        // do NOT delete old layouts
+        ee()->db->where_in('layout_id', $old_layouts)->delete('layout_publish_member_roles');
+
+        //assign new layout
+        $layout->PrimaryRoles = $assigned_roles;
         $channel->ChannelLayouts->add($layout);
         $layout->synchronize($channel->getAllCustomFields());
 
@@ -67,20 +77,6 @@ class Layout_customizer
 
         $channel_layout->layout_name = $layout_name;
         $channel_layout->field_layout = $field_layout;
-
-        if (APP_VER < 6) {
-            $member_groups = ee('Model')->get('MemberGroup')
-                ->filter('group_title', 'NOT IN', $this->member_group_deny)
-                ->all();
-
-            $channel_layout->MemberGroups = $member_groups;
-        } else {
-            $member_roles = ee('Model')->get('Role')
-                ->filter('name', 'NOT IN', $this->member_group_deny)
-                ->all();
-
-            $channel_layout->PrimaryRoles = $member_roles;
-        }
 
         $channel_layout->save();
     }
