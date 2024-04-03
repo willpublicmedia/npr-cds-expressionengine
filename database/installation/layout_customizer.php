@@ -55,7 +55,7 @@ class Layout_customizer
     {
         $model = ee('Model')->get('ChannelLayout')->filter('layout_name', '==', $layout_name)->first();
 
-        if ($model != null) {
+        if ($model != null && $model->channel_id == $this->channel->channel_id) {
             return;
         }
 
