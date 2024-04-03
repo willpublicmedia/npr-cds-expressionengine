@@ -261,7 +261,7 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
                     $tab['fields'][] = [
                         'field' => $field['field_id'],
                         'visible' => true,
-                        'collapsed' => $field['field_is_hidden'] === 'y' ? true : false,
+                        'collapsed' => (array_key_exists('field_is_hidden', $field) && $field['field_is_hidden'] === 'y') ? true : false,
                     ];
                 }
 
