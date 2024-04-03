@@ -13,6 +13,7 @@ require_once __DIR__ . '/database/migrations/story_api/legacy_extension_installe
 require_once __DIR__ . '/database/installation/tables/table_loader.php';
 require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
+require_once __DIR__ . '/Model/DefaultNprStoryLayout.php';
 
 use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Channel_installer;
@@ -26,6 +27,7 @@ use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Legacy_extension_ins
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Story_api_settings_migrator;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Dependency_manager;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
+use IllinoisPublicMedia\NprCds\Model\DefaultNprStoryLayout;
 
 class Npr_cds_upd extends Installer
 {
@@ -234,7 +236,6 @@ class Npr_cds_upd extends Installer
             $settings = $settings[0];
         }
 
-        $layout_name = '';
         $channel_ids = explode('|', $settings);
         foreach ($channel_ids as $channel_id) {
             $channel = ee('Model')->get('Channel')->filter('channel_id', $channel_id)->first();
@@ -243,7 +244,7 @@ class Npr_cds_upd extends Installer
             }
 
             $customizer = new Layout_customizer($channel);
-            $customizer->install($layout_name);
+            $customizer->install(DefaultNprStoryLayout::LAYOUT_NAME);
         }
     }
 }

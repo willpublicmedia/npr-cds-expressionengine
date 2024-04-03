@@ -3,12 +3,15 @@
 namespace IllinoisPublicMedia\NprCds\Model;
 
 use ExpressionEngine\Model\Channel\Display\DefaultChannelLayout;
+use IllinoisPublicMedia\NprCds\Constants;
 
 class DefaultNprStoryLayout extends DefaultChannelLayout
 {
     // Documentation: https://docs.expressionengine.com/latest/development/services/model/building-your-own.html
     // You can get this all instances of this model by using:
     // ee('Model')->get('npr_cds:DefaultNprStoryLayout')->all();
+
+    public const LAYOUT_NAME = 'NPR CDS v' . Constants::VERSION;
 
     private $custom_options_fields = [
         // publish
