@@ -34,6 +34,10 @@ class Field_group_migrator
                 continue;
             }
 
+            if ($channel->FieldGroups->filter('group_name', Field_installer::DEFAULT_FIELD_GROUP['group_name'])->count() > 0) {
+                continue;
+            }
+
             // assign cds field group
             $channel->FieldGroups->add($cds_field_group);
 
