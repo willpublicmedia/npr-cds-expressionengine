@@ -52,6 +52,10 @@ class Layout_customizer
         $assigned_roles = $channel->AssignedRoles->pluck('role_id');
         $old_layouts = $channel->ChannelLayouts->pluck('layout_id');
 
+        // explicitly assign super admins to newly created layouts
+        $super_admin_id = ee('Model')->get('Role')->fields('role_id')->filter('short_name', 'super_admins')->first()->role_id;
+        $assigned_roles[] = $super_admin_id;
+
         // unassign old member layout assignments
         // do NOT delete old layouts
         ee()->db->where_in('layout_id', $old_layouts)->delete('layout_publish_member_roles');
