@@ -31,7 +31,16 @@ The WordPress plugin was originally developed as an Open Source plugin by NPR an
     - and your push and pull urls.
 4. Select "Theme uses featured image" if your page templates pull a hero image from the story's image field.
 5. Select a suitable file storage location for pulled images.
-6. Select channels that may be used by the CDS addon. These channels must use the field group "NPR Story API", which was created by the installer.
+6. Select channels that may be used by the CDS addon. See channel mapping rules below.
+
+### Mapped Channels
+
+Only mapped channels will be processed for CDS content.
+
+In order to be mapped, a channel must meet the following requirements:
+- Mapped channels must have access to all fields required by the story api (NPR CDS field group).
+- Mapped channel `channel_name` must use the prefix "npr_stories" (e.g., "npr_stories_local_programming"). The `channel_prefix` field does not need to follow any naming conventions.
+- Mapped channels must be configured as mapped in the addon settings.
 
 ### Migrating from Story API
 
