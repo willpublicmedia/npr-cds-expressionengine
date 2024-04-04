@@ -6,6 +6,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+require_once __DIR__ . '/../utilities/config_utils.php';
 require_once __DIR__ . '/../utilities/channel_entry_builder.php';
 require_once __DIR__ . '/../publishing/npr_cds_expressionengine.php';
 require_once __DIR__ . '/story_api_compatibility_mapper.php';
@@ -14,6 +15,7 @@ use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Mapping\Story_api_compatibility_mapper;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Channel_entry_builder;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 use \stdClass;
 
 class Publish_form_mapper
@@ -26,7 +28,7 @@ class Publish_form_mapper
 
     public function __construct()
     {
-        $this->settings = $this->load_settings();
+        $this->settings = Config_utils::load_settings(array_keys($this->settings));
     }
 
     public function map($entry, $values, $story)
@@ -728,26 +730,6 @@ class Publish_form_mapper
         }
 
         return $videos;
-    }
-
-    private function load_settings()
-    {
-        $fields = array_keys($this->settings);
-
-        $settings = ee()->db->select(implode(',', $fields))
-            ->limit(1)
-            ->get('npr_cds_settings')
-            ->result_array();
-
-        if (isset($settings[0])) {
-            $settings = $settings[0];
-        }
-
-        if (in_array('theme_uses_featured_image', $settings)) {
-            $settings['theme_uses_featured_image'] = (bool) $settings['theme_uses_featured_image'];
-        }
-
-        return $settings;
     }
 
     private function parse_credits($asset): string

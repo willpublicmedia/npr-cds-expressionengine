@@ -2,8 +2,10 @@
 
 namespace IllinoisPublicMedia\NprCds\Libraries\Mapping;
 
+require_once __DIR__ . '/../utilities/config_utils.php';
 require_once __DIR__ . '/../utilities/field_utils.php';
 use EEHarbor\Tagger\FluxCapacitor\Conduit\StaticCache;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
 // see /ee/ExpressionEngine/Config/constants.php
@@ -36,7 +38,7 @@ class Story_api_compatibility_mapper
             }
         }
 
-        $this->settings = $this->load_settings();
+        $this->settings = Config_utils::load_settings(array_keys($this->settings));
     }
 
     public function map_cds_to_story(array $cds_data): array
@@ -130,26 +132,6 @@ class Story_api_compatibility_mapper
         }
 
         return $api_audio;
-    }
-
-    private function load_settings()
-    {
-        $fields = array_keys($this->settings);
-
-        $settings = ee()->db->select(implode(',', $fields))
-            ->limit(1)
-            ->get('npr_cds_settings')
-            ->result_array();
-
-        if (isset($settings[0])) {
-            $settings = $settings[0];
-        }
-
-        if (in_array('theme_uses_featured_image', $settings)) {
-            $settings['theme_uses_featured_image'] = (bool) $settings['theme_uses_featured_image'];
-        }
-
-        return $settings;
     }
 
     private function map_collections(array $data, $field_name = 'keywords'): array

@@ -2,6 +2,7 @@
 
 namespace IllinoisPublicMedia\NprCds\Extensions;
 
+require_once __DIR__ . '/../libraries/utilities/config_utils.php';
 require_once __DIR__ . '/../libraries/dto/http/api_request.php';
 require_once __DIR__ . '/../libraries/publishing/npr_cds_expressionengine.php';
 require_once __DIR__ . '/../libraries/utilities/field_utils.php';
@@ -9,6 +10,7 @@ use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
 class BeforeChannelEntryDelete extends AbstractRoute
@@ -24,7 +26,7 @@ class BeforeChannelEntryDelete extends AbstractRoute
 
     public function __construct()
     {
-        $this->settings = $this->load_settings();
+        $this->settings = Config_utils::load_settings(array_keys($this->settings));
         $this->map_model_fields(array_keys($this->fields));
     }
 
@@ -70,26 +72,6 @@ class BeforeChannelEntryDelete extends AbstractRoute
         $alert->defer();
 
         return;
-    }
-
-    private function load_settings()
-    {
-        $fields = array_keys($this->settings);
-
-        $settings = ee()->db->select(implode(',', $fields))
-            ->limit(1)
-            ->get('npr_cds_settings')
-            ->result_array();
-
-        if (isset($settings[0])) {
-            $settings = $settings[0];
-        }
-
-        if (in_array('theme_uses_featured_image', $settings)) {
-            $settings['theme_uses_featured_image'] = (bool) $settings['theme_uses_featured_image'];
-        }
-
-        return $settings;
     }
 
     private function map_model_fields($field_array)

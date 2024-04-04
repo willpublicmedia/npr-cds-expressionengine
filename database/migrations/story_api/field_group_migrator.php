@@ -6,8 +6,10 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
+require_once __DIR__ . '/../../../libraries/utilities/config_utils.php';
 require_once __DIR__ . '/../../installation/fields/field_installer.php';
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 
 class Field_group_migrator
 {
@@ -17,7 +19,7 @@ class Field_group_migrator
 
     public function __construct()
     {
-        $this->settings = $this->load_settings();
+        $this->settings = Config_utils::load_settings(array_keys($this->settings));
     }
 
     public function migrate()
@@ -48,25 +50,5 @@ class Field_group_migrator
             $cds_field_group->save();
             $legacy_field_group->save();
         }
-    }
-
-    private function load_settings()
-    {
-        $fields = array_keys($this->settings);
-
-        $settings = ee()->db->select(implode(',', $fields))
-            ->limit(1)
-            ->get('npr_cds_settings')
-            ->result_array();
-
-        if (isset($settings[0])) {
-            $settings = $settings[0];
-        }
-
-        if (in_array('theme_uses_featured_image', $settings)) {
-            $settings['theme_uses_featured_image'] = (bool) $settings['theme_uses_featured_image'];
-        }
-
-        return $settings;
     }
 }

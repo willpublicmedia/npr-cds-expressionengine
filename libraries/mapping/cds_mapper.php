@@ -6,6 +6,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+require_once __DIR__ . '/../utilities/config_utils.php';
 require_once __DIR__ . '/../configuration/npr_constants.php';
 require_once __DIR__ . '/../utilities/field_utils.php';
 require_once __DIR__ . '/../utilities/mp3file.php';
@@ -13,6 +14,7 @@ require_once __DIR__ . '/../utilities/mp3file.php';
 use DateInterval;
 use ExpressionEngine\Model\Channel\ChannelEntry;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\MP3File;
 use \stdClass;
@@ -40,7 +42,7 @@ class Cds_mapper
     public function __construct()
     {
         $this->field_utils = new Field_utils();
-        $this->settings = $this->load_settings();
+        $this->settings = Config_utils::load_settings(array_keys($this->settings));
 
         if (APP_VER >= 7) {
             $compatibility_mode = ee()->config->item('file_manager_compatibility_mode');
@@ -725,26 +727,6 @@ class Cds_mapper
         }
 
         return $text;
-    }
-
-    private function load_settings()
-    {
-        $fields = array_keys($this->settings);
-
-        $settings = ee()->db->select(implode(',', $fields))
-            ->limit(1)
-            ->get('npr_cds_settings')
-            ->result_array();
-
-        if (isset($settings[0])) {
-            $settings = $settings[0];
-        }
-
-        if (in_array('theme_uses_featured_image', $settings)) {
-            $settings['theme_uses_featured_image'] = (bool) $settings['theme_uses_featured_image'];
-        }
-
-        return $settings;
     }
 
     private function process_image_credits(array $image_data): array
