@@ -110,6 +110,10 @@ class Npr_cds_mcp extends Mcp
 
         $mapped = $form_data['mapped_channels'];
         $mapped = $this->require_npr_channel($mapped);
+
+        // keep empty values from creeping in
+        $mapped = array_filter($mapped);
+
         $mapped = implode('|', array_values($form_data['mapped_channels']));
         $form_data['mapped_channels'] = $mapped;
 
