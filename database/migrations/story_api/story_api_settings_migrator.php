@@ -26,10 +26,22 @@ class Story_api_settings_migrator
             'service_name' => $service['service_name'],
         );
 
+        $data['mapped_channels'] = $this->clean_empty_channel_values($data['mapped_channels']);
+
         ee()->db->where('id', 1);
         ee()->db->update('npr_cds_settings', $data);
 
         return;
+    }
+
+    private function clean_empty_channel_values(string $mapped_channel_setting): string
+    {
+        $channels = explode('|', $mapped_channel_setting);
+        $channels = array_filter($channels);
+
+        $clean = implode('|', $channels);
+
+        return $clean;
     }
 
     private function find_service_id($org_id)
