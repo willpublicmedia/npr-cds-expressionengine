@@ -43,7 +43,9 @@ class Layout_customizer
     private function assign_layout($layout_name, $channel)
     {
         $layout = ee('Model')->get('ChannelLayout')
+            ->with('Channel')
             ->filter('layout_name', '==', $layout_name)
+            ->filter('Channel.channel_id', $channel->channel_id)
             ->first();
 
         // get channel assigned member groups and layouts
@@ -64,7 +66,6 @@ class Layout_customizer
         }
 
         ee()->db->insert_batch('layout_publish_member_roles', $data);
-        ee()->db->flush_cache();
     }
 
     private function create_layout($layout_name)
