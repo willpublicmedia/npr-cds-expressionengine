@@ -42,10 +42,12 @@ class Layout_customizer
 
     private function assign_layout($layout_name, $channel)
     {
-        $layout = ee('Model')->get('ChannelLayout')->filter('layout_name', '==', $layout_name)->first();
+        $layout = ee('Model')->get('ChannelLayout')
+            ->filter('layout_name', '==', $layout_name)
+            ->first();
 
         // get channel assigned member groups and layouts
-        $assigned_roles = $channel->AssignedRoles;
+        $assigned_roles = $channel->AssignedRoles->pluck('role_id');
         $old_layouts = $channel->ChannelLayouts->pluck('layout_id');
 
         // unassign old member layout assignments
@@ -53,12 +55,16 @@ class Layout_customizer
         ee()->db->where_in('layout_id', $old_layouts)->delete('layout_publish_member_roles');
 
         //assign new layout
-        $layout->PrimaryRoles = $assigned_roles;
-        $channel->ChannelLayouts->add($layout);
-        $layout->synchronize($channel->getAllCustomFields());
+        $data = [];
+        foreach ($assigned_roles as $role_id) {
+            $data[] = [
+                'layout_id' => $layout->layout_id,
+                'role_id' => $role_id,
+            ];
+        }
 
-        $channel->save();
-        $layout->save();
+        ee()->db->insert_batch('layout_publish_member_roles', $data);
+        ee()->db->flush_cache();
     }
 
     private function create_layout($layout_name)
