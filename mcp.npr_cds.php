@@ -82,6 +82,7 @@ class Npr_cds_mcp extends Mcp
 
     private function load_settings()
     {
+        // note: this is a different settings load than provided by Config_utils::load_settings.
         $results = ee()->db->get('npr_cds_settings')->result_array();
 
         $raw = array_pop($results);
