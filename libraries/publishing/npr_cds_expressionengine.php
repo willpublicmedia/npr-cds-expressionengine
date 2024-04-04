@@ -17,6 +17,49 @@ use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
 
 class Npr_cds_expressionengine
 {
+    public function get_service_name(string $service_id): string
+    {
+        $url = "https://organization.api.npr.org/v4/services/" . urlencode($service_id);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+        $raw = curl_exec($ch);
+
+        //Did an error occur? If so, dump it out.
+        if (curl_errno($ch)) {
+            $msg = curl_error($ch);
+
+            ee('CP/Alert')->makeInline('service-name-lookup-failure')
+                ->asIssue()
+                ->withTitle("Failed to look up service name")
+                ->addToBody($msg)
+                ->defer();
+
+            return '';
+        }
+
+        curl_close($ch);
+
+        $json = json_decode($raw);
+
+        if (!property_exists($json, 'name')) {
+            ee('CP/Alert')->makeInline('service-name-not-found')
+                ->asIssue()
+                ->withTitle("Service Name not found")
+                ->addToBody("Contact NPR Station Services for assistance.")
+                ->defer();
+
+            return '';
+        }
+
+        $service_name = $json->name;
+
+        return $service_name;
+    }
+
     public function request(Api_request $request): Api_response
     {
         $response = $this->connect_as_curl($request);
