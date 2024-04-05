@@ -54,7 +54,8 @@ class Npr_cds_mcp extends Mcp
             $validation_results = $this->process_form_data($_POST);
 
             if ($validation_results->isValid()) {
-                $this->save_settings($_POST, 'npr_cds_settings');
+                $settings = $this->save_settings($_POST, 'npr_cds_settings');
+                $this->settings = $settings;
             }
         }
 
@@ -115,7 +116,7 @@ class Npr_cds_mcp extends Mcp
         return $channel_array;
     }
 
-    private function save_settings($form_data, $table_name)
+    private function save_settings($form_data, $table_name): array
     {
         $changed = false;
 
@@ -135,7 +136,7 @@ class Npr_cds_mcp extends Mcp
         }
 
         if ($changed == false) {
-            return;
+            return $form_data;
         }
 
         $service_name = $this->get_service_name($form_data['service_id']);
@@ -147,5 +148,7 @@ class Npr_cds_mcp extends Mcp
         $old_settings = array_pop($query);
 
         ee()->db->update($table_name, $form_data, array('id' => $old_settings['id']));
+
+        return $form_data;
     }
 }
