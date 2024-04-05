@@ -105,7 +105,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         $response = $this->pull_npr_story($npr_story_id);
-        if (is_null($response) || isset($response->messages)) {
+        if (is_null($response) || isset($response->messages) || !empty($response->json->Message) || !str_starts_with($response->code, '2')) {
             return;
         }
 
