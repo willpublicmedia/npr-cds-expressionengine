@@ -72,6 +72,9 @@ class Story_api_compatibility_mapper
                 case ($key === 'transcripts'):
                     $story_api_compatible_data['transcript'] = is_null($value) ? '' : $value[0];
                     break;
+                case ($key === 'videos'):
+                    $story_api_compatible_data['videoembed_grid'] = is_null($value) ? [] : $this->map_videos($value);
+                    break;
                 default:
                     if (!is_null($value)) {
                         $story_api_compatible_data[$key] = $value;
@@ -251,6 +254,28 @@ class Story_api_compatibility_mapper
         }
 
         return $image_array;
+    }
+
+    private function map_videos(array $video_data): array
+    {
+        $field_id = $this->field_utils->get_field_id('videoembed_grid');
+        $grid_column_names = $this->field_utils->get_grid_column_names($field_id);
+
+        $videos = [];
+        $count = 1;
+        foreach ($video_data as $id => $data) {
+            $row_name = "new_row_$count";
+
+            $video = [
+                $grid_column_names['embed_code'] => $data['embed_code'],
+                $grid_column_names['video_title'] => $data['title'],
+            ];
+
+            $videos['rows'][$row_name] = $video;
+            $count++;
+        }
+
+        return $videos;
     }
 
     private function parse_audio_permissions(array $permissions): string
