@@ -325,7 +325,7 @@ class Cds_mapper
          * attach video to post
          */
         if (!empty($videos)) {
-            $story->video = [];
+            $story->videos = [];
             $video_has = new stdClass;
             $video_has->href = '/' . $cds_version . '/profiles/has-videos';
             $video_has->rels = ['interface'];
@@ -334,13 +334,20 @@ class Cds_mapper
 
         $videos = $this->get_video_codes($entry, 'videoembed_grid');
         foreach ($videos as $video) {
+            $asset_id = $this->settings['document_prefix'] . '-';
             // add asset id to videos[]
+            $video_asset = new stdClass;
+            $video_asset->href = '#/' . $asset_id;
+            $story->videos[] = $video_asset;
+
             // add video document to assets[]
             dd($video);
 
             // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
             // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
         }
+
+        throw new \Exception('video asset ids incomplete');
 
         $json = json_encode($story);
 
