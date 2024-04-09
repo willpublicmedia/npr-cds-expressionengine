@@ -321,6 +321,27 @@ class Cds_mapper
             $story->audio[] = $new_audio;
         }
 
+        /**
+         * attach video to post
+         */
+        if (!empty($videos)) {
+            $story->video = [];
+            $video_has = new stdClass;
+            $video_has->href = '/' . $cds_version . '/profiles/has-videos';
+            $video_has->rels = ['interface'];
+            $story->profiles[] = $video_has;
+        }
+
+        $videos = $this->get_video_codes($entry, 'videoembed_grid');
+        foreach ($videos as $video) {
+            // add asset id to videos[]
+            // add video document to assets[]
+            dd($video);
+
+            // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
+            // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
+        }
+
         $json = json_encode($story);
 
         return $json;
@@ -727,6 +748,38 @@ class Cds_mapper
         }
 
         return $text;
+    }
+
+    // todo: refactor against get_media()
+    private function get_video_codes(ChannelEntry $entry, string $field_name): array
+    {
+        $content_type = 'channel';
+        ee()->load->model('grid_model');
+        $media_field_id = $this->field_utils->get_field_id($field_name);
+
+        // map column names
+        $columns = ee()->grid_model->get_columns_for_field($media_field_id, $content_type);
+
+        // get entry data
+        $entry_data = ee()->grid_model->get_entry_rows($entry->entry_id, $media_field_id, $content_type, []);
+
+        // loop entry data rows
+        $media = array();
+        foreach ($entry_data[$entry->entry_id] as $row) {
+            $row_data = array();
+
+            // map column data to column names
+            foreach ($columns as $column_id => $column_details) {
+                $column_name = $column_details['col_name'];
+                $row_column = "col_id_$column_id";
+                $row_col_data = $row[$row_column];
+                $row_data[$column_name] = $row_col_data;
+            }
+
+            $media[] = $row_data;
+        }
+
+        return $media;
     }
 
     private function process_image_credits(array $image_data): array
