@@ -4,7 +4,7 @@
     "license": "GPL-2.0+",
     "type": "expressionengine-addon",
     "require": {
-        "openpublicmedia/npr-cds-wordpress": "v1.0.5"
+        "openpublicmedia/npr-cds-wordpress": "v1.0.8"
     },
     "autoload": {
         "classmap": [
