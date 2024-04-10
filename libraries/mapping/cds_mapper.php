@@ -364,6 +364,9 @@ class Cds_mapper
                     // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
                     $video_document->subheadline = $video['video_title'];
                     $video_document->videoId = $video_info['asset_id_fragment'];
+                    if (array_key_exists('startTime', $video_info)) {
+                        $video_document->startTime = $video_info['startTime'];
+                    }
                 }
 
                 if ($video_info['npr_video_profile'] === 'player-video') {
@@ -880,14 +883,21 @@ class Cds_mapper
             }
         }
 
-        // guess npr profile from domain, allowing for variants like youtu.be
+        // parse url segments and query strings
         $parsed_url = parse_url($attributes['src']);
+        parse_str($parsed_url['query'], $queries);
+
+        // guess npr profile from domain, allowing for variants like youtu.be
         $npr_video_profile = str_contains($parsed_url['host'], 'youtu') ? 'youtube-video' : 'player-video';
         $attributes['video_id'] = $this->get_video_id($attributes['src']);
 
         // grab a path fragment for the asset ID
         $attributes['npr_video_profile'] = $npr_video_profile;
         $attributes['asset_id_fragment'] = $attributes['video_id'] !== '' ? $attributes['video_id'] : str_replace('/', '-', $parsed_url['path']);
+
+        if (array_key_exists('start', $queries)) {
+            $attributes['startTime'] = $queries['start'];
+        }
 
         return $attributes;
     }
