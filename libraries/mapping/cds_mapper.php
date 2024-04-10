@@ -346,8 +346,12 @@ class Cds_mapper
 
             // add video document to assets[]
             if (!in_array($video_info['npr_video_profile'], $videos)) {
+                $profile = new stdClass;
+                $profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
+                $story->profiles[] = $profile;
                 $profiles_already_added[] = $video_info['npr_video_profile'];
             }
+
             dd($video, $video_info);
             // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
 
