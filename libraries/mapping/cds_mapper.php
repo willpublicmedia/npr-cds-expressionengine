@@ -371,6 +371,15 @@ class Cds_mapper
 
             if ($video_info['npr_video_profile'] === 'stream-player-video') {
                 // add player-video profile (https://npr.github.io/content-distribution-service/profiles/stream-player-video.html)
+                $video_document->enclosures = [];
+                $enclosure = new stdClass;
+                $enclosure->href = $video_info['src'];
+                $enclosure->rels = ['hls'];
+                $video_document->enclosures[] = $enclosure;
+
+                $video_document->title = $video['video_title'];
+                $video_document->isEmbeddable = true;
+                $video_document->isRestrictedToAuthorizedOrgServiceIds = false;
             }
         }
 
