@@ -349,10 +349,6 @@ class Cds_mapper
             $video_document->id = $video_asset_id;
             $video_document->profiles = [];
 
-            $doctype = new stdClass;
-            $doctype->href = '/' . $cds_version . '/profiles/document';
-            $video_document->profiles[] = $doctype;
-
             $video_profile = new stdClass;
             $video_profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
 
