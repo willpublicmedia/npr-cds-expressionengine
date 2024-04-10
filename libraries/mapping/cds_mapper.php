@@ -12,6 +12,7 @@ require_once __DIR__ . '/../utilities/field_utils.php';
 require_once __DIR__ . '/../utilities/mp3file.php';
 
 use DateInterval;
+use DOMDocument;
 use ExpressionEngine\Model\Channel\ChannelEntry;
 use IllinoisPublicMedia\NprCds\Libraries\Configuration\Npr_constants;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
@@ -334,6 +335,7 @@ class Cds_mapper
 
         $videos = $this->get_video_codes($entry, 'videoembed_grid');
         foreach ($videos as $video) {
+            $video_info = $this->process_video_info($video);
             $asset_id = $this->settings['document_prefix'] . '-';
             // add asset id to videos[]
             $video_asset = new stdClass;
@@ -801,5 +803,39 @@ class Cds_mapper
         }
 
         return $credits;
+    }
+
+    private function process_video_info(array $data): array
+    {
+        // set default tag name and check embed code against other possibilities
+        $tag_name = 'iframe';
+        $possible_tags = ['iframe', 'video', 'embed'];
+        foreach ($possible_tags as $possible) {
+            if (strpos($data['embed_code'], "<$possible") !== false) {
+                $tag_name = $possible;
+                break;
+            }
+        }
+
+        // load embed code as DOM document and parse video tag attributes
+        $dom = new DOMDocument;
+        $dom->loadHTML($data['embed_code']);
+
+        $attributes = [];
+        foreach ($dom->getElementsByTagName($tag_name) as $tag) {
+            foreach ($tag->attributes as $attribute_name => $node_value) {
+                $attributes[$attribute_name] = $tag->getAttribute($attribute_name);
+            }
+        }
+
+        // guess npr profile from domain, allowing for variants like youtu.be
+        $parsed_url = parse_url($attributes['src']);
+        $npr_video_profile = str_contains($parsed_url['host'], 'youtu') ? 'youtube-video' : 'player-video';
+        $attributes['npr_video_profile'] = $npr_video_profile;
+
+        // grab a path fragment for the asset ID
+        $attributes['asset_id_fragment'] = str_replace('/', '-', $parsed_url['path']);
+
+        return $attributes;
     }
 }
