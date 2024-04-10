@@ -396,10 +396,6 @@ class Cds_mapper
         $video_document->profiles[] = $video_profile;
         $story->assets->{$asset_id} = $video_document;
 
-        dd($video_document, $story);
-
-        throw new \Exception('video asset ids incomplete');
-
         $json = json_encode($story);
 
         return $json;
