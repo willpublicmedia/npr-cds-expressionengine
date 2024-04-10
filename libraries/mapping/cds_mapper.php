@@ -336,14 +336,15 @@ class Cds_mapper
         $videos = $this->get_video_codes($entry, 'videoembed_grid');
         foreach ($videos as $video) {
             $video_info = $this->process_video_info($video);
-            $asset_id = $this->settings['document_prefix'] . '-';
+            $asset_id = $this->settings['document_prefix'] . '-' . $video_info['asset_id_fragment'];
+
             // add asset id to videos[]
             $video_asset = new stdClass;
             $video_asset->href = '#/' . $asset_id;
             $story->videos[] = $video_asset;
 
             // add video document to assets[]
-            dd($video);
+            dd($video, $video_info);
 
             // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
             // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
