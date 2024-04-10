@@ -333,6 +333,7 @@ class Cds_mapper
             $story->profiles[] = $video_has;
         }
 
+        $profiles_already_added = [];
         $videos = $this->get_video_codes($entry, 'videoembed_grid');
         foreach ($videos as $video) {
             $video_info = $this->process_video_info($video);
@@ -344,9 +345,12 @@ class Cds_mapper
             $story->videos[] = $video_asset;
 
             // add video document to assets[]
+            if (!in_array($video_info['npr_video_profile'], $videos)) {
+                $profiles_already_added[] = $video_info['npr_video_profile'];
+            }
             dd($video, $video_info);
-
             // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
+
             // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
         }
 
@@ -792,6 +796,26 @@ class Cds_mapper
         return $media;
     }
 
+    private function get_video_id(string $url): string
+    {
+        $values = '';
+        if (preg_match('/youtube\.com\/embed\/([^\&\?\/]+)/', $url, $id)) {
+            $values = $id[1];
+        } else if (preg_match('/youtube\.com\/watch\?v=([^\&\?\/]+)/', $url, $id)) {
+            $values = $id[1];
+        } else if (preg_match('/youtube\.com\/v\/([^\&\?\/]+)/', $url, $id)) {
+            $values = $id[1];
+        } else if (preg_match('/youtu\.be\/([^\&\?\/]+)/', $url, $id)) {
+            $values = $id[1];
+        } else if (preg_match('/youtube\.com\/verify_age\?next_url=\/watch%3Fv%3D([^\&\?\/]+)/', $url, $id)) {
+            $values = $id[1];
+        } else {
+            // not an youtube video
+        }
+
+        return $values;
+    }
+
     private function process_image_credits(array $image_data): array
     {
         $credits = array();
@@ -832,10 +856,11 @@ class Cds_mapper
         // guess npr profile from domain, allowing for variants like youtu.be
         $parsed_url = parse_url($attributes['src']);
         $npr_video_profile = str_contains($parsed_url['host'], 'youtu') ? 'youtube-video' : 'player-video';
-        $attributes['npr_video_profile'] = $npr_video_profile;
+        $attributes['video_id'] = $this->get_video_id($attributes['src']);
 
         // grab a path fragment for the asset ID
-        $attributes['asset_id_fragment'] = str_replace('/', '-', $parsed_url['path']);
+        $attributes['npr_video_profile'] = $npr_video_profile;
+        $attributes['asset_id_fragment'] = $attributes['video_id'] !== '' ? $attributes['video_id'] : str_replace('/', '-', $parsed_url['path']);
 
         return $attributes;
     }
