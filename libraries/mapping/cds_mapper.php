@@ -895,7 +895,10 @@ class Cds_mapper
 
         // parse url segments and query strings
         $parsed_url = parse_url($attributes['src']);
-        parse_str($parsed_url['query'], $queries);
+        $queries = [];
+        if (array_key_exists('query', $parsed_url)) {
+            parse_str($parsed_url['query'], $queries);
+        }
 
         // guess npr profile from domain, allowing for variants like youtu.be
         $npr_video_profile = str_contains($parsed_url['host'], 'youtu') ? 'youtube-video' : 'stream-player-video';
