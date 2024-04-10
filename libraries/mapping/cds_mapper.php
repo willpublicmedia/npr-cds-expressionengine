@@ -345,17 +345,37 @@ class Cds_mapper
             $story->videos[] = $video_asset;
 
             // add video document to assets[]
+            $video_document = new stdClass;
+            $video_document->id = $asset_id;
+            $video_document->profiles = [];
+
+            $doctype = new stdClass;
+            $doctype->href = '/' . $cds_version . '/profiles/document';
+            $video_document->profiles[] = $doctype;
+
+            $video_profile = new stdClass;
+            $video_profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
+            $video_profile->rels = ['type'];
             if (!in_array($video_info['npr_video_profile'], $videos)) {
-                $profile = new stdClass;
-                $profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
-                $story->profiles[] = $profile;
+                $story->profiles[] = $video_profile;
                 $profiles_already_added[] = $video_info['npr_video_profile'];
+
+                if ($video_info['npr_video_profile'] === 'youtube-video') {
+                    // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
+                    $video_document->videoId = $video_info['asset_id_fragment'];
+                }
+
+                if ($video_info['npr_video_profile'] === 'player-video') {
+                    // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
+                }
+
+                if ($video_info['npr_video_profile'] === 'stream-player-video') {
+                    // add player-video profile (https://npr.github.io/content-distribution-service/profiles/stream-player-video.html)
+                }
             }
+            $video_document->profiles[] = $video_profile;
 
             dd($video, $video_info);
-            // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
-
-            // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
         }
 
         throw new \Exception('video asset ids incomplete');
