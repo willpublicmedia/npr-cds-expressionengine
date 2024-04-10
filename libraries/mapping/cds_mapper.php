@@ -354,7 +354,6 @@ class Cds_mapper
 
             $video_profile = new stdClass;
             $video_profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
-            $video_profile->rels = ['type'];
 
             if ($video_info['npr_video_profile'] === 'youtube-video') {
                 // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
