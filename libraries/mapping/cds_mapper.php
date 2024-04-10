@@ -336,16 +336,17 @@ class Cds_mapper
         $videos = $this->get_video_codes($entry, 'videoembed_grid');
         foreach ($videos as $video) {
             $video_info = $this->process_video_info($video);
-            $asset_id = $this->settings['document_prefix'] . '-' . $video_info['asset_id_fragment'];
+            $video_asset_id = $cds_id . $cds_count;
+            $cds_count++;
 
             // add asset id to videos[]
             $video_asset = new stdClass;
-            $video_asset->href = '#/' . $asset_id;
+            $video_asset->href = '#/' . $video_asset_id;
             $story->videos[] = $video_asset;
 
             // add video document to assets[]
             $video_document = new stdClass;
-            $video_document->id = $asset_id;
+            $video_document->id = $video_asset_id;
             $video_document->profiles = [];
 
             $doctype = new stdClass;
@@ -393,7 +394,7 @@ class Cds_mapper
         }
 
         $video_document->profiles[] = $video_profile;
-        $story->assets->{$asset_id} = $video_document;
+        $story->assets->{$video_asset_id} = $video_document;
 
         $json = json_encode($story);
 
