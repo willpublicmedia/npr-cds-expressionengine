@@ -333,7 +333,6 @@ class Cds_mapper
             $story->profiles[] = $video_has;
         }
 
-        $profiles_already_added = [];
         $videos = $this->get_video_codes($entry, 'videoembed_grid');
         foreach ($videos as $video) {
             $video_info = $this->process_video_info($video);
@@ -356,33 +355,29 @@ class Cds_mapper
             $video_profile = new stdClass;
             $video_profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
             $video_profile->rels = ['type'];
-            if (!in_array($video_info['npr_video_profile'], $videos)) {
-                $story->profiles[] = $video_profile;
-                $profiles_already_added[] = $video_info['npr_video_profile'];
 
-                if ($video_info['npr_video_profile'] === 'youtube-video') {
-                    // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
-                    $video_document->subheadline = $video['video_title'];
-                    $video_document->videoId = $video_info['asset_id_fragment'];
-                    if (array_key_exists('startTime', $video_info)) {
-                        $video_document->startTime = $video_info['startTime'];
-                    }
-                }
-
-                if ($video_info['npr_video_profile'] === 'player-video') {
-                    // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
-                }
-
-                if ($video_info['npr_video_profile'] === 'stream-player-video') {
-                    // add player-video profile (https://npr.github.io/content-distribution-service/profiles/stream-player-video.html)
+            if ($video_info['npr_video_profile'] === 'youtube-video') {
+                // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
+                $video_document->subheadline = $video['video_title'];
+                $video_document->videoId = $video_info['asset_id_fragment'];
+                if (array_key_exists('startTime', $video_info)) {
+                    $video_document->startTime = $video_info['startTime'];
                 }
             }
 
-            $video_document->profiles[] = $video_profile;
-            $story->assets->{$asset_id} = $video_document;
+            if ($video_info['npr_video_profile'] === 'player-video') {
+                // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
+            }
 
-            dd($video_document, $story);
+            if ($video_info['npr_video_profile'] === 'stream-player-video') {
+                // add player-video profile (https://npr.github.io/content-distribution-service/profiles/stream-player-video.html)
+            }
         }
+
+        $video_document->profiles[] = $video_profile;
+        $story->assets->{$asset_id} = $video_document;
+
+        dd($video_document, $story);
 
         throw new \Exception('video asset ids incomplete');
 
