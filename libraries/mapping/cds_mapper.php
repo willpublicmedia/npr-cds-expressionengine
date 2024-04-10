@@ -373,9 +373,11 @@ class Cds_mapper
                     // add player-video profile (https://npr.github.io/content-distribution-service/profiles/stream-player-video.html)
                 }
             }
+            
             $video_document->profiles[] = $video_profile;
+            $story->assets->{$asset_id} = $video_document;
 
-            dd($video, $video_info);
+            dd($video_document, $story);
         }
 
         throw new \Exception('video asset ids incomplete');
