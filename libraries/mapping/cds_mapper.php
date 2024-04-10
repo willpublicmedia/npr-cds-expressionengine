@@ -906,7 +906,7 @@ class Cds_mapper
 
         // grab a path fragment for the asset ID
         $attributes['npr_video_profile'] = $npr_video_profile;
-        $attributes['asset_id_fragment'] = $attributes['video_id'] !== '' ? $attributes['video_id'] : str_replace('/', '-', $parsed_url['path']);
+        $attributes['asset_id_fragment'] = $attributes['video_id'] !== '' ? strtolower($attributes['video_id']) : str_replace('/', '-', strtolower($parsed_url['path']));
 
         if (array_key_exists('start', $queries)) {
             $attributes['startTime'] = $queries['start'];
