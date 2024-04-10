@@ -883,7 +883,7 @@ class Cds_mapper
         parse_str($parsed_url['query'], $queries);
 
         // guess npr profile from domain, allowing for variants like youtu.be
-        $npr_video_profile = str_contains($parsed_url['host'], 'youtu') ? 'youtube-video' : 'player-video';
+        $npr_video_profile = str_contains($parsed_url['host'], 'youtu') ? 'youtube-video' : 'stream-player-video';
         $attributes['video_id'] = $this->get_video_id($attributes['src']);
 
         // grab a path fragment for the asset ID
