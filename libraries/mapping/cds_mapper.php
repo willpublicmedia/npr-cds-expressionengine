@@ -325,6 +325,8 @@ class Cds_mapper
         /**
          * attach video to post
          */
+        $videos = $this->get_video_codes($entry, 'videoembed_grid');
+
         if (!empty($videos)) {
             $story->videos = [];
             $video_has = new stdClass;
@@ -333,7 +335,6 @@ class Cds_mapper
             $story->profiles[] = $video_has;
         }
 
-        $videos = $this->get_video_codes($entry, 'videoembed_grid');
         foreach ($videos as $video) {
             $video_info = $this->process_video_info($video);
             $video_asset_id = $cds_id . $cds_count;
