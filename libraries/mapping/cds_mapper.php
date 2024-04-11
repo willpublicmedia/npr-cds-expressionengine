@@ -342,7 +342,7 @@ class Cds_mapper
 
             // add asset id to videos[]
             $video_asset = new stdClass;
-            $video_asset->href = '#/' . $video_asset_id;
+            $video_asset->href = '#/assets/' . $video_asset_id;
             $story->videos[] = $video_asset;
 
             // add video document to assets[]
