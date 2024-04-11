@@ -337,7 +337,7 @@ class Cds_mapper
 
         foreach ($videos as $video) {
             $video_info = $this->process_video_info($video);
-            $video_asset_id = $cds_id . $cds_count;
+            $video_asset_id = $cds_id . '-' . $cds_count;
             $cds_count++;
 
             // add asset id to videos[]
