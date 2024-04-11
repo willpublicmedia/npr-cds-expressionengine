@@ -333,6 +333,14 @@ class Cds_mapper
             $video_has->href = '/' . $cds_version . '/profiles/has-videos';
             $video_has->rels = ['interface'];
             $story->profiles[] = $video_has;
+
+            // story profile type not allowed on profile has-videos
+            foreach ($story->profiles as $profile) {
+                if ($profile->href === '/' . $cds_version . '/profiles/story') {
+                    $profile->href = 'program';
+                    break;
+                }
+            }
         }
 
         foreach ($videos as $video) {
