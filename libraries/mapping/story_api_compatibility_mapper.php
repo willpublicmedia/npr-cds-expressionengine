@@ -228,7 +228,7 @@ class Story_api_compatibility_mapper
 
             foreach ($crops as $crop) {
                 // add this as a config option
-                $skip_all_images_but_primary = false;
+                $skip_all_images_but_primary = true;
                 $preferred_image_format = 'image-wide';
 
                 $primary = in_array('primary', $data['rels']) && in_array('primary', $crop['type']);
@@ -262,6 +262,11 @@ class Story_api_compatibility_mapper
                 $image_array['rows'][$row_name] = $image;
                 $count++;
             }
+        }
+
+        // ensure one image marked primary
+        if (count($image_array) === 1) {
+            $image_array['rows'][0][$grid_column_names['crop_primary']] = true;
         }
 
         return $image_array;
