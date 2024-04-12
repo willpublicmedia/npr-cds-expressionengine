@@ -224,15 +224,19 @@ class Story_api_compatibility_mapper
         $count = 1;
         foreach ($image_data as $id => $data) {
             $credit = $this->map_image_credit($data);
-            $primary = in_array('primary', $data['rels']);
-
             $crops = $this->map_image_crops($data, $data['caption'], $credit);
 
             foreach ($crops as $crop) {
-                //         // we only care about the largest image size.
-                //         if (!$crop['primary']) {
-                //             continue;
-                //         }
+                $primary = in_array('primary', $data['rels']) && in_array('primary', $crop['type']);
+
+                // add this as a config option
+                $skip_all_images_but_primary = false;
+                if ($skip_all_images_but_primary) {
+                    // we only care about the largest image size.
+                    if (!in_array('primary', $crop['type'])) {
+                        continue;
+                    }
+                }
 
                 // should be row_id_x if row exists, but this doesn't seem to duplicate entries.
                 $row_name = "new_row_$count";
