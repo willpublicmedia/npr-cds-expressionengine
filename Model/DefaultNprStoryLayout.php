@@ -211,7 +211,7 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
                 'collapsed' => false,
             ],
             [
-                'field' => 'audio_runby_date',
+                'field' => $this->custom_options_fields['audio_runby_date'],
                 'visible' => true,
                 'collapsed' => false,
             ],
