@@ -228,16 +228,10 @@ class Story_api_compatibility_mapper
 
             foreach ($crops as $crop) {
                 // add this as a config option
-                $skip_all_images_but_primary = true;
-                $preferred_image_format = 'image-wide';
-
                 $primary = in_array('primary', $data['rels']) && in_array('primary', $crop['type']);
-                $has_preferred_format = in_array($preferred_image_format, $crop['type']);
 
-                if ($has_preferred_format && !in_array($preferred_image_format, $crop['type'])) {
-                    continue;
-                }
-
+                // add this as a config option
+                $skip_all_images_but_primary = false;
                 if ($skip_all_images_but_primary) {
                     // we only care about the largest image size.
                     if (!in_array('primary', $crop['type'])) {
