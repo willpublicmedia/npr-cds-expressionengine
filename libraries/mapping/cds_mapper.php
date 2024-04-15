@@ -340,10 +340,11 @@ class Cds_mapper
             $video_asset_id = $cds_id . '-' . $cds_count;
             $cds_count++;
 
-            // add asset id to videos[]
+            // add asset id to videos[] and layout[]
             $video_asset = new stdClass;
             $video_asset->href = '#/assets/' . $video_asset_id;
             $story->videos[] = $video_asset;
+            $story->layout[] = $video_asset;
 
             // add video document to assets[]
             $video_document = new stdClass;
