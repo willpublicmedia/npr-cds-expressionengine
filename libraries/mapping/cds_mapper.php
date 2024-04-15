@@ -359,6 +359,7 @@ class Cds_mapper
 
             if ($video_info['npr_video_profile'] === 'youtube-video') {
                 // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
+                $video_profile->rels = ['type'];
                 $video_document->title = $entry->Channel->channel_title;
                 $video_document->subheadline = $video['video_title'];
                 $video_document->videoId = $video_info['video_id'];
