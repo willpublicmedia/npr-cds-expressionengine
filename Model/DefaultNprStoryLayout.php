@@ -37,10 +37,10 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
         // options
         'channel_entry_source' => null,
         'npr_story_id' => null,
-        'nprone_featured' => null,
         'overwrite_local_values' => null,
         'publish_to_npr' => null,
         'send_to_one' => null,
+        'nprone_featured' => null,
     ];
 
     /**
@@ -207,7 +207,12 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
 
         $option_fields = [
             [
-                'field' => 'channel_id',
+                'field' => 'sticky',
+                'visible' => true,
+                'collapsed' => false,
+            ],
+            [
+                'field' => 'status',
                 'visible' => true,
                 'collapsed' => false,
             ],
@@ -242,19 +247,14 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
                 'collapsed' => true,
             ],
             [
-                'field' => 'status',
+                'field' => 'channel_id',
                 'visible' => true,
-                'collapsed' => false,
+                'collapsed' => true,
             ],
             [
                 'field' => 'author_id',
                 'visible' => true,
-                'collapsed' => false,
-            ],
-            [
-                'field' => 'sticky',
-                'visible' => true,
-                'collapsed' => false,
+                'collapsed' => true,
             ],
         ];
 
@@ -262,7 +262,7 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
             $option_fields[] = [
                 'field' => 'allow_comments',
                 'visible' => true,
-                'collapsed' => false,
+                'collapsed' => true,
             ];
         }
 
