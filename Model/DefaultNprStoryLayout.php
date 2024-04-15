@@ -29,11 +29,6 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
         // metadata
         'summary' => null,
         'keywords' => null,
-        // date
-        'audio_runby_date' => null,
-        'last_modified_date' => null,
-        'story_date' => null,
-        'pub_date' => null,
         // options
         'channel_entry_source' => null,
         'npr_story_id' => null,
@@ -41,6 +36,11 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
         'publish_to_npr' => null,
         'send_to_one' => null,
         'nprone_featured' => null,
+        // date
+        'audio_runby_date' => null,
+        'last_modified_date' => null,
+        'story_date' => null,
+        'pub_date' => null,
     ];
 
     /**
@@ -131,78 +131,6 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
             'fields' => $metadata_fields,
         ];
 
-        // Date Tab ------------------------------------------------------------
-
-        $date_fields = [
-            [
-                'field' => 'entry_date',
-                'visible' => true,
-                'collapsed' => false,
-            ],
-            [
-                'field' => 'expiration_date',
-                'visible' => true,
-                'collapsed' => false,
-            ],
-            [
-                'field' => $this->custom_options_fields['pub_date'],
-                'visible' => true,
-                'collapsed' => false,
-            ],
-            [
-                'field' => $this->custom_options_fields['last_modified_date'],
-                'visible' => true,
-                'collapsed' => true,
-            ],
-            [
-                'field' => $this->custom_options_fields['story_date'],
-                'visible' => true,
-                'collapsed' => true,
-            ],
-            [
-                'field' => $this->custom_options_fields['audio_runby_date'],
-                'visible' => true,
-                'collapsed' => true,
-            ],
-        ];
-
-        if (bool_config_item('enable_comments') && $channel->comment_system_enabled) {
-            $date_fields[] = [
-                'field' => 'comment_expiration_date',
-                'visible' => true,
-                'collapsed' => false,
-            ];
-        }
-
-        $layout[] = [
-            'id' => 'date',
-            'name' => 'date',
-            'visible' => true,
-            'fields' => $date_fields,
-        ];
-
-        // Category Tab --------------------------------------------------------
-
-        $cat_groups = ee('Model')->get('CategoryGroup')
-            ->filter('group_id', 'IN', explode('|', $channel->cat_group))
-            ->all();
-
-        $category_group_fields = [];
-        foreach ($cat_groups as $cat_group) {
-            $category_group_fields[] = [
-                'field' => 'categories[cat_group_id_' . $cat_group->getId() . ']',
-                'visible' => true,
-                'collapsed' => false,
-            ];
-        }
-
-        $layout[] = [
-            'id' => 'categories',
-            'name' => 'categories',
-            'visible' => true,
-            'fields' => $category_group_fields,
-        ];
-
         // Options Tab ---------------------------------------------------------
 
         $option_fields = [
@@ -271,6 +199,83 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
             'name' => 'options',
             'visible' => true,
             'fields' => $option_fields,
+        ];
+
+        // Date Tab ------------------------------------------------------------
+
+        $date_fields = [
+            [
+                'field' => 'entry_date',
+                'visible' => true,
+                'collapsed' => false,
+            ],
+            [
+                'field' => 'expiration_date',
+                'visible' => true,
+                'collapsed' => false,
+            ],
+            [
+                'field' => 'audio_runby_date',
+                'visible' => true,
+                'collapsed' => false,
+            ],
+            [
+                'field' => $this->custom_options_fields['pub_date'],
+                'visible' => true,
+                'collapsed' => false,
+            ],
+            [
+                'field' => $this->custom_options_fields['last_modified_date'],
+                'visible' => true,
+                'collapsed' => true,
+            ],
+            [
+                'field' => $this->custom_options_fields['story_date'],
+                'visible' => true,
+                'collapsed' => true,
+            ],
+            [
+                'field' => $this->custom_options_fields['audio_runby_date'],
+                'visible' => true,
+                'collapsed' => true,
+            ],
+        ];
+
+        if (bool_config_item('enable_comments') && $channel->comment_system_enabled) {
+            $date_fields[] = [
+                'field' => 'comment_expiration_date',
+                'visible' => true,
+                'collapsed' => false,
+            ];
+        }
+
+        $layout[] = [
+            'id' => 'date',
+            'name' => 'date',
+            'visible' => true,
+            'fields' => $date_fields,
+        ];
+
+        // Category Tab --------------------------------------------------------
+
+        $cat_groups = ee('Model')->get('CategoryGroup')
+            ->filter('group_id', 'IN', explode('|', $channel->cat_group))
+            ->all();
+
+        $category_group_fields = [];
+        foreach ($cat_groups as $cat_group) {
+            $category_group_fields[] = [
+                'field' => 'categories[cat_group_id_' . $cat_group->getId() . ']',
+                'visible' => true,
+                'collapsed' => false,
+            ];
+        }
+
+        $layout[] = [
+            'id' => 'categories',
+            'name' => 'categories',
+            'visible' => true,
+            'fields' => $category_group_fields,
         ];
 
         if ($this->channel_id) {
