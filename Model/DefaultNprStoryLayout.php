@@ -45,6 +45,8 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
         // prevent channel custom fields from stomping layout custom fields.
         $this->synchronize_custom_fields($this->custom_options_fields);
 
+        $channel = ee('Model')->get('Channel', $this->channel_id)->first();
+
         $layout = [];
 
         $layout[] = [
@@ -94,8 +96,6 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
                 ],
             ],
         ];
-
-        $channel = ee('Model')->get('Channel', $this->channel_id)->first();
 
         // Date Tab ------------------------------------------------------------
 
