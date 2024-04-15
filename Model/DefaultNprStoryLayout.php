@@ -13,7 +13,6 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
 
     public const LAYOUT_NAME = 'NPR CDS v' . Constants::VERSION;
 
-    // publish
     // metadata
     // options
     // date
@@ -27,6 +26,9 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
         'audio_files' => null,
         'transcript' => null,
         'videoembed_grid' => null,
+        // metadata
+        'summary' => null,
+        'keywords' => null,
         // date
         'audio_runby_date' => null,
         'last_modified_date' => null,
@@ -106,6 +108,27 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
                     'collapsed' => false,
                 ],
             ],
+        ];
+
+        // Metadata Tab ------------------------------------------------------------
+        $metadata_fields = [
+            [
+                'field' => $this->custom_options_fields['keywords'],
+                'visible' => true,
+                'collapsed' => false,
+            ],
+            [
+                'field' => $this->custom_options_fields['keywords'],
+                'visible' => true,
+                'collapsed' => false,
+            ],
+        ];
+
+        $layout[] = [
+            'id' => 'metadata',
+            'name' => 'metadata',
+            'visible' => true,
+            'fields' => $metadata_fields,
         ];
 
         // Date Tab ------------------------------------------------------------
