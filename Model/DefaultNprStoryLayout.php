@@ -13,10 +13,6 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
 
     public const LAYOUT_NAME = 'NPR CDS v' . Constants::VERSION;
 
-    // metadata
-    // options
-    // date
-    // categories
     private $custom_options_fields = [
         // publish
         'byline' => null,
@@ -277,6 +273,8 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
             'visible' => true,
             'fields' => $category_group_fields,
         ];
+
+        // -- End tab definitions --
 
         if ($this->channel_id) {
             // Here comes the ugly! @TODO don't do this
