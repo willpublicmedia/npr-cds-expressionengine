@@ -820,6 +820,22 @@ class Story_content_definitions
             'field_pre_channel_id' => 0,
             'field_order' => 1,
         ),
+        'transcript' => array(
+            'field_name' => 'transcript',
+            'field_label' => 'Text Transcripts',
+            'field_instructions' => 'Full transcript of story audio.',
+            'field_type' => 'textarea',
+            'field_maxl' => '',
+            'field_list_items' => '',
+            'field_pre_populate' => 'n',
+            'field_pre_field_id' => 0,
+            'field_pre_channel_id' => 0,
+            'field_order' => 1,
+            'field_settings' => array(
+                'field_fmt' => 'none',
+                'field_show_fmt' => 'n',
+            ),
+        ),
         'videoembed_grid' => array(
             'field_name' => 'videoembed_grid',
             'field_label' => 'Video Embed',
@@ -848,7 +864,7 @@ class Story_content_definitions
                                 'field_maxl' => '',
                                 'field_fmt' => 'none',
                                 'field_text_direction' => 'ltr',
-                                'field_content_type' => 'all'
+                                'field_content_type' => 'all',
                             ),
                         ),
                         'new_1' => array(
@@ -867,8 +883,8 @@ class Story_content_definitions
                             ),
                         ),
                     ),
-                )
-            )
+                ),
+            ),
         ),
     );
 }
