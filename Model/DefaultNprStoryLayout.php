@@ -109,7 +109,7 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
         // Metadata Tab ------------------------------------------------------------
         $metadata_fields = [
             [
-                'field' => $this->custom_options_fields['keywords'],
+                'field' => $this->custom_options_fields['summary'],
                 'visible' => true,
                 'collapsed' => false,
             ],
@@ -122,7 +122,7 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
 
         $layout[] = [
             'id' => 'metadata',
-            'name' => 'metadata',
+            'name' => 'Metadata',
             'visible' => true,
             'fields' => $metadata_fields,
         ];
