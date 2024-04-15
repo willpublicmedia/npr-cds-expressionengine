@@ -13,13 +13,19 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
 
     public const LAYOUT_NAME = 'NPR CDS v' . Constants::VERSION;
 
+    // publish
+    // metadata
+    // options
+    // date
+    // categories
     private $custom_options_fields = [
         // publish
-        'teaser' => null,
         'byline' => null,
-        'audio_files' => null,
-        'npr_images' => null,
+        'teaser' => null,
         'text' => null,
+        'npr_images' => null,
+        'audio_files' => null,
+        'transcript' => null,
         'videoembed_grid' => null,
         // date
         'audio_runby_date' => null,
@@ -80,12 +86,17 @@ class DefaultNprStoryLayout extends DefaultChannelLayout
                     'collapsed' => false,
                 ],
                 [
+                    'field' => $this->custom_options_fields['npr_images'],
+                    'visible' => true,
+                    'collapsed' => false,
+                ],
+                [
                     'field' => $this->custom_options_fields['audio_files'],
                     'visible' => true,
                     'collapsed' => false,
                 ],
                 [
-                    'field' => $this->custom_options_fields['npr_images'],
+                    'field' => $this->custom_options_fields['transcript'],
                     'visible' => true,
                     'collapsed' => false,
                 ],
