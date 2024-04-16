@@ -20,8 +20,6 @@ The WordPress plugin was originally developed as an Open Source plugin by NPR an
 
 ## Installation & Configuration
 
-**Pre-release warning:** As of version 0.0.0, field and pulish layout creation has not been implemented. Install the [Story API addon](https://github.org/willpublicmedia/npr-api-expressionengine), then install this addon and follow the migration instructions.
-
 1. Copy addon files to `{system_dir}/user/addons/npr_cds/`.
 2. Activate plugin from control panel Addons screen.
 3. From the CDS settings screen, configure the following:
