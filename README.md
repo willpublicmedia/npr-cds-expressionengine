@@ -2,7 +2,7 @@
 
 An ExpressionEngine addon for publishing to and from NPR's Content Distribution System (CDS).
 
-Ported from Open Public Media's NPR CDS wordpress plugin.
+Ported from Open Public Media's [NPR CDS wordpress](https://github.com/openpublicmedia/npr-cds-wordpress) plugin.
 
 ## Description
 
@@ -38,6 +38,7 @@ The WordPress plugin was originally developed as an Open Source plugin by NPR an
 Only mapped channels will be processed for CDS content.
 
 In order to be mapped, a channel must meet the following requirements:
+
 - Mapped channels must have access to all fields required by the story api (NPR CDS field group).
 - Mapped channel `channel_name` must use the prefix "npr_stories" (e.g., "npr_stories_local_programming"). The `channel_prefix` field does not need to follow any naming conventions.
 - Mapped channels must be configured as mapped in the addon settings.
