@@ -89,9 +89,19 @@ class Field_conditioner
             $field->field_is_conditional = 'y';
 
             // add conditions
-            foreach ($rulesets['conditions'] as $rules) {
+            foreach ($rulesets['conditions'] as $order => $rules) {
                 $condition = ee('Model')->make('FieldCondition');
-                $condition->condition_field_id = '';
+
+                $condition_field_id = $this->field_utils->get_field_id($rules['condition_field_name']);
+                $condition->condition_field_id = $condition_field_id;
+
+                $condition->evaluation_rule = $rules['evaluation_rule'];
+
+                if (array_key_exists('value', $rules)) {
+                    $condition->value = $rules['value'];
+                }
+
+                $condition->order = $order;
             }
             // sync conditional logic
 
