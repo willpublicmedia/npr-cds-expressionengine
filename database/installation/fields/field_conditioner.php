@@ -12,29 +12,55 @@ class Field_conditioner
         'nprone_featured' => [
             'match' => 'all',
             'conditions' => [
-                // source matches local
-                // publish turnedOn
-                'channel_entry_source' => 'local',
-                'publish_to_npr' => 'turnedOn',
+                [
+                    'condition_field_name' => 'channel_entry_source',
+                    'evaluation_rule' => 'matches',
+                    'value' => 'local',
+                    'order' => 0,
+                ],
+                [
+                    'condition_field_name' => 'publish_to_npr',
+                    'evaluation_rule' => 'turnedOn',
+                    'order' => 1,
+                ],
             ],
         ],
         'overwrite_local_values' => [
             'match' => 'all',
             'conditions' => [
-                'channel_entry_source' => 'npr',
+                [
+                    'condition_field_name' => 'channel_entry_source',
+                    'evaluation_rule' => 'matches',
+                    'value' => 'npr',
+                    'order' => 0,
+                ],
             ],
         ],
         'publish_to_npr' => [
             'match' => 'all',
             'conditions' => [
-                'channel_entry_source' => 'local',
+                [
+                    'condition_field_name' => 'channel_entry_source',
+                    'evaluation_rule' => 'matches',
+                    'value' => 'local',
+                    'order' => 0,
+                ],
             ],
         ],
         'send_to_one' => [
             'match' => 'all',
             'conditions' => [
-                'channel_entry_source' => 'local',
-                'publish_to_npr' => 'turnedOn',
+                [
+                    'condition_field_name' => 'channel_entry_source',
+                    'evaluation_rule' => 'matches',
+                    'value' => 'local',
+                    'order' => 0,
+                ],
+                [
+                    'condition_field_name' => 'publish_to_npr',
+                    'evaluation_rule' => 'turnedOn',
+                    'order' => 1,
+                ],
             ],
         ],
 
@@ -53,13 +79,13 @@ class Field_conditioner
             $field->field_is_conditional = 'y';
 
             // add conditions
-            foreach ($rulesets['conditions'] as $condition_field => $condition_value) {
+            foreach ($rulesets['conditions'] as $rules) {
                 $condition = ee('Model')->make('FieldCondition');
                 $condition->condition_field_id = '';
             }
             // sync conditional logic
 
-            dd($field_name, $rulesets);
+            dd($field_name, $rules);
         }
         throw new \Exception('not implemented');
     }
