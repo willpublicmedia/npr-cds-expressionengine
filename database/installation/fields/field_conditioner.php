@@ -88,6 +88,10 @@ class Field_conditioner
             // make conditional
             $field->field_is_conditional = 'y';
 
+            // create condition set
+            $condition_set = ee('Model')->make('FieldConditionSet');
+            $condition_set->match = $rulesets['match'];
+
             // add conditions
             foreach ($rulesets['conditions'] as $order => $rules) {
                 $condition = ee('Model')->make('FieldCondition');
@@ -102,7 +106,14 @@ class Field_conditioner
                 }
 
                 $condition->order = $order;
+
+                $condition_set->FieldConditions->add($condition);
             }
+
+            $field->FieldConditionSets->add($condition_set);
+            $condition_set->save();
+            $field->save();
+
             // sync conditional logic
 
             dd($field_name, $rules);
