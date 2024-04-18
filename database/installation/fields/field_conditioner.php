@@ -115,9 +115,11 @@ class Field_conditioner
             $field->save();
 
             // sync conditional logic
-
-            dd($field_name, $rules);
+            $channels = $field->getAllChannels();
+            foreach ($channels as $channel) {
+                $channel->conditional_sync_required = 'y';
+                $channel->save();
+            }
         }
-        throw new \Exception('not implemented');
     }
 }
