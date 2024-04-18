@@ -50,6 +50,8 @@ class Field_conditioner
             }
 
             // make conditional
+            $field->field_is_conditional = 'y';
+
             // add conditions
             // sync conditional logic
 
