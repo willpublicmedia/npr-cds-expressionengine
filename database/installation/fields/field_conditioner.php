@@ -53,6 +53,10 @@ class Field_conditioner
             $field->field_is_conditional = 'y';
 
             // add conditions
+            foreach ($rulesets['conditions'] as $condition_field => $condition_value) {
+                $condition = ee('Model')->make('FieldCondition');
+                $condition->condition_field_id = '';
+            }
             // sync conditional logic
 
             dd($field_name, $rulesets);
