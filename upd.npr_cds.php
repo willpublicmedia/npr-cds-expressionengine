@@ -7,6 +7,7 @@ require_once __DIR__ . '/libraries/installation/dependency_manager.php';
 require_once __DIR__ . '/database/migrations/story_api/story_api_settings_migrator.php';
 require_once __DIR__ . '/database/migrations/story_api/field_group_migrator.php';
 require_once __DIR__ . '/database/installation/fields/field_installer.php';
+require_once __DIR__ . '/database/installation/fields/field_conditioner.php';
 require_once __DIR__ . '/database/installation/channel_installer.php';
 require_once __DIR__ . '/database/installation/status_installer.php';
 require_once __DIR__ . '/database/migrations/story_api/legacy_extension_installer.php';
@@ -17,6 +18,7 @@ require_once __DIR__ . '/Model/DefaultNprStoryLayout.php';
 
 use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Channel_installer;
+use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_conditioner;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Layout_customizer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
@@ -78,6 +80,7 @@ class Npr_cds_upd extends Installer
         $this->create_tables($this->tables['config']);
 
         $this->create_required_fields();
+        $this->condition_fields();
         $this->create_required_statuses();
         $this->create_required_channels();
 
@@ -126,6 +129,10 @@ class Npr_cds_upd extends Installer
             return false;
         }
 
+        if ($this->version <= '0.1.0') {
+            $this->condition_fields();
+        }
+
         parent::update($current);
 
         return true;
@@ -137,6 +144,12 @@ class Npr_cds_upd extends Installer
         $has_dependencies = $manager->check_dependencies();
 
         return $has_dependencies;
+    }
+
+    private function condition_fields(): void
+    {
+        $conditioner = new Field_conditioner();
+        $conditioner->condition_fields();
     }
 
     private function migrate_mapped_channel_field_groups(): void
