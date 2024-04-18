@@ -6,6 +6,9 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
+require_once __DIR__ . '/../../../libraries/utilities/field_utils.php';
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
+
 class Field_conditioner
 {
     private $field_conditions = [
@@ -65,6 +68,13 @@ class Field_conditioner
         ],
 
     ];
+
+    private $field_utils;
+
+    public function __construct()
+    {
+        $this->field_utils = new Field_utils();
+    }
 
     public function condition_fields(): void
     {
