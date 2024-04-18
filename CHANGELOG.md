@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0
+
+- hide incompatible publish options
+- remove unused dependencies
+
 ## 0.0.0
 
 Prototype release.
