@@ -2,6 +2,7 @@
 
 ## unreleased
 
+- allow template to use first video as hero image
 - polyfill [HLS](https://github.com/video-dev/hls.js/)
 
 ## 0.1.0
