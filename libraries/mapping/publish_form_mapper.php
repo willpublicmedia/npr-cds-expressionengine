@@ -677,6 +677,12 @@ class Publish_form_mapper
             }
         } elseif ($profile === 'stream-player-video') {
             if (in_array('hls', $asset->enclosures[0]->rels)) {
+                $asset_caption = [];
+                $asset_caption[] = $video['title'];
+                $asset_caption[] = $video['caption'];
+                $asset_caption[] = '(' . $video['producer'] . '/' . $video['provider'] . ')';
+                $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
+
                 $embed_code = '<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>' .
                 '<video id="' . $asset->id . '" controls></video>' .
                 '<script>' .
@@ -692,7 +698,7 @@ class Publish_form_mapper
                     '});' .
                     '}' .
                     '</script>';
-
+                $embed_code = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $embed_code . '</div>' . $full_caption . '</figure>';
                 $video['embed_code'] = $embed_code;
             }
         }
