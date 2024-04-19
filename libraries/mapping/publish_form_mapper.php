@@ -396,7 +396,8 @@ class Publish_form_mapper
                             } elseif ($asset_profile == 'stream-player-video') {
                                 if (in_array('hls', $asset_current->enclosures[0]->rels)) {
                                     $returnary['has_video_streaming'] = true;
-                                    $video_asset = '<video id="' . $asset_current->id . '" controls></video>' .
+                                    $video_asset = '<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>' .
+                                    '<video id="' . $asset_current->id . '" controls></video>' .
                                     '<script>' .
                                     'let video = document.getElementById("' . $asset_current->id . '");' .
                                     'if (Hls.isSupported()) {' .
@@ -666,7 +667,8 @@ class Publish_form_mapper
             }
         } elseif ($profile === 'stream-player-video') {
             if (in_array('hls', $asset->enclosures[0]->rels)) {
-                $embed_code = '<video id="' . $asset->id . '" controls></video>' .
+                $embed_code = '<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>' .
+                '<video id="' . $asset->id . '" controls></video>' .
                 '<script>' .
                 'let video = document.getElementById("' . $asset->id . '");' .
                 'if (Hls.isSupported()) {' .

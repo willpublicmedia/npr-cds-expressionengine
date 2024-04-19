@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- polyfill [HLS](https://github.com/video-dev/hls.js/)
+
 ## 0.1.0
 
 - hide incompatible publish options
