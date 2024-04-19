@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.2.0
 
 - allow template to use first video as hero image
 - polyfill [HLS](https://github.com/video-dev/hls.js/)
