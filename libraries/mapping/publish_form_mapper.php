@@ -413,7 +413,9 @@ class Publish_form_mapper
                                         '</script>';
                                 }
                             }
-                            $body_with_layout .= '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
+
+                            $video_asset = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
+                            $body_with_layout .= $video_asset;
                         }
                         break;
                     default:
