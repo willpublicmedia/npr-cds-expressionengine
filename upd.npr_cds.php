@@ -15,6 +15,7 @@ require_once __DIR__ . '/database/installation/tables/table_loader.php';
 require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 require_once __DIR__ . '/Model/DefaultNprStoryLayout.php';
+require_once __DIR__ . '/database/installation/updates/updater_0_3_0.php';
 
 use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Channel_installer;
@@ -24,6 +25,7 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Layout_customizer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
+use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_3_0;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Field_group_migrator;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Legacy_extension_installer;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Story_api_settings_migrator;
@@ -133,6 +135,10 @@ class Npr_cds_upd extends Installer
             $this->condition_fields();
         }
 
+        if ($this->version <= '0.3.0') {
+            $this->update_0_3_0();
+        }
+
         parent::update($current);
 
         return true;
@@ -236,6 +242,12 @@ class Npr_cds_upd extends Installer
         $data = $loader->load($table_name);
 
         return $data;
+    }
+
+    private function update_0_3_0(): void
+    {
+        $updater = new Updater_0_3_0();
+        $updater->update();
     }
 
     private function update_publish_form_layouts(): void
