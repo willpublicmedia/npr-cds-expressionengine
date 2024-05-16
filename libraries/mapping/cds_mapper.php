@@ -396,10 +396,10 @@ class Cds_mapper
                 $video_document->isEmbeddable = true;
                 $video_document->isRestrictedToAuthorizedOrgServiceIds = false;
             }
+            
+            $video_document->profiles[] = $video_profile;
+            $story->assets->{$video_asset_id} = $video_document;
         }
-
-        $video_document->profiles[] = $video_profile;
-        $story->assets->{$video_asset_id} = $video_document;
 
         $json = json_encode($story);
 

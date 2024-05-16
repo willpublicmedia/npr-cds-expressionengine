@@ -2,7 +2,9 @@
 
 ## unreleased
 
-- avoid column duplication error due to incorrect module version
+- avoid column duplication error due to incorrect module
+- add alt text to pushed image documents
+- correct video profile processing on push
 
 ## 0.3.1.1
 
