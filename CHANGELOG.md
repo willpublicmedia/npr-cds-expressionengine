@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- avoid column duplication error due to incorrect module version
+
 ## 0.3.1.1
 
 - correct module version

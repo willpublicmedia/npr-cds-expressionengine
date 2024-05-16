@@ -14,7 +14,6 @@ class Updater_0_3_1
     public function update(): bool
     {
         $success = $this->insert_missing_column();
-        $this->log_message();
         return $success;
     }
 
@@ -32,6 +31,13 @@ class Updater_0_3_1
         $image_field_table = 'channel_grid_field_' . $image_field_id;
         $col_name = 'col_id_' . $alt_column[0]['col_id'];
 
+        $query_result = ee()->db->query("SHOW COLUMNS FROM `exp_" . $image_field_table . "` LIKE '" . $col_name . "'")->result_array();
+        $alt_column_exists = count($query_result) > 0;
+
+        if ($alt_column_exists) {
+            return true;
+        }
+
         $column_def = [
             $col_name => [
                 'type' => 'text',
@@ -40,6 +46,8 @@ class Updater_0_3_1
 
         ee()->load->dbforge();
         ee()->dbforge->add_column($image_field_table, $column_def);
+
+        $this->log_message();
 
         return true;
     }
