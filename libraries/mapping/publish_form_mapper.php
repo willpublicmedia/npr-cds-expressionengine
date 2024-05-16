@@ -610,6 +610,7 @@ class Publish_form_mapper
 
             $images[$asset_id] = [
                 'rels' => $rels,
+                'alt_text' => property_exists($asset_current, 'altText') ? $asset_current->altText : '',
                 'caption' => property_exists($asset_current, 'caption') ? $asset_current->caption : '',
                 'copyright' => property_exists($asset_current, 'copyright') ? $asset_current->copyright : null,
                 'displaySize' => property_exists($asset_current, 'displaySize') ? $asset_current->displaySize : '',
