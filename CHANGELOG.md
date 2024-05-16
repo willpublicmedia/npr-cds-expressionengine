@@ -1,6 +1,10 @@
 # Changelog
 
-## unreleased
+## 0.3.1.1
+
+- correct module version
+
+## 0.3.1
 
 - correct version check on update
 - add missing alt text column to image table
