@@ -580,6 +580,10 @@ class Cds_mapper
                 $row_data[$column_name] = $row_col_data;
             }
 
+            if (count($row_data) <= 0 || is_null($row_data['correction_date'])) {
+                break;
+            }
+
             $date_info = explode('|', $row_data['correction_date']);
             $date = date('c', $date_info[0]);
             $row_data['correction_date'] = $date;
