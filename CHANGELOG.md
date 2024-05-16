@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- add image alt text field
+
 ## 0.2.0
 
 - allow template to use first video as hero image
