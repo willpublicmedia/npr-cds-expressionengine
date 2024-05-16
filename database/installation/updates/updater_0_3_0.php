@@ -48,8 +48,24 @@ class Updater_0_3_0
 
         $alt_text_column = ee('Model')->make('grid:GridColumn', $this->alt_text_def);
         $model->GridColumns->add($alt_text_column);
+
         $model->validate();
         $model->save();
+
+        $columns = ee('Model')->get('grid:GridColumn')->filter('field_id', $model->field_id)->all();
+        foreach ($columns as $column) {
+            if ($column->col_order < $alt_text_column->col_order) {
+                continue;
+            }
+
+            if ($column->col_name == $alt_text_column->col_name) {
+                continue;
+            }
+
+            $new_order = $column->col_order + 1;
+            $column->col_order = $new_order;
+            $column->save();
+        }
 
         $this->log_message();
 
