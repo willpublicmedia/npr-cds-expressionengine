@@ -198,7 +198,7 @@ class Cds_mapper
             $story->profiles[] = $image_profile;
         }
 
-        foreach ($images as $image) {
+        foreach ($images as $key => $image) {
             $manipulations = $this->get_manipulations($image);
             $crops = $this->create_image_crops($manipulations);
 
@@ -216,6 +216,15 @@ class Cds_mapper
             $new_image = new stdClass;
             $image_asset = new stdClass;
             $image_asset_id = $this->settings['document_prefix'] . '-' . $image['file_id'];
+
+            $new_image->href = '#/assets/' . $image_asset_id;
+            if ($key === array_key_first($images)) {
+                // this is redundant, but we keep getting a later version of $new_image in $story->layout.
+                $image_layout_obj = new stdClass;
+                $image_layout_obj->href = '#/assets/' . $image_asset_id;
+                $story->layout[] = $image_layout_obj;
+            }
+
             $image_asset->id = $image_asset_id;
             $image_asset->profiles = $this->get_npr_cds_asset_profile('image');
             $image_asset->title = $entry->title;
@@ -263,7 +272,6 @@ class Cds_mapper
                 $image_asset->enclosures[] = $enclosure;
             }
 
-            $new_image->href = '#/assets/' . $image_asset_id;
             $story->images[] = $new_image;
         }
 
@@ -396,7 +404,7 @@ class Cds_mapper
                 $video_document->isEmbeddable = true;
                 $video_document->isRestrictedToAuthorizedOrgServiceIds = false;
             }
-            
+
             $video_document->profiles[] = $video_profile;
             $story->assets->{$video_asset_id} = $video_document;
         }
