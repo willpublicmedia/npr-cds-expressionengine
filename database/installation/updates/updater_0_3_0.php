@@ -2,8 +2,6 @@
 
 namespace IllinoisPublicMedia\NprCds\Database\Installation\Updates;
 
-require_once __DIR__ . '/../../../libraries/utilities/field_utils.php';
-
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
@@ -14,11 +12,12 @@ class Updater_0_3_0
     private $alt_text_def = [
         'col_type' => 'text',
         'col_label' => 'Alt Text',
-        'col_name' => 'crop_alt_text',
+        'col_name' => 'alt_text',
         'col_instructions' => "The alt text for the image, describing the image contents for screen readers.",
         'col_required' => 'n',
         'col_search' => 'n',
-        'col_width' => '',
+        'content_type' => 'channel',
+        'col_order' => 5,
         'col_settings' => [
             'field_maxl' => '',
             'field_fmt' => 'none',
@@ -47,11 +46,13 @@ class Updater_0_3_0
                 ->defer();
         }
 
-        throw new \Exception('grid model needed');
-        $model->GridColumns->add($this->alt_text_def);
+        $alt_text_column = ee('Model')->make('grid:GridColumn', $this->alt_text_def);
+        $model->GridColumns->add($alt_text_column);
         $model->validate();
         $model->save();
+
         $this->log_message();
+
         return true;
     }
 

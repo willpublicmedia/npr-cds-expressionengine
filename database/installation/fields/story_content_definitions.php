@@ -412,7 +412,7 @@ class Story_content_definitions
                         'new_7' => array(
                             'col_type' => 'text',
                             'col_label' => 'Alt Text',
-                            'col_name' => 'crop_alt_text',
+                            'col_name' => 'alt_text',
                             'col_instructions' => "The alt text for the image, describing the image contents for screen readers.",
                             'col_required' => 'n',
                             'col_search' => 'n',
