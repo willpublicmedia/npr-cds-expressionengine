@@ -219,6 +219,7 @@ class Cds_mapper
             $image_asset->id = $image_asset_id;
             $image_asset->profiles = $this->get_npr_cds_asset_profile('image');
             $image_asset->title = $entry->title;
+            $image_asset->altText = $image['alt_text'];
             $image_asset->caption = $entry->{$this->field_utils->get_field_name('teaser')};
             $image_asset->producer = $image_credits['media_credit'];
             $image_asset->provider = $image_credits['media_agency'];
