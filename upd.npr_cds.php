@@ -133,15 +133,15 @@ class Npr_cds_upd extends Installer
             return false;
         }
 
-        if ($this->version <= '0.1.0') {
+        if ($current < '0.1.0') {
             $this->condition_fields();
         }
 
-        if ($this->version <= '0.3.0') {
+        if ($current < '0.3.0') {
             $this->update_0_3_0();
         }
 
-        if ($this->version <= '0.3.1') {
+        if ($current < '0.3.1') {
             $this->update_0_3_1();
         }
 

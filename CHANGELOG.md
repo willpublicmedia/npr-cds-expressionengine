@@ -2,6 +2,7 @@
 
 ## unreleased
 
+- correct version check on update
 - add missing alt text column to image table
 
 ## 0.3.0
