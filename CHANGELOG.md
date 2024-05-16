@@ -5,6 +5,7 @@
 - avoid column duplication error due to incorrect module
 - add alt text to pushed image documents
 - correct video profile processing on push
+- correct various profile validation issues on push
 
 ## 0.3.1.1
 
