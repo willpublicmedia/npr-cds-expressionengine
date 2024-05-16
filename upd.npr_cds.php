@@ -16,6 +16,7 @@ require_once __DIR__ . '/database/installation/tables/itable.php';
 require_once __DIR__ . '/libraries/installation/table_installer.php';
 require_once __DIR__ . '/Model/DefaultNprStoryLayout.php';
 require_once __DIR__ . '/database/installation/updates/updater_0_3_0.php';
+require_once __DIR__ . '/database/installation/updates/updater_0_3_1.php';
 
 use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Channel_installer;
@@ -26,6 +27,7 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Status_installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_3_0;
+use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_3_1;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Field_group_migrator;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Legacy_extension_installer;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Story_api_settings_migrator;
@@ -139,6 +141,10 @@ class Npr_cds_upd extends Installer
             $this->update_0_3_0();
         }
 
+        if ($this->version <= '0.3.1') {
+            $this->update_0_3_1();
+        }
+
         parent::update($current);
 
         return true;
@@ -247,6 +253,12 @@ class Npr_cds_upd extends Installer
     private function update_0_3_0(): void
     {
         $updater = new Updater_0_3_0();
+        $updater->update();
+    }
+    
+    private function update_0_3_1(): void
+    {
+        $updater = new Updater_0_3_1();
         $updater->update();
     }
 

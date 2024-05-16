@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- add missing alt text column to image table
+
 ## 0.3.0
 
 - add image alt text field
