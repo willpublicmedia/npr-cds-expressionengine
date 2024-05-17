@@ -3,9 +3,10 @@
 ## unreleased
 
 - avoid column duplication error due to incorrect module
-- add alt text to pushed image documents
+- use alt text on pushed or pulled stories
 - correct video profile processing on push
 - correct various profile validation issues on push
+- add guard clauses on pulled stories
 
 ## 0.3.1.1
 
