@@ -323,8 +323,9 @@ class Publish_form_mapper
                             $figclass .= ' alignright';
                             $fightml .= " width=200";
                         }
+                        $this_alt_text = (!empty(trim($asset_current->altText)) ? trim($asset_current->altText) : '');
                         $thiscaption = (!empty(trim($asset_current->caption)) ? trim($asset_current->caption) : '');
-                        $fightml .= (!empty($fightml) && !empty($thiscaption) ? ' alt="' . str_replace('"', '\'', strip_tags($thiscaption)) . '"' : '');
+                        $fightml .= (!empty($fightml) ? ' alt="' . str_replace('"', '\'', strip_tags($this_alt_text)) . '"' : '');
                         $fightml .= (!empty($fightml) ? '>' : '');
                         $thiscaption .= (!empty($cites) ? " <cite class=\"photocredit\">" . $this->parse_credits($asset_current) . "</cite>" : '');
                         $figcaption = (!empty($fightml) && !empty($thiscaption) ? "<figcaption class=\"caption\">$thiscaption</figcaption>" : '');
