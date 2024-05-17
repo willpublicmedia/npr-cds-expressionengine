@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- add checks on pulled content
+
 ## 0.3.2
 
 - avoid column duplication error due to incorrect module

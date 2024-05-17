@@ -34,7 +34,7 @@ class Channel_entry_builder
 
             $entry->{$field} = $value;
 
-            if ($name === 'keywords') {
+            if ($name === 'keywords' && array_key_exists('tags', $value)) {
                 $value = implode(',', array_values($value['tags']));
             }
 
