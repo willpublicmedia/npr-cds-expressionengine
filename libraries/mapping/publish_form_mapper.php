@@ -228,6 +228,9 @@ class Publish_form_mapper
                         }
                         break;
                     case 'promo-card':
+                        if (!property_exists($asset_current, 'documentLink')) {
+                            break;
+                        }
                         $promo_card = $this->get_document($asset_current->documentLink->href);
                         $promo_card_url = '';
                         if (!is_null($promo_card)) {
