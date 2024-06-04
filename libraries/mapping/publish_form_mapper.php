@@ -659,6 +659,8 @@ class Publish_form_mapper
         ];
 
         if ($profile === 'player-video') {
+            $poster = '';
+            $video_url = $asset_current->enclosures[0]->href;
             $enclosures = [];
             foreach ($asset->enclosures as $enclosure) {
                 $data = [
@@ -667,19 +669,38 @@ class Publish_form_mapper
                     'type' => $enclosure->type,
                 ];
 
+                if ( in_array( 'mp4-hd', $enclosure->rels ) ) {
+                    $video_url = $enclosure->href;
+                } elseif ( in_array( 'mp4-high', $enclosure->rels ) ) {
+                    $video_url = $enclosure->href;
+                }
+
                 $enclosures[] = $data;
             }
 
             $video['enclosures'] = $enclosures;
 
-            if (!empty($asset->images)) {
+            if (!empty($asset_current->images)) {
                 foreach ($asset->images as $v_image) {
                     if (in_array('thumbnail', $v_image->rels)) {
                         $v_image_id = $this->extract_asset_id($v_image->href);
                         $video['thumbnail'] = $v_image;
                     }
                 }
+                foreach ($asset_current->images as $v_image) {
+                    if (in_array('thumbnail', $v_image->rels)) {
+                        $v_image_id = $this->extract_asset_id($v_image->href);
+                        $v_image_asset = $story->assets->{$v_image_id};
+                        foreach ($v_image_asset->enclosures as $vma) {
+                            $poster = ' poster="' . $this->get_image_url($vma) . '"';
+                        }
+                    }
+                }
             }
+           
+            $video_asset = '<video controls poster="' . $poster . '" width="640" height="360"><source src="' . $video_url . '"</source></video>';
+            $video['embed_code'] = $video_asset;
+
         } elseif ($profile === 'stream-player-video') {
             if (in_array('hls', $asset->enclosures[0]->rels)) {
                 $asset_caption = [];
@@ -743,6 +764,7 @@ class Publish_form_mapper
                 case str_contains($asset_profile, 'player-video');
                     $video = $this->get_video_streaming($asset_current, $asset_profile);
                     break;
+                
                 default:
                     // no code
                     break;
