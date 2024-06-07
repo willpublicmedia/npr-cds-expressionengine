@@ -356,7 +356,7 @@ class Publish_form_mapper
                         $fightml .= '</div></div></ul></figure>';
                         $body_with_layout .= $fightml;
                         break;
-                    case str_contains($asset_profile, 'player-video'):
+                    /*case str_contains($asset_profile, 'player-video'):
                         if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
                             $asset_caption = [];
                             $full_caption = '';
@@ -416,7 +416,7 @@ class Publish_form_mapper
                                         '}' .
                                         '</script>';
                                 }
-                            }
+                            } 
 
                             $video_asset = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
 
@@ -429,7 +429,7 @@ class Publish_form_mapper
                                 $body_with_layout .= $video_asset;
                             }
                         }
-                        break;
+                        break; */
                     default:
                         // Do nothing???
                         break;
@@ -629,7 +629,7 @@ class Publish_form_mapper
         return $images;
     }
 
-    private function get_video_streaming($asset, $profile): ?array
+    private function get_video_streaming($asset, $profile, $current_story): ?array
     {
         if ($asset->isRestrictedToAuthorizedOrgServiceIds === true) {
             return null;
@@ -660,7 +660,7 @@ class Publish_form_mapper
 
         if ($profile === 'player-video') {
             $poster = '';
-            $video_url = $asset_current->enclosures[0]->href;
+            $video_url = $asset->enclosures[0]->href;
             $enclosures = [];
             foreach ($asset->enclosures as $enclosure) {
                 $data = [
@@ -680,37 +680,59 @@ class Publish_form_mapper
 
             $video['enclosures'] = $enclosures;
 
-            if (!empty($asset_current->images)) {
+            if (!empty($asset->images)) {
                 foreach ($asset->images as $v_image) {
                     if (in_array('thumbnail', $v_image->rels)) {
                         $v_image_id = $this->extract_asset_id($v_image->href);
                         $video['thumbnail'] = $v_image;
                     }
                 }
-                foreach ($asset_current->images as $v_image) {
+                foreach ($asset->images as $v_image) {
                     if (in_array('thumbnail', $v_image->rels)) {
                         $v_image_id = $this->extract_asset_id($v_image->href);
-                        $v_image_asset = $story->assets->{$v_image_id};
+                        $v_image_asset = $current_story->assets->{$v_image_id};
                         foreach ($v_image_asset->enclosures as $vma) {
-                            $poster = ' poster="' . $this->get_image_url($vma) . '"';
+                            $poster = $this->get_image_url($vma);
                         }
                     }
                 }
             }
            
-            $video_asset = '<video controls poster="' . $poster . '" width="640" height="360"><source src="' . $video_url . '"</source></video>';
-            $video['embed_code'] = $video_asset;
+            $video_asset = '<video controls poster="' . $poster . '"  class="ratio ratio-16x9"><source src="' . $video_url . '"</source></video>';
+            
+            $asset_caption = [];
+            $asset_caption[] = $video['title'];
+            $asset_caption[] = $video['caption'];
+
+            if ($video['producer'] != null && $video['provider'] != null) {
+                $asset_caption[] = '(' . $video['producer'] . '/' . $video['provider'] . ')';
+            } else if ($video['producer'] != null) {
+                $asset_caption[] = '(' . $video['producer'] . ')';
+            } else if ($video['provider'] != null) {
+                $asset_caption[] = '(' . $video['provider'] . ')';
+            }
+            
+            $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
+            $code_with_figure = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
+            
+            $video['embed_code'] = $code_with_figure;
 
         } elseif ($profile === 'stream-player-video') {
             if (in_array('hls', $asset->enclosures[0]->rels)) {
                 $asset_caption = [];
                 $asset_caption[] = $video['title'];
                 $asset_caption[] = $video['caption'];
-                $asset_caption[] = '(' . $video['producer'] . '/' . $video['provider'] . ')';
+                if ($video['producer'] != null && $video['provider'] != null) {
+                    $asset_caption[] = '(' . $video['producer'] . '/' . $video['provider'] . ')';
+                } else if ($video['producer'] != null) {
+                    $asset_caption[] = '(' . $video['producer'] . ')';
+                } else if ($video['provider'] != null) {
+                    $asset_caption[] = '(' . $video['provider'] . ')';
+                }
                 $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
 
                 $embed_code = '<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>' .
-                '<video id="' . $asset->id . '" controls></video>' .
+                '<video id="' . $asset->id . '" controls class="ratio ratio-16x9"></video>' .
                 '<script>' .
                 'let video = document.getElementById("' . $asset->id . '");' .
                 'if (Hls.isSupported()) {' .
@@ -753,6 +775,19 @@ class Publish_form_mapper
         $videos = [];
         foreach ($video_refs as $ref) {
             $asset_id = $this->extract_asset_id($ref->href);
+
+            $all_layouts = $story->layout;
+            $video_in_layout = false;
+            foreach($all_layouts as $layout) {
+                if (strpos($layout->href, $asset_id)) {
+                    $video_in_layout = true;
+                    break;
+                }
+            }
+            if (!$video_in_layout) {
+                continue;
+            }
+
             $asset_current = $story->assets->{$asset_id};
             $asset_profile = $this->extract_asset_profile($asset_current);
 
@@ -762,7 +797,7 @@ class Publish_form_mapper
                     $video = $this->get_video_youtube($asset_current);
                     break;
                 case str_contains($asset_profile, 'player-video');
-                    $video = $this->get_video_streaming($asset_current, $asset_profile);
+                    $video = $this->get_video_streaming($asset_current, $asset_profile, $story);
                     break;
                 
                 default:
