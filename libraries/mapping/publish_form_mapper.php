@@ -420,9 +420,17 @@ class Publish_form_mapper
 
                             $video_asset = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
 
+                            $counter = 0;
+                            $all_layouts = $story->layout;
+                            foreach ($all_layouts as $layout_asset) {
+                                if ($layout->href === $story->layout[$counter]->href) {
+                                    break;
+                                }
+                                $counter += 1;
+                            }
                             $is_first_video = true;
                             if (!empty($story->videos)) {
-                                $is_first_video = $layout->href === $story->videos[0]->href;
+                                $is_first_video = $layout->href === $story->layout[$counter]->href;
                             }
 
                             if (!$this->settings['theme_uses_featured_image'] || !$is_first_video) {
@@ -629,7 +637,7 @@ class Publish_form_mapper
         return $images;
     }
 
-    private function get_video_streaming($asset, $profile): ?array
+    private function get_video_streaming($asset, $profile, $current_story): ?array
     {
         if ($asset->isRestrictedToAuthorizedOrgServiceIds === true) {
             return null;
@@ -659,6 +667,8 @@ class Publish_form_mapper
         ];
 
         if ($profile === 'player-video') {
+            $poster = '';
+            $video_url = $asset->enclosures[0]->href;
             $enclosures = [];
             foreach ($asset->enclosures as $enclosure) {
                 $data = [
@@ -666,6 +676,12 @@ class Publish_form_mapper
                     'rels' => $enclosure->rels,
                     'type' => $enclosure->type,
                 ];
+
+                if (in_array('mp4-hd', $enclosure->rels)) {
+                    $video_url = $enclosure->href;
+                } elseif (in_array('mp4-high', $enclosure->rels)) {
+                    $video_url = $enclosure->href;
+                }
 
                 $enclosures[] = $data;
             }
@@ -679,17 +695,52 @@ class Publish_form_mapper
                         $video['thumbnail'] = $v_image;
                     }
                 }
+                foreach ($asset->images as $v_image) {
+                    if (in_array('thumbnail', $v_image->rels)) {
+                        $v_image_id = $this->extract_asset_id($v_image->href);
+                        $v_image_asset = $current_story->assets->{$v_image_id};
+                        foreach ($v_image_asset->enclosures as $vma) {
+                            $poster = $this->get_image_url($vma);
+                        }
+                    }
+                }
             }
+
+            $video_asset = '<video controls poster="' . $poster . '"  class="ratio ratio-16x9"><source src="' . $video_url . '"</source></video>';
+
+            $asset_caption = [];
+            $asset_caption[] = $video['title'];
+            $asset_caption[] = $video['caption'];
+
+            if ($video['producer'] != null && $video['provider'] != null) {
+                $asset_caption[] = '(' . $video['producer'] . '/' . $video['provider'] . ')';
+            } else if ($video['producer'] != null) {
+                $asset_caption[] = '(' . $video['producer'] . ')';
+            } else if ($video['provider'] != null) {
+                $asset_caption[] = '(' . $video['provider'] . ')';
+            }
+
+            $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
+            $code_with_figure = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
+
+            $video['embed_code'] = $code_with_figure;
+
         } elseif ($profile === 'stream-player-video') {
             if (in_array('hls', $asset->enclosures[0]->rels)) {
                 $asset_caption = [];
                 $asset_caption[] = $video['title'];
                 $asset_caption[] = $video['caption'];
-                $asset_caption[] = '(' . $video['producer'] . '/' . $video['provider'] . ')';
+                if ($video['producer'] != null && $video['provider'] != null) {
+                    $asset_caption[] = '(' . $video['producer'] . '/' . $video['provider'] . ')';
+                } else if ($video['producer'] != null) {
+                    $asset_caption[] = '(' . $video['producer'] . ')';
+                } else if ($video['provider'] != null) {
+                    $asset_caption[] = '(' . $video['provider'] . ')';
+                }
                 $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
 
                 $embed_code = '<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>' .
-                '<video id="' . $asset->id . '" controls></video>' .
+                '<video id="' . $asset->id . '" controls class="ratio ratio-16x9"></video>' .
                 '<script>' .
                 'let video = document.getElementById("' . $asset->id . '");' .
                 'if (Hls.isSupported()) {' .
@@ -732,6 +783,19 @@ class Publish_form_mapper
         $videos = [];
         foreach ($video_refs as $ref) {
             $asset_id = $this->extract_asset_id($ref->href);
+
+            $all_layouts = $story->layout;
+            $video_in_layout = false;
+            foreach ($all_layouts as $layout) {
+                if (strpos($layout->href, $asset_id)) {
+                    $video_in_layout = true;
+                    break;
+                }
+            }
+            if (!$video_in_layout) {
+                continue;
+            }
+
             $asset_current = $story->assets->{$asset_id};
             $asset_profile = $this->extract_asset_profile($asset_current);
 
@@ -741,8 +805,9 @@ class Publish_form_mapper
                     $video = $this->get_video_youtube($asset_current);
                     break;
                 case str_contains($asset_profile, 'player-video');
-                    $video = $this->get_video_streaming($asset_current, $asset_profile);
+                    $video = $this->get_video_streaming($asset_current, $asset_profile, $story);
                     break;
+
                 default:
                     // no code
                     break;
