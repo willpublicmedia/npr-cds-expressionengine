@@ -356,7 +356,7 @@ class Publish_form_mapper
                         $fightml .= '</div></div></ul></figure>';
                         $body_with_layout .= $fightml;
                         break;
-                    /*case str_contains($asset_profile, 'player-video'):
+                    case str_contains($asset_profile, 'player-video'):
                         if ($asset_current->isRestrictedToAuthorizedOrgServiceIds !== true) {
                             $asset_caption = [];
                             $full_caption = '';
@@ -420,16 +420,25 @@ class Publish_form_mapper
 
                             $video_asset = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
 
+                            
+                            $counter = 0;
+                            $all_layouts = $story->layout;
+                            foreach($all_layouts as $layout_asset) {
+                                if ($layout->href === $story->layout[$counter]->href) {
+                                    break;
+                                }
+                                $counter += 1;
+                            } 
                             $is_first_video = true;
                             if (!empty($story->videos)) {
-                                $is_first_video = $layout->href === $story->videos[0]->href;
+                                $is_first_video = $layout->href === $story->layout[$counter]->href;
                             }
 
                             if (!$this->settings['theme_uses_featured_image'] || !$is_first_video) {
                                 $body_with_layout .= $video_asset;
                             }
                         }
-                        break; */
+                        break; 
                     default:
                         // Do nothing???
                         break;
