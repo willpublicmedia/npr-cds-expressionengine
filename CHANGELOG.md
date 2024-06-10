@@ -1,7 +1,8 @@
 # Changelog
 
-## unreleased
+## 0.3.3
 
+- add embed code generation for player-video and stream-player-video profiles
 - add checks on pulled content
 
 ## 0.3.2
