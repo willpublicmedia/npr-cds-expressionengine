@@ -416,19 +416,18 @@ class Publish_form_mapper
                                         '}' .
                                         '</script>';
                                 }
-                            } 
+                            }
 
                             $video_asset = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
 
-                            
                             $counter = 0;
                             $all_layouts = $story->layout;
-                            foreach($all_layouts as $layout_asset) {
+                            foreach ($all_layouts as $layout_asset) {
                                 if ($layout->href === $story->layout[$counter]->href) {
                                     break;
                                 }
                                 $counter += 1;
-                            } 
+                            }
                             $is_first_video = true;
                             if (!empty($story->videos)) {
                                 $is_first_video = $layout->href === $story->layout[$counter]->href;
@@ -438,7 +437,7 @@ class Publish_form_mapper
                                 $body_with_layout .= $video_asset;
                             }
                         }
-                        break; 
+                        break;
                     default:
                         // Do nothing???
                         break;
@@ -678,9 +677,9 @@ class Publish_form_mapper
                     'type' => $enclosure->type,
                 ];
 
-                if ( in_array( 'mp4-hd', $enclosure->rels ) ) {
+                if (in_array('mp4-hd', $enclosure->rels)) {
                     $video_url = $enclosure->href;
-                } elseif ( in_array( 'mp4-high', $enclosure->rels ) ) {
+                } elseif (in_array('mp4-high', $enclosure->rels)) {
                     $video_url = $enclosure->href;
                 }
 
@@ -706,9 +705,9 @@ class Publish_form_mapper
                     }
                 }
             }
-           
+
             $video_asset = '<video controls poster="' . $poster . '"  class="ratio ratio-16x9"><source src="' . $video_url . '"</source></video>';
-            
+
             $asset_caption = [];
             $asset_caption[] = $video['title'];
             $asset_caption[] = $video['caption'];
@@ -720,10 +719,10 @@ class Publish_form_mapper
             } else if ($video['provider'] != null) {
                 $asset_caption[] = '(' . $video['provider'] . ')';
             }
-            
+
             $full_caption = '<figcaption>' . implode(' ', $asset_caption) . '</figcaption>';
             $code_with_figure = '<figure class="figure wp-block-embed is-type-video"><div class="wp-block-embed__wrapper">' . $video_asset . '</div>' . $full_caption . '</figure>';
-            
+
             $video['embed_code'] = $code_with_figure;
 
         } elseif ($profile === 'stream-player-video') {
@@ -787,7 +786,7 @@ class Publish_form_mapper
 
             $all_layouts = $story->layout;
             $video_in_layout = false;
-            foreach($all_layouts as $layout) {
+            foreach ($all_layouts as $layout) {
                 if (strpos($layout->href, $asset_id)) {
                     $video_in_layout = true;
                     break;
@@ -808,7 +807,7 @@ class Publish_form_mapper
                 case str_contains($asset_profile, 'player-video');
                     $video = $this->get_video_streaming($asset_current, $asset_profile, $story);
                     break;
-                
+
                 default:
                     // no code
                     break;
