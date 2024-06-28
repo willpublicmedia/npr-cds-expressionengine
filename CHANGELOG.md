@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4
+
+- correct syntax when calling EE config
+
 ## 0.3.3
 
 - add embed code generation for player-video and stream-player-video profiles

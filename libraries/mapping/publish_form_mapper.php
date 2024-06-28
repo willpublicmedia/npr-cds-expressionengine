@@ -452,7 +452,7 @@ class Publish_form_mapper
                 $correct_id = $this->extract_asset_id($correction->href);
                 $correct_current = $story->assets->{$correct_id};
                 $correction_text .= '<li><strong><em>' .
-                date(ee()->config->get('date_format'), strtotime($correct_current->dateTime)) .
+                date(ee()->config->item('date_format'), strtotime($correct_current->dateTime)) .
                 '</em></strong><br />' . strip_tags($correct_current->text) . '</li>';
             }
             $body_with_layout .= '<div class="wp-block-embed__wrapper" id="corrections-' . $story->npr_story_id . '"><span class="h3">Corrections:</span><ul>' . $correction_text . '</ul></div>';
@@ -539,7 +539,7 @@ class Publish_form_mapper
             $correct_id = $this->extract_asset_id($correction->href);
             $correct_current = $story->assets->{$correct_id};
             $corrections[$correct_id] = [
-                'date' => date(ee()->config->get('date_format'), strtotime($correct_current->dateTime)),
+                'date' => date(ee()->config->item('date_format'), strtotime($correct_current->dateTime)),
                 'text' => strip_tags($correct_current->text),
             ];
         }
