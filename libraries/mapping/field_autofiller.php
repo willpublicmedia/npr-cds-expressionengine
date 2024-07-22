@@ -106,11 +106,6 @@ class Field_autofiller
             $format = $this->get_file_extension($item[$file_col]);
             $dimensions = $this->get_image_dimensions($file_model->file_hw_original);
 
-            $crop_col = $column_names['crop_type'];
-            $item[$crop_col] = empty($item[$crop_col]) ?
-            'default' :
-            $item[$crop_col];
-
             $src_col = $column_names['crop_src'];
             $item[$src_col] = empty($item[$src_col]) ?
             $this->build_url($file_model->getAbsoluteUrl()) :
@@ -120,6 +115,24 @@ class Field_autofiller
             $item[$width_col] = empty($item[$width_col]) ?
             $dimensions['width'] :
             $item[$width_col];
+
+            $height_col = $column_names['crop_height'];
+            $item[$height_col] = empty($item[$height_col]) ?
+            $dimensions['height'] :
+            $item[$height_col];
+
+            $crop_type = '';
+            if ($dimensions['width'] == $dimensions['height']) {
+                $crop_type = 'crop_square'; 
+            } else if ($dimensions['width'] < $dimensions['height']) {
+                $crop_type = 'crop_vertical';
+            } else {
+                $crop_type = 'crop_wide';
+            }
+            $crop_col = $column_names['crop_type'];
+            $item[$crop_col] = empty($item[$crop_col]) ?
+            $crop_type :
+            $item[$crop_col];
 
             $image_data['rows'][$row] = $item;
         }
