@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.5
 
 - correct audio duration format on push
 - merge status messages on push
