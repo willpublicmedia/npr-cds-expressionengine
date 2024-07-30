@@ -2,6 +2,7 @@
 
 ## unreleased
 
+- correct audio duration format on push
 - merge status messages on push
 
 ## 0.3.4
