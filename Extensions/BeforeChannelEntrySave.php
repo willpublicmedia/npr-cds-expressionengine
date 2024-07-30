@@ -200,24 +200,22 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         $response = $this->push_story($json, $entry->{$this->fields['npr_story_id']});
+
+        $alert = ee('CP/Alert')->makeInline('story-push')
+            ->withTitle('NPR Stories');
+
         if (is_null($response)) {
-            ee('CP/Alert')->makeInline('story-push')
-                ->asIssue()
-                ->withTitle('NPR CDS')
-                ->addToBody("Error pushing to NPR")
-                ->defer();
-            return;
+            $alert->addToBody('Error pushing to NPR.')
+                ->asIssue();
+        } elseif (!str_starts_with($response->code, 2)) {
+            $alert->addToBody($response->messages[0])
+                ->asIssue();
+        } else {
+            $alert->addToBody('Story pushed to NPR.')
+                ->asSuccess();
         }
 
-        if (!str_starts_with($response->code, 2)) {
-            return;
-        }
-
-        ee('CP/Alert')->makeInline('story-push')
-            ->asSuccess()
-            ->withTitle('NPR Stories')
-            ->addToBody("Story pushed to NPR.")
-            ->defer();
+        $alert->defer();
     }
 
     private function check_required_fields($field_groups, $display_error = true)

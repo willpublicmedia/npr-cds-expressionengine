@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- merge status messages on push
+
 ## 0.3.4
 
 - correct syntax when calling EE config
