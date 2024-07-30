@@ -135,7 +135,7 @@ class Npr_cds_expressionengine
         $json = json_decode($raw);
 
         if (!$json) {
-            $message = "Something went wrong. HTTP status code $status.";
+            $message = str_starts_with($status, 2) ? "Story pushed successfully." : "Something went wrong. HTTP status code $status.";
             $response->messages = [$message];
             return $response;
         }
