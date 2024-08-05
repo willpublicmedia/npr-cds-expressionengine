@@ -608,12 +608,20 @@ class Cds_mapper
             $filename = array_pop($image_path_elements);
         }
 
-        $file_id = ee()->db->select('file_id')
+        $file_query = ee()->db->select('file_id')
             ->from('files')
             ->where(array(
                 'file_name' => $filename,
-            ))
-            ->limit(1)
+            ));
+
+        if (str_contains($filename, '%')) {
+            $file_query->or_where(
+                ['file_name' => urldecode($filename)]
+            );
+
+        }
+
+        $file_id = $file_query->limit(1)
             ->get()
             ->row()
             ->file_id;

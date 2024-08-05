@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- check for urlencoded filenames
+
 ## 0.3.5
 
 - correct audio duration format on push
