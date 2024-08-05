@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.6
 
 - check for urlencoded filenames
 
