@@ -320,8 +320,8 @@ class Publish_form_mapper
                             }
                         }
                         $figclass = "figure wp-block-image size-large";
-                        $image_href = $this->get_image_url($thisimg);
-                        $fightml = '<img src="' . $image_href . '"';
+                        $image_href = in_array('primary', $img_enclose->rels) ?  $this->get_image_url($thisimg, true) : $this->get_image_url($thisimg);
+                        $fightml = '<img src="' . $image_href['url'] . '"';
                         if (in_array('image-vertical', $thisimg->rels)) {
                             $figclass .= ' alignright';
                             $fightml .= " width=200";
@@ -351,7 +351,7 @@ class Publish_form_mapper
                             $full_credits = $this->parse_credits($ig_asset_current);
 
                             $link_text = str_replace('"', "'", $ig_asset_current->title . $full_credits);
-                            $fightml .= '<li class="splide__slide"><a href="' . urlencode($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . urlencode($image_href) . '" alt="' . ee('Format')->make('Text', $link_text)->attributeEscape() . '"></a><div>' . htmlspecialchars($link_text) . '</div></li>';
+                            $fightml .= '<li class="splide__slide"><a href="' . urlencode($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . urlencode($image_href['url']) . '" alt="' . ee('Format')->make('Text', $link_text)->attributeEscape() . '"></a><div>' . htmlspecialchars($link_text) . '</div></li>';
                         }
                         $fightml .= '</div></div></ul></figure>';
                         $body_with_layout .= $fightml;
@@ -384,7 +384,8 @@ class Publish_form_mapper
                                             $v_image_id = $this->extract_asset_id($v_image->href);
                                             $v_image_asset = $story->assets->{$v_image_id};
                                             foreach ($v_image_asset->enclosures as $vma) {
-                                                $poster = ' poster="' . $this->get_image_url($vma) . '"';
+                                                $poster_image = $this->get_image_url($vma);
+                                                $poster = ' poster="' . $poster_image($vma)['url'] . '"';
                                             }
                                         }
                                     }
@@ -565,29 +566,59 @@ class Publish_form_mapper
         return $json->resources[0];
     }
 
-    private function get_image_url($image)
+    private function get_image_url($image, $download = false): array
     {
         if (empty($image->hrefTemplate)) {
             return $image->href;
         }
+
+        $parse = parse_url($image->hrefTemplate);
+        if (!empty($parse['query'])) {
+            parse_str($parse['query'], $output);
+            if (!empty($output['url'])) {
+                $parse = parse_url(urldecode($output['url']));
+            }
+        }
+
+        $path = pathinfo($parse['path']);
+        $out = [
+            'url' => $image->href,
+            'filename' => $path['filename'] . '.' . $path['extension'],
+        ];
+
+        if (empty($image->hrefTemplate)) {
+            return $out;
+        }
+
+        // load image preferences or use hardcoded
         // $format = get_option('npr_cds_image_format', 'webp');
         // $quality = get_option('npr_cds_image_quality', 75);
         // $width = get_option('npr_cds_image_width', 1200);
         $format = 'jpeg';
         $quality = 75;
         $width = 1200;
-        $parse = parse_url($image->hrefTemplate);
-        parse_str($parse['query'], $output);
-        foreach ($output as $k => $v) {
-            if ($v == '{width}') {
-                $output[$k] = $width;
-            } elseif ($v == '{format}') {
-                $output[$k] = $format;
-            } elseif ($v == '{quality}') {
-                $output[$k] = $quality;
-            }
+
+        if ($download) {
+            $width = $image->width;
         }
-        return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
+
+        $out['url'] = str_replace(['{width}', '{format}', '{quality}'], [$width, $format, $quality], $image->hrefTemplate);
+        if ($format !== $path['extension']) {
+            $out['filename'] = $path['filename'] . '.' . $format;
+        }
+
+        return $out;
+        // parse_str($parse['query'], $output);
+        // foreach ($output as $k => $v) {
+        //     if ($v == '{width}') {
+        //         $output[$k] = $width;
+        //     } elseif ($v == '{format}') {
+        //         $output[$k] = $format;
+        //     } elseif ($v == '{quality}') {
+        //         $output[$k] = $quality;
+        //     }
+        // }
+        // return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
     }
 
     private function get_images($story): array
