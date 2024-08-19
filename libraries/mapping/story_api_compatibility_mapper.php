@@ -410,22 +410,4 @@ class Story_api_compatibility_mapper
 
         return $results;
     }
-
-    private function strip_sideloaded_query_strings($url)
-    {
-        $url_data = parse_url($url);
-        $filename = basename($url_data['path']);
-
-        if (!array_key_exists('query', $url_data)) {
-            return $filename;
-        }
-
-        $path_data = pathinfo($filename);
-        $filename = "{$path_data['filename']}-{$url_data['query']}.{$path_data['extension']}";
-
-        ee()->load->library('upload');
-        $filename = ee()->upload->clean_file_name($filename);
-
-        return $filename;
-    }
 }
