@@ -3,8 +3,10 @@
 namespace IllinoisPublicMedia\NprCds\Libraries\Mapping;
 
 require_once __DIR__ . '/../utilities/config_utils.php';
+require_once __DIR__ . '/../utilities/cds_utils.php';
 require_once __DIR__ . '/../utilities/field_utils.php';
 use EEHarbor\Tagger\FluxCapacitor\Conduit\StaticCache;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Cds_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 
@@ -298,7 +300,9 @@ class Story_api_compatibility_mapper
     private function sideload_file(array $data, string $description, string $credit, $field = 'userfile')
     {
         // rename file if it'll be problematic.
-        $filename = $this->strip_sideloaded_query_strings($data['href']);
+        $cds_utils = new Cds_utils();
+        $image_href = $cds_utils->get_image_url($data);
+        $filename = $image_href['filename'];
 
         // see if file has already been uploaded
         $file = ee('Model')->get('File')
