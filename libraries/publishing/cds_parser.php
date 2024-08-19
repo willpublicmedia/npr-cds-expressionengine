@@ -5,6 +5,7 @@ namespace IllinoisPublicMedia\NprCds\Libraries\Publishing;
 require_once __DIR__ . '/../dto/http/api_response.php';
 require_once __DIR__ . '/../utilities/field_utils.php';
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Cds_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
 use stdClass;
 
@@ -239,7 +240,7 @@ class Cds_parser
                         }
                         $figclass = "wp-block-image size-large";
                         $image_href = $this->get_image_url($thisimg);
-                        $fightml = '<img src="' . $image_href . '"';
+                        $fightml = '<img src="' . $image_href['url'] . '"';
                         if (in_array('image-vertical', $thisimg->rels)) {
                             $figclass .= ' alignright';
                             $fightml .= " width=200";
@@ -268,7 +269,7 @@ class Cds_parser
                             $full_credits = $this->parse_credits($ig_asset_current);
 
                             $link_text = str_replace('"', "'", $ig_asset_current->title . $full_credits);
-                            $fightml .= '<li class="splide__slide"><a href="' . urlencode($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . urlencode($image_href) . '" alt="' . ee('Format')->make('Text', $link_text)->attributeEscape() . '"></a><div>' . htmlspecialchars($link_text) . '</div></li>';
+                            $fightml .= '<li class="splide__slide"><a href="' . urlencode($thisimg->href) . '" target="_blank"><img data-splide-lazy="' . urlencode($image_href['url']) . '" alt="' . ee('Format')->make('Text', $link_text)->attributeEscape() . '"></a><div>' . htmlspecialchars($link_text) . '</div></li>';
                         }
                         $fightml .= '</div></div></ul></figure>';
                         $body_with_layout .= $fightml;
@@ -301,7 +302,8 @@ class Cds_parser
                                             $v_image_id = $this->extract_asset_id($v_image->href);
                                             $v_image_asset = $story->assets->{$v_image_id};
                                             foreach ($v_image_asset->enclosures as $vma) {
-                                                $poster = ' poster="' . $this->get_image_url($vma) . '"';
+                                                $poster_image = $this->get_image_url($vma);
+                                                $poster = ' poster="' . $poster_image['url'] . '"';
                                             }
                                         }
                                     }
@@ -402,29 +404,12 @@ class Cds_parser
         return new stdClass();
     }
 
-    private function get_image_url($image)
+    private function get_image_url($image, $download = false): array
     {
-        if (empty($image->hrefTemplate)) {
-            return $image->href;
-        }
-        // $format = get_option('npr_cds_image_format', 'webp');
-        // $quality = get_option('npr_cds_image_quality', 75);
-        // $width = get_option('npr_cds_image_width', 1200);
-        $format = 'jpeg';
-        $quality = 75;
-        $width = 1200;
-        $parse = parse_url($image->hrefTemplate);
-        parse_str($parse['query'], $output);
-        foreach ($output as $k => $v) {
-            if ($v == '{width}') {
-                $output[$k] = $width;
-            } elseif ($v == '{format}') {
-                $output[$k] = $format;
-            } elseif ($v == '{quality}') {
-                $output[$k] = $quality;
-            }
-        }
-        return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
+        $cds_utils = new Cds_utils();
+        $out = $cds_utils->get_image_url($image, $download);
+
+        return $out;
     }
 
     /**

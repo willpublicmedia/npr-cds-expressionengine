@@ -7,6 +7,7 @@ if (!defined('BASEPATH')) {
 }
 
 require_once __DIR__ . '/../utilities/config_utils.php';
+require_once __DIR__ . '/../utilities/cds_utils.php';
 require_once __DIR__ . '/../utilities/channel_entry_builder.php';
 require_once __DIR__ . '/../publishing/npr_cds_expressionengine.php';
 require_once __DIR__ . '/story_api_compatibility_mapper.php';
@@ -14,6 +15,7 @@ require_once __DIR__ . '/story_api_compatibility_mapper.php';
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
 use IllinoisPublicMedia\NprCds\Libraries\Mapping\Story_api_compatibility_mapper;
 use IllinoisPublicMedia\NprCds\Libraries\Publishing\Npr_cds_expressionengine;
+use IllinoisPublicMedia\NprCds\Libraries\Utilities\Cds_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Channel_entry_builder;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 use \stdClass;
@@ -320,7 +322,7 @@ class Publish_form_mapper
                             }
                         }
                         $figclass = "figure wp-block-image size-large";
-                        $image_href = in_array('primary', $img_enclose->rels) ?  $this->get_image_url($thisimg, true) : $this->get_image_url($thisimg);
+                        $image_href = in_array('primary', $img_enclose->rels) ? $this->get_image_url($thisimg, true) : $this->get_image_url($thisimg);
                         $fightml = '<img src="' . $image_href['url'] . '"';
                         if (in_array('image-vertical', $thisimg->rels)) {
                             $figclass .= ' alignright';
@@ -568,57 +570,9 @@ class Publish_form_mapper
 
     private function get_image_url($image, $download = false): array
     {
-        if (empty($image->hrefTemplate)) {
-            return $image->href;
-        }
-
-        $parse = parse_url($image->hrefTemplate);
-        if (!empty($parse['query'])) {
-            parse_str($parse['query'], $output);
-            if (!empty($output['url'])) {
-                $parse = parse_url(urldecode($output['url']));
-            }
-        }
-
-        $path = pathinfo($parse['path']);
-        $out = [
-            'url' => $image->href,
-            'filename' => $path['filename'] . '.' . $path['extension'],
-        ];
-
-        if (empty($image->hrefTemplate)) {
-            return $out;
-        }
-
-        // load image preferences or use hardcoded
-        // $format = get_option('npr_cds_image_format', 'webp');
-        // $quality = get_option('npr_cds_image_quality', 75);
-        // $width = get_option('npr_cds_image_width', 1200);
-        $format = 'jpeg';
-        $quality = 75;
-        $width = 1200;
-
-        if ($download) {
-            $width = $image->width;
-        }
-
-        $out['url'] = str_replace(['{width}', '{format}', '{quality}'], [$width, $format, $quality], $image->hrefTemplate);
-        if ($format !== $path['extension']) {
-            $out['filename'] = $path['filename'] . '.' . $format;
-        }
-
+        $cds_utils = new Cds_utils();
+        $out = $cds_utils->get_image_url($image, $download);
         return $out;
-        // parse_str($parse['query'], $output);
-        // foreach ($output as $k => $v) {
-        //     if ($v == '{width}') {
-        //         $output[$k] = $width;
-        //     } elseif ($v == '{format}') {
-        //         $output[$k] = $format;
-        //     } elseif ($v == '{quality}') {
-        //         $output[$k] = $quality;
-        //     }
-        // }
-        // return $parse['scheme'] . '://' . $parse['host'] . $parse['path'] . '?' . http_build_query($output);
     }
 
     private function get_images($story): array
