@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.7
 
 - correct image url generation for NPR's CDN (see also openpublicmedia/npr-cds-wordpress v1.2.5)
 
