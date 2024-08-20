@@ -1,0 +1,15 @@
+{
+    "name": "illinoispublicmedia/npr_cds_expressionengine",
+    "description": "An ExpressionEngine port of OpenPublicMedia's wordpress plugin for NPR's Content Delivery System.",
+    "license": "GPL-2.0+",
+    "type": "expressionengine-addon",
+    "autoload": {
+        "classmap": [
+            "vendor/phpunit/"
+        ]
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpunit/phpunit": "^11"
+    }
+}
