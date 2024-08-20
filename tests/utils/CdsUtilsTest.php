@@ -12,10 +12,10 @@ final class NprCdsUtilsTest extends TestCase
 
     private ?CdsUtilsProvider $cds_utils_provider;
 
-    public function testSanityIsSane(): void
+    public function test_get_image_url(array | \stdClass $image_data, string $expected): void
     {
-        $x = 2;
-        $this->assertEquals(1, $x);
+        $actual = $this->cds_utils->get_image_url($image_data);
+        $this->assertEquals($expected, $actual);
     }
 
     protected function setUp(): void
