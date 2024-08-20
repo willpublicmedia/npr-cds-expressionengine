@@ -6,35 +6,41 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../libraries/utilities/cds_utils.php';
 
-final class NprCdsUtilsTest extends TestCase
+final class CdsUtilsTest extends TestCase
 {
     private ?Cds_utils $cds_utils;
 
-    private ?CdsUtilsProvider $cds_utils_provider;
-
-    public function test_get_image_url(array | \stdClass $image_data, string $expected): void
+    public function testGetImageFilename(): void
     {
-        $actual = $this->cds_utils->get_image_url($image_data);
+        $data = [
+            'id' => 'g-s1-17257',
+            'isRestrictedToAuthorizedOrgServiceIds' => false,
+            'height' => 683,
+            'href' => 'https=>//npr.brightspotcdn.com/dims3/default/strip/false/crop/911x683+57+0/resize/911x683!/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Ffd%2F7c%2F3b5faa1c4a54b24e400c55b19854%2Fgettyimages-1497461299.jpg',
+            'hrefTemplate' => 'https=>//npr.brightspotcdn.com/dims3/default/strip/false/crop/911x683+57+0/resize/{width}/quality/{quality}/format/{format}/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Ffd%2F7c%2F3b5faa1c4a54b24e400c55b19854%2Fgettyimages-1497461299.jpg',
+            'rels' => [
+                'image-standard',
+                'scalable',
+            ],
+            'type' => 'image/jpeg',
+            'width' => 911,
+        ];
+
+        $out = $this->cds_utils->get_image_url($data);
+
+        $expected = 'gettyimages-1497461299.jpeg';
+        $actual = $out['filename'];
+
         $this->assertEquals($expected, $actual);
     }
 
     protected function setUp(): void
     {
         $this->cds_utils = new Cds_utils();
-        $this->cds_utils_provider = new CdsUtilsProvider();
     }
 
     protected function tearDown(): void
     {
         $this->cds_utils = null;
-        $this->cds_utils_provider = null;
-    }
-
-    private function image_provider(): array
-    {
-        $array_data = $this->cds_utils_provider->image_provider();
-        $object_data = $this->cds_utils_provider->image_provider([], 'class');
-        $out = array_merge($array_data, $object_data);
-        return $out;
     }
 }

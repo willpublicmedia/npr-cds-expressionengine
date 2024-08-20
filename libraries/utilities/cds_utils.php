@@ -1,10 +1,6 @@
 <?php
 namespace IllinoisPublicMedia\NprCds\Libraries\Utilities;
 
-if (!defined('BASEPATH')) {
-    exit('No direct script access allowed.');
-}
-
 /**
  * Contains common utilities for CDS property manipulation.
  */
