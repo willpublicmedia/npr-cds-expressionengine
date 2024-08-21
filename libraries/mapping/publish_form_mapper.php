@@ -223,6 +223,11 @@ class Publish_form_mapper
                 $asset_id = $this->extract_asset_id($layout->href);
                 $asset_current = $story->assets->{$asset_id};
                 $asset_profile = $this->extract_asset_profile($asset_current);
+
+                if (!empty($asset_current->isRestrictedToAuthorizedOrgServiceIds)) {
+                    continue;
+                }
+
                 switch ($asset_profile) {
                     case 'text':
                         if (!empty($asset_current->text)) {
@@ -588,6 +593,10 @@ class Publish_form_mapper
             }
 
             $asset_current = $story->assets->{$asset_id};
+
+            if (!empty($asset_current->isRestrictedToAuthorizedOrgServiceIds)) {
+                continue;
+            }
 
             $enclosures = [];
             foreach ($asset_current->enclosures as $enclosure) {

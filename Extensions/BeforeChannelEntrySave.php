@@ -110,9 +110,27 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         $stories = $response->json->resources;
+
+        $restrictionNotice = [];
+        foreach ($stories->resources as $story) {
+            if (!empty($story->isRestrictedToAuthorizedOrgServiceIds)) {
+                $restrictionNotice[] = $story->id;
+            }
+        }
+
+        if (!empty($restrictionNotice)) {
+            $error = [
+                'npr_story_syndication' => [
+                    'The following CDS IDs are not licensed for syndication, and cannot be downloaded: ' . implode(', ', $restrictionNotice),
+                ],
+            ];
+
+            $this->display_error($error);
+        }
+
         if (count($stories) > 1) {
             $error = [
-                'npr_story_id' => [
+                'npr_story_collection' => [
                     'Story ID represents a document collection. Select a single document ID and try again.',
                 ],
             ];
