@@ -324,6 +324,8 @@ class Cds_mapper
             $story->assets->{$audio_asset_id} = $audio_asset;
 
             $new_audio->href = '#/assets/' . $audio_asset_id;
+            $story->layout[] = $new_audio;
+
             if (count($audio_files) == 1) {
                 $new_audio->rels = ['headline', 'primary'];
             }

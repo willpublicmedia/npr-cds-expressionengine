@@ -2,6 +2,7 @@
 
 ## unreleased
 
+- add audio to document layout
 - expand checks for restricted media
 
 ## 0.3.7
