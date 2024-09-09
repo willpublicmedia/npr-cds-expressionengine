@@ -300,7 +300,6 @@ class Cds_mapper
             $audio_guid = $audio['url'];
             $audio_files[] = $audio['file_id'];
 
-            $new_audio = new stdClass;
             $audio_asset = new stdClass;
             $audio_asset_id = $this->settings['document_prefix'] . '-' . $audio['file_id'];
             $audio_asset->id = $audio_asset_id;
@@ -323,14 +322,18 @@ class Cds_mapper
             $audio_asset->enclosures = [$audio_enc];
             $story->assets->{$audio_asset_id} = $audio_asset;
 
-            $new_audio->href = '#/assets/' . $audio_asset_id;
-            $story->layout[] = $new_audio;
+            $audio_layout = new stdClass;
+            $audio_layout->href = '#/assets/' . $audio_asset_id;
+            $story->layout[] = $audio_layout;
 
+            // avoid pass-by-reference validation error
             if (count($audio_files) == 1) {
+                $new_audio = clone $audio_layout;
                 $new_audio->rels = ['headline', 'primary'];
+                $story->audio[] = $new_audio;
+            } else {
+                $story->audio[] = $audio_layout;
             }
-
-            $story->audio[] = $new_audio;
         }
 
         /**
