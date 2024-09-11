@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.3.8
 
 - add audio to document layout
 - expand checks for restricted media
