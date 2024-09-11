@@ -155,31 +155,83 @@ class Cds_mapper
         // if expiry date is not set, returns publication date plus 7 days
         $story->recommendUntilDateTime = $this->get_post_expiry_datetime($entry);
 
-        // Parse through the paragraphs, add references to layout array, and paragraph text to assets
-        $parts = array_filter(
-            array_map('trim', preg_split("/<\/?p>/", $content))
-        );
+        // assign media to top of layout
+        /**
+         * attach video to post
+         */
+        $videos = $this->get_video_codes($entry, 'videoembed_grid');
 
-        foreach ($parts as $part) {
-            $para = new stdClass;
-            $para_asset = new stdClass;
-            $para_id = $cds_id . '-' . $cds_count;
-            $para->id = $para_id;
+        if (!empty($videos)) {
+            $story->videos = [];
+            $video_has = new stdClass;
+            $video_has->href = '/' . $cds_version . '/profiles/has-videos';
+            $video_has->rels = ['interface'];
+            $story->profiles[] = $video_has;
+        }
 
-            $para_type = 'text';
-            if (preg_match('/^<(figure|div)/', $part)) {
-                $para_type = 'html';
-            }
-            if ($para_type == 'html') {
-                $para->profiles = $this->get_npr_cds_asset_profile($para_type . '-block');
-            } else {
-                $para->profiles = $this->get_npr_cds_asset_profile($para_type);
-            }
-            $para->{$para_type} = $part;
-            $story->assets->{$para_id} = $para;
-            $para_asset->href = '#/assets/' . $para_id;
-            $story->layout[] = $para_asset;
+        foreach ($videos as $video) {
+            $video_info = $this->process_video_info($video);
+            $video_asset_id = $cds_id . '-' . $cds_count;
             $cds_count++;
+
+            // add asset id to videos[] and layout[]
+            $video_asset = new stdClass;
+            $video_asset->href = '#/assets/' . $video_asset_id;
+            $story->videos[] = $video_asset;
+            $story->layout[] = $video_asset;
+
+            // add video document to assets[]
+            $video_document = new stdClass;
+            $video_document->id = $video_asset_id;
+            $video_document->profiles = [];
+
+            $doc_profile = new stdClass;
+            $doc_profile->href = '/' . $cds_version . '/profiles/document';
+            $video_document->profiles[] = $doc_profile;
+
+            $video_profile = new stdClass;
+            $video_profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
+
+            if ($video_info['npr_video_profile'] === 'youtube-video') {
+                // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
+                $video_profile->rels = ['type'];
+                $video_document->headline = $entry->Channel->channel_title;
+                $video_document->subheadline = $video['video_title'];
+                $video_document->videoId = $video_info['video_id'];
+                if (array_key_exists('startTime', $video_info)) {
+                    $video_document->startTime = $video_info['startTime'];
+                }
+            }
+
+            if ($video_info['npr_video_profile'] === 'player-video') {
+                // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
+                $video_document->enclosures = [];
+                $enclosure = new stdClass;
+                $enclosure->href = $video_info['src'];
+                $enclosure->rels = ['mp4-high'];
+                $video_document->enclosures[] = $enclosure;
+
+                $video_document->title = $video['video_title'];
+                $video_document->isEmbeddable = true;
+                $video_document->isRestrictedToAuthorizedOrgServiceIds = false;
+            }
+
+            if ($video_info['npr_video_profile'] === 'stream-player-video') {
+                // add player-video profile (https://npr.github.io/content-distribution-service/profiles/stream-player-video.html)
+                $video_profile->rels = ['type'];
+                $video_document->enclosures = [];
+                $enclosure = new stdClass;
+                $enclosure->href = $video_info['src'];
+                $enclosure->rels = ['hls'];
+                $video_document->enclosures[] = $enclosure;
+
+                $video_document->title = $video['video_title'];
+                $video_document->isEmbeddable = true;
+                $video_document->isRestrictedToAuthorizedOrgServiceIds = false;
+            }
+
+            $video_document->profiles[] = $video_profile;
+            $story->assets->{$video_asset_id} = $video_document;
         }
 
         /*
@@ -336,82 +388,31 @@ class Cds_mapper
             }
         }
 
-        /**
-         * attach video to post
-         */
-        $videos = $this->get_video_codes($entry, 'videoembed_grid');
+        // Parse through the paragraphs, add references to layout array, and paragraph text to assets
+        $parts = array_filter(
+            array_map('trim', preg_split("/<\/?p>/", $content))
+        );
 
-        if (!empty($videos)) {
-            $story->videos = [];
-            $video_has = new stdClass;
-            $video_has->href = '/' . $cds_version . '/profiles/has-videos';
-            $video_has->rels = ['interface'];
-            $story->profiles[] = $video_has;
-        }
+        foreach ($parts as $part) {
+            $para = new stdClass;
+            $para_asset = new stdClass;
+            $para_id = $cds_id . '-' . $cds_count;
+            $para->id = $para_id;
 
-        foreach ($videos as $video) {
-            $video_info = $this->process_video_info($video);
-            $video_asset_id = $cds_id . '-' . $cds_count;
+            $para_type = 'text';
+            if (preg_match('/^<(figure|div)/', $part)) {
+                $para_type = 'html';
+            }
+            if ($para_type == 'html') {
+                $para->profiles = $this->get_npr_cds_asset_profile($para_type . '-block');
+            } else {
+                $para->profiles = $this->get_npr_cds_asset_profile($para_type);
+            }
+            $para->{$para_type} = $part;
+            $story->assets->{$para_id} = $para;
+            $para_asset->href = '#/assets/' . $para_id;
+            $story->layout[] = $para_asset;
             $cds_count++;
-
-            // add asset id to videos[] and layout[]
-            $video_asset = new stdClass;
-            $video_asset->href = '#/assets/' . $video_asset_id;
-            $story->videos[] = $video_asset;
-            $story->layout[] = $video_asset;
-
-            // add video document to assets[]
-            $video_document = new stdClass;
-            $video_document->id = $video_asset_id;
-            $video_document->profiles = [];
-
-            $doc_profile = new stdClass;
-            $doc_profile->href = '/' . $cds_version . '/profiles/document';
-            $video_document->profiles[] = $doc_profile;
-
-            $video_profile = new stdClass;
-            $video_profile->href = '/' . $cds_version . '/profiles/' . $video_info['npr_video_profile'];
-
-            if ($video_info['npr_video_profile'] === 'youtube-video') {
-                // add youtube-video profile (https://npr.github.io/content-distribution-service/profiles/youtube-video.html)
-                $video_profile->rels = ['type'];
-                $video_document->headline = $entry->Channel->channel_title;
-                $video_document->subheadline = $video['video_title'];
-                $video_document->videoId = $video_info['video_id'];
-                if (array_key_exists('startTime', $video_info)) {
-                    $video_document->startTime = $video_info['startTime'];
-                }
-            }
-
-            if ($video_info['npr_video_profile'] === 'player-video') {
-                // add player-video profile (https://npr.github.io/content-distribution-service/profiles/player-video.html)
-                $video_document->enclosures = [];
-                $enclosure = new stdClass;
-                $enclosure->href = $video_info['src'];
-                $enclosure->rels = ['mp4-high'];
-                $video_document->enclosures[] = $enclosure;
-
-                $video_document->title = $video['video_title'];
-                $video_document->isEmbeddable = true;
-                $video_document->isRestrictedToAuthorizedOrgServiceIds = false;
-            }
-
-            if ($video_info['npr_video_profile'] === 'stream-player-video') {
-                // add player-video profile (https://npr.github.io/content-distribution-service/profiles/stream-player-video.html)
-                $video_profile->rels = ['type'];
-                $video_document->enclosures = [];
-                $enclosure = new stdClass;
-                $enclosure->href = $video_info['src'];
-                $enclosure->rels = ['hls'];
-                $video_document->enclosures[] = $enclosure;
-
-                $video_document->title = $video['video_title'];
-                $video_document->isEmbeddable = true;
-                $video_document->isRestrictedToAuthorizedOrgServiceIds = false;
-            }
-
-            $video_document->profiles[] = $video_profile;
-            $story->assets->{$video_asset_id} = $video_document;
         }
 
         $json = json_encode($story);
