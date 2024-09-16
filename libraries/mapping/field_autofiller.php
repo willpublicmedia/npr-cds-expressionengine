@@ -163,9 +163,11 @@ class Field_autofiller
             return;
         }
 
+        $legacy_filepath = str_starts_with($entry_filepath, '{filedir');
         $file_compatibility = ee()->config->item('file_manager_compatibility_mode');
+
         $file_model = ee('Model')->get('File');
-        if ($file_compatibility === 'n') {
+        if ($file_compatibility === 'n' && !$legacy_filepath) {
             // use ee7 file paths
             $split = explode(':', $entry_filepath);
 
