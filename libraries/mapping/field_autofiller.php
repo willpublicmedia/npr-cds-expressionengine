@@ -163,6 +163,9 @@ class Field_autofiller
             return;
         }
 
+        // "{file:15057:url}"
+        $file_compatibility = ee()->config->item('file_manager_compatibility_mode');
+
         $split = explode('}', $entry_filepath);
 
         if (!$split || sizeof($split) < 2) {
