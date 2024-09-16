@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.9
+
+- update autofill handling for file manager compatibility
+
 ## 0.3.8
 
 - add audio to document layout
