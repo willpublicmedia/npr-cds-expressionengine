@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.10
+
+- check for legacy filepath in modern settings
+
 ## 0.3.9
 
 - update autofill handling for file manager compatibility
