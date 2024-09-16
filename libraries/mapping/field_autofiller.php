@@ -163,28 +163,44 @@ class Field_autofiller
             return;
         }
 
-        // "{file:15057:url}"
         $file_compatibility = ee()->config->item('file_manager_compatibility_mode');
+        $file_model = ee('Model')->get('File');
+        if ($file_compatibility === 'n') {
+            // use ee7 file paths
+            $split = explode(':', $entry_filepath);
 
-        $split = explode('}', $entry_filepath);
+            if (!$split || sizeof($split) < 3) {
+                ee('CP/Alert')->makeInline('autofill-model-error')
+                    ->asAttention()
+                    ->withTitle('NPR Stories')
+                    ->addToBody("Missing filepath information ($entry_filepath). Unable to autofill media fields.")
+                    ->defer();
 
-        if (!$split || sizeof($split) < 2) {
-            ee('CP/Alert')->makeInline('autofill-model-error')
-                ->asAttention()
-                ->withTitle('NPR Stories')
-                ->addToBody("Missing filepath information ($entry_filepath). Unable to autofill media fields.")
-                ->defer();
+                return null;
+            }
 
-            return null;
+            $file_model->filter('file_id', $split[1]);
+        } else {
+            // use old style file paths
+            $split = explode('}', $entry_filepath);
+
+            if (!$split || sizeof($split) < 2) {
+                ee('CP/Alert')->makeInline('autofill-model-error')
+                    ->asAttention()
+                    ->withTitle('NPR Stories')
+                    ->addToBody("Missing filepath information ($entry_filepath). Unable to autofill media fields.")
+                    ->defer();
+
+                return null;
+            }
+
+            preg_match('/\d+$/', $split[0], $location_id);
+
+            $file_model->filter('file_name', $split[1])
+                ->filter('upload_location_id', $location_id[0]);
         }
 
-        preg_match('/\d+$/', $split[0], $location_id);
-
-        $file_model = ee('Model')->get('File')
-            ->filter('file_name', $split[1])
-            ->filter('upload_location_id', $location_id[0])
-            ->first();
-
+        $file_model = $file_model->first();
         return $file_model;
     }
 
