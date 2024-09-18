@@ -32,12 +32,11 @@ class Channel_entry_builder
                 $field = $this->field_utils->get_field_name($field);
             }
 
-            $entry->{$field} = $value;
-
             if ($name === 'keywords' && array_key_exists('tags', $value)) {
                 $value = implode(',', array_values($value['tags']));
             }
 
+            $entry->{$field} = $value;
             $values[$field] = $value;
 
             if ($this->field_is_grid($name)) {

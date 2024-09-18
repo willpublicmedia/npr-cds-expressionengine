@@ -2,6 +2,7 @@
 
 ## unreleased
 
+- correct keyword assignment on pull
 - correct authorized service check on pull
 
 ## 0.3.10
