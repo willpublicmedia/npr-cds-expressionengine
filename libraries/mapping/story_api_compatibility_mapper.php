@@ -156,6 +156,7 @@ class Story_api_compatibility_mapper
         $field_id = $this->field_utils->get_field_id($field_name);
 
         // store keywords so they can be picked up by tagger's post-save hook.
+        StaticCache::delete('Tagger/FieldData/' . $field_id);
         StaticCache::set('Tagger/FieldData/' . $field_id, $keywords);
 
         return $keywords;
