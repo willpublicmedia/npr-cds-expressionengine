@@ -112,7 +112,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $stories = $response->json->resources;
 
         $restrictionNotice = [];
-        foreach ($stories->resources as $story) {
+        foreach ($stories as $story) {
             if (!empty($story->isRestrictedToAuthorizedOrgServiceIds)) {
                 $restrictionNotice[] = $story->id;
             }

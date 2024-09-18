@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- correct authorized service check on pull
+
 ## 0.3.10
 
 - check for legacy filepath in modern settings
