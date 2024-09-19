@@ -33,7 +33,7 @@ class Channel_entry_builder
             }
 
             if ($name === 'keywords' && array_key_exists('tags', $value)) {
-                $value = implode(',', array_values($value['tags']));
+                $value = $this->save_keywords($value);
             }
 
             $entry->{$field} = $value;
@@ -67,5 +67,21 @@ class Channel_entry_builder
 
         $is_grid = ($type === 'grid' || $type === 'file_grid');
         return $is_grid;
+    }
+
+    private function save_keywords(array $data): string
+    {
+        $tagger_installed = ee('Addon')->get('tagger')->isInstalled();
+
+        $value = '';
+        if ($tagger_installed) {
+            require_once rtrim(PATH_THIRD, '/') . '/tagger/ft.tagger.php';
+            $tagger = new \Tagger_ft();
+            $value = $tagger->save($data);
+        } else {
+            $value = implode(',', array_values($data['tags']));
+        }
+
+        return $value;
     }
 }
