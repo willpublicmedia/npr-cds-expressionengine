@@ -33,7 +33,7 @@ class Channel_entry_builder
             }
 
             if ($name === 'keywords' && array_key_exists('tags', $value)) {
-                $value = $this->save_keywords($value);
+                $value = $this->save_keywords($value, $name, $entry->entry_id);
             }
 
             $entry->{$field} = $value;
@@ -69,15 +69,26 @@ class Channel_entry_builder
         return $is_grid;
     }
 
-    private function save_keywords(array $data): string
+    private function save_keywords(array $data, string $field_title, string | int | null $entry_id): string
     {
         $tagger_installed = ee('Addon')->get('tagger')->isInstalled();
 
         $value = '';
         if ($tagger_installed) {
-            require_once rtrim(PATH_THIRD, '/') . '/tagger/ft.tagger.php';
-            $tagger = new \Tagger_ft();
-            $value = $tagger->save($data);
+            // throw new \Exception('see legacy/libraries/api_channel_entries #1287');
+            $field_id = $this->field_utils->get_field_id($field_title);
+            $field_name = $this->field_utils->get_field_name($field_title);
+
+            ee()->api_channel_fields->settings[$field_name]['entry_id'] = $entry_id;
+            ee()->api_channel_fields->settings[$field_name]['field_id'] = $field_id;
+
+            ee()->api_channel_fields->setup_handler('tagger');
+            ee()->api_channel_fields->apply('_init', array(array(
+                'content_id' => $entry_id,
+            )));
+
+            $value = ee()->api_channel_fields->apply('save', array($data));
+            $_POST[$field_name] = $data; // we shouldn't have to do this, but Tagger_ft->display_field uses post.
         } else {
             $value = implode(',', array_values($data['tags']));
         }
