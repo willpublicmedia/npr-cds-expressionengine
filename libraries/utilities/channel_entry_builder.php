@@ -88,7 +88,7 @@ class Channel_entry_builder
             )));
 
             $value = ee()->api_channel_fields->apply('save', array($data));
-            $_POST[$field_name] = $data; // we shouldn't have to do this, but Tagger_ft->display_field uses post.
+            \EEHarbor\Tagger\FluxCapacitor\Conduit\StaticCache::set('Tagger/FieldData/' . $field_id, $data);
         } else {
             $value = implode(',', array_values($data['tags']));
         }
