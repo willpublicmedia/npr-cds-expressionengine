@@ -38,7 +38,7 @@ class AfterChannelEntrySave extends AbstractRoute
 
         $actions = [
             'post_save' => $data,
-            'display_field' => $entry->{$field_name}
+            // 'display_field' => $data
         ];
 
         foreach ($actions as $method => $params) {
