@@ -2,6 +2,7 @@
 
 namespace IllinoisPublicMedia\NprCds\Extensions;
 
+use ExpressionEngine\Model\Channel\ChannelEntry;
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
 
 require_once __DIR__ . '/../libraries/utilities/field_utils.php';
@@ -11,47 +12,47 @@ class AfterChannelEntrySave extends AbstractRoute
 {
     private $field_utils;
 
-    public function process($entry, $values)
+    public function update_entry_tags($entry, $values)
+    {
+        $tag_field = 'keywords';
+        $tagger_installed = ee('Addon')->get('tagger')->isInstalled();
+        if ($tagger_installed) {
+            $this->run_tagger_hooks($entry, $tag_field);
+        }
+    }
+
+    private function run_tagger_hooks(ChannelEntry $entry, string $field_title): void
     {
         $this->field_utils = new Field_utils();
 
-        $tagger_installed = ee('Addon')->get('tagger')->isInstalled();
+        $field_id = $this->field_utils->get_field_id($field_title);
+        $field_name = $this->field_utils->get_field_name($field_title);
+        $data = $entry->{$field_name};
 
-        if ($tagger_installed) {
-            // throw new \Exception('see legacy/libraries/api_channel_entries #1287');
-            $field_id = $this->field_utils->get_field_id('keywords');
-            $field_name = $this->field_utils->get_field_name('keywords');
-            $data = $entry->{$field_name};
+        $field_settings = [
+            'entry_id' => $entry->entry_id,
+            'field_data' => $data,
+            'field_id' => $field_id,
+            'field_type' => 'tagger',
+        ];
 
-            $field_settings = [
-                'entry_id' => $entry->entry_id,
-                'field_data' => $data,
-                'field_id' => $field_id,
-                'field_type' => 'tagger',
-            ];
+        $actions = [
+            'post_save' => $data,
+            'display_field' => $entry->{$field_name}
+        ];
 
-            // load handler
+        foreach ($actions as $method => $params) {
+            // handler is unloaded after apply, so must be reloaded
             ee()->api_channel_fields->set_settings($field_name, $field_settings);
             ee()->api_channel_fields->setup_handler('tagger');
-            ee()->api_channel_fields->apply('_init', array(array(
-                'content_id' => $entry->entry_id,
-                'field_id' => $field_id,
-            )));
+            ee()->api_channel_fields->apply('_init', [
+                [
+                    'content_id' => $entry->entry_id,
+                    'field_id' => $field_id,
+                ],
+            ]);
 
-            // exec post-save
-            // missing field id
-            ee()->api_channel_fields->apply('post_save', [$data]);
-
-            // reload handler
-            ee()->api_channel_fields->set_settings($field_name, $field_settings);
-            ee()->api_channel_fields->setup_handler('tagger');
-            ee()->api_channel_fields->apply('_init', array(array(
-                'content_id' => $entry->entry_id,
-                'field_id' => $field_id,
-            )));
-
-            // exec display
-            ee()->api_channel_fields->apply('display_field', [$entry->{$field_name}]);
+            ee()->api_channel_fields->apply($method, [$params]);
         }
     }
 }

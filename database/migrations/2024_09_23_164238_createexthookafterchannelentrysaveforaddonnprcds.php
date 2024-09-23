@@ -4,6 +4,13 @@ use ExpressionEngine\Service\Migration\Migration;
 
 class CreateExtHookAfterChannelEntrySaveForAddonNprCds extends Migration
 {
+    private $required_extensions = [
+        'update_entry_tags' => [
+            'hook' => 'after_channel_entry_save',
+            'priority' => 10,
+        ],
+    ];
+
     /**
      * Execute the migration
      * @return void
@@ -12,18 +19,31 @@ class CreateExtHookAfterChannelEntrySaveForAddonNprCds extends Migration
     {
         $addon = ee('Addon')->get('npr_cds');
 
-        $ext = [
-            'class' => $addon->getExtensionClass(),
-            'method' => 'after_channel_entry_save',
-            'hook' => 'after_channel_entry_save',
-            'settings' => serialize([]),
-            'priority' => 10,
-            'version' => $addon->getVersion(),
-            'enabled' => 'y'
-        ];
+        foreach ($this->required_extensions as $method => $config) {
+            $ext_class = $addon->getExtensionClass();
 
-        // If we didnt find a matching Extension, lets just insert it
-        ee('Model')->make('Extension', $ext)->save();
+            $installed = ee('Model')->get('Extension')
+                ->filter('class', $ext_class)
+                ->filter('method', $method)
+                ->filter('hook', $config['hook'])
+                ->count() > 0;
+
+            if ($installed) {
+                continue;
+            }
+
+            $data = [
+                'class' => $ext_class,
+                'method' => $method,
+                'hook' => $config['hook'],
+                'settings' => serialize([]),
+                'priority' => $config['priority'],
+                'version' => $addon->getVersion(),
+                'enabled' => 'y'
+            ];
+
+            ee('Model')->make('Extension', $data)->save();
+        }
     }
 
     /**
