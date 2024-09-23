@@ -30,17 +30,28 @@ class AfterChannelEntrySave extends AbstractRoute
                 'field_type' => 'tagger',
             ];
 
+            // load handler
             ee()->api_channel_fields->set_settings($field_name, $field_settings);
-
-            // ee()->api_channel_fields->settings[$field_name]['entry_id'] = $entry->entry_id;
-            // ee()->api_channel_fields->settings[$field_name]['field_id'] = $field_id;
-
             ee()->api_channel_fields->setup_handler('tagger');
             ee()->api_channel_fields->apply('_init', array(array(
                 'content_id' => $entry->entry_id,
+                'field_id' => $field_id,
             )));
 
+            // exec post-save
+            // missing field id
             ee()->api_channel_fields->apply('post_save', [$data]);
+
+            // reload handler
+            ee()->api_channel_fields->set_settings($field_name, $field_settings);
+            ee()->api_channel_fields->setup_handler('tagger');
+            ee()->api_channel_fields->apply('_init', array(array(
+                'content_id' => $entry->entry_id,
+                'field_id' => $field_id,
+            )));
+
+            // exec display
+            ee()->api_channel_fields->apply('display_field', [$entry->{$field_name}]);
         }
     }
 }

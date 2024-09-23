@@ -75,7 +75,6 @@ class Channel_entry_builder
 
         $value = '';
         if ($tagger_installed) {
-            // throw new \Exception('see legacy/libraries/api_channel_entries #1287');
             $field_id = $this->field_utils->get_field_id($field_title);
             $field_name = $this->field_utils->get_field_name($field_title);
 
@@ -85,6 +84,7 @@ class Channel_entry_builder
             ee()->api_channel_fields->setup_handler('tagger');
             ee()->api_channel_fields->apply('_init', array(array(
                 'content_id' => $entry_id,
+                'field_id' => $field_id,
             )));
 
             $value = ee()->api_channel_fields->apply('save', array($data));
