@@ -5,7 +5,6 @@ namespace IllinoisPublicMedia\NprCds\Libraries\Mapping;
 require_once __DIR__ . '/../utilities/config_utils.php';
 require_once __DIR__ . '/../utilities/cds_utils.php';
 require_once __DIR__ . '/../utilities/field_utils.php';
-use EEHarbor\Tagger\FluxCapacitor\Conduit\StaticCache;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Cds_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Config_utils;
 use IllinoisPublicMedia\NprCds\Libraries\Utilities\Field_utils;
@@ -141,8 +140,6 @@ class Story_api_compatibility_mapper
 
     private function map_collections(array $data, $field_name = 'keywords'): array
     {
-        $site_id = ee()->config->item('site_id');
-
         $keywords = [
             'tags' => [],
         ];
@@ -152,12 +149,6 @@ class Story_api_compatibility_mapper
 
             $keywords['tags'][] = $tag;
         }
-
-        $field_id = $this->field_utils->get_field_id($field_name);
-
-        // store keywords so they can be picked up by tagger's post-save hook.
-        StaticCache::delete('Tagger/FieldData/' . $field_id);
-        StaticCache::set('Tagger/FieldData/' . $field_id, $keywords);
 
         return $keywords;
     }
