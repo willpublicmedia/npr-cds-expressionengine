@@ -850,13 +850,16 @@ class Cds_mapper
         $tagger_installed = ee('Addon')->get('tagger')->isInstalled();
 
         $rows = null;
+        $values = explode(',', $entry->{$field});
         if ($tagger_installed) {
-            $rows = ee()->db->select('tag_id', 'tag_name')
-                ->where('tag_name', 'in', '(' . $entry->{$field} . ')')
+            $included = sprintf('"%s"', implode('", "', $values)); // wrap tag names in quotes
+
+            $rows = ee()->db->select('tag_id, tag_name')
+                ->where('tag_name in (' . $included . ')')
                 ->get('tagger')
                 ->result_array();
         } else {
-            $rows = explode(',', $entry->{$field});
+            $rows = $values;
         }
 
         foreach ($rows as $row) {
