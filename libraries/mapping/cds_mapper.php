@@ -416,7 +416,7 @@ class Cds_mapper
             $cds_count++;
         }
 
-        $tags = $this->get_tags($entry, 'keywords', $this->settings['document_prefix']);
+        $tags = $this->get_tags($entry, 'keywords', $cds_version, $this->settings['document_prefix']);
         if (!$aggregations_added) {
             $story->profiles[] = $this->add_aggregation_profile($cds_version);
             if (!property_exists($story, 'items')) {
@@ -445,7 +445,7 @@ class Cds_mapper
     private function add_aggregation_profile(string $cds_version): stdClass
     {
         $profile = new stdClass();
-        $profile->href = $cds_version . '/profiles/aggregation';
+        $profile->href = '/' . $cds_version . '/profiles/aggregation';
         return $profile;
     }
 
@@ -838,7 +838,7 @@ class Cds_mapper
         return $future->format(\DateTime::ATOM);
     }
 
-    private function get_tags(ChannelEntry $entry, string $field_name, string $doc_prefix): array
+    private function get_tags(ChannelEntry $entry, string $field_name, string $cds_version, string $doc_prefix): array
     {
         $tags = [];
         $field = $this->field_utils->get_field_name($field_name);
@@ -863,7 +863,9 @@ class Cds_mapper
         }
 
         foreach ($rows as $row) {
-            $href = $tagger_installed ? $doc_prefix . '-tag-' . $row['tag_id'] . '-' . $row['tag_name'] : $doc_prefix . '-tag-' . $row;
+            // /v1/documents/956356216
+            $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-tag-';
+            $href = $tagger_installed ? $href . $row['tag_id'] . '-' . $row['tag_name'] : $href . $row;
             $tag = new stdClass();
             $tag->rels = ['category'];
             $tag->href = $href;
