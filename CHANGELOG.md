@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.4.0
 
 - push channel title as a topic
 - include tags in pushed stories
