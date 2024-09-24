@@ -415,6 +415,8 @@ class Cds_mapper
             $cds_count++;
         }
 
+        $tags = $this->get_tags($entry, 'keywords', $this->settings['document_prefix']);
+
         $json = json_encode($story);
 
         return $json;
@@ -814,6 +816,38 @@ class Cds_mapper
         $future = date_add(date_create($future), new DateInterval('P7D'));
 
         return $future->format(\DateTime::ATOM);
+    }
+
+    private function get_tags(ChannelEntry $entry, string $field_name, string $doc_prefix): array
+    {
+        $tags = [];
+        $field = $this->field_utils->get_field_name($field_name);
+
+        if (empty($entry->{$field})) {
+            return $tags;
+        }
+
+        $tagger_installed = ee('Addon')->get('tagger')->isInstalled();
+
+        $rows = null;
+        if ($tagger_installed) {
+            $rows = ee()->db->select('tag_id', 'tag_name')
+                ->where('tag_name', 'in', '(' . $entry->{$field} . ')')
+                ->get('tagger')
+                ->result_array();
+        } else {
+            $rows = explode(',', $entry->{$field});
+        }
+
+        foreach ($rows as $row) {
+            $href = $tagger_installed ? $doc_prefix . '-tag-' . $row['tag_id'] . '-' . $row['tag_name'] : $doc_prefix . '-tag-' . $row;
+            $tag = new stdClass();
+            $tag->rels = ['category'];
+            $tag->href = $href;
+            $tags[] = $tag;
+        }
+
+        return $tags;
     }
 
     private function get_text(ChannelEntry $entry, string $field_name, bool $strip_tags): string
