@@ -416,7 +416,7 @@ class Cds_mapper
             $cds_count++;
         }
 
-        $tags = $this->get_tags($entry, 'keywords', $cds_version, $this->settings['document_prefix']);
+        $topics = $this->generate_topics($entry, $cds_version, $this->settings['document_prefix']);
         if (!$aggregations_added) {
             $story->profiles[] = $this->add_aggregation_profile($cds_version);
             if (!property_exists($story, 'items')) {
@@ -426,6 +426,12 @@ class Cds_mapper
             $aggregations_added = true;
         }
 
+        foreach ($topics as $topic) {
+            $story->collections[] = $topic;
+        }
+
+        // we should always have an aggregation interface from the channel topic as long as topics run first.
+        $tags = $this->get_tags($entry, 'keywords', $cds_version, $this->settings['document_prefix']);
         foreach ($tags as $tag) {
             $story->collections[] = $tag;
         }
@@ -440,6 +446,21 @@ class Cds_mapper
         $prefix = $this->settings['document_prefix'];
         $cds_id = $prefix . '-' . $entry->entry_id;
         return $cds_id;
+    }
+
+    private function add_channel_as_topic(ChannelEntry $entry, string $cds_version, string $doc_prefix): stdClass
+    {
+        $channel_id = $entry->Channel->channel_id;
+        $topic_title = $entry->Channel->channel_title;
+        $topic_title = str_replace('+NPR', '', $topic_title);
+        $topic_title = url_title($topic_title, '-', true);
+
+        $topic = new stdClass();
+        $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-topic-' . $channel_id . '-' . $topic_title;
+        $topic->href = $href;
+        $topic->rels = ['topic'];
+
+        return $topic;
     }
 
     private function add_aggregation_profile(string $cds_version): stdClass
@@ -543,6 +564,14 @@ class Cds_mapper
         }
 
         return $crops;
+    }
+
+    private function generate_topics(ChannelEntry $entry, string $cds_version, string $doc_prefix): array
+    {
+        $topics = [];
+        $topics[] = $this->add_channel_as_topic($entry, $cds_version, $doc_prefix);
+
+        return $topics;
     }
 
     private function get_audio_duration(string $absolute_path): int | float
