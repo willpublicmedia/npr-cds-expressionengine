@@ -2,7 +2,9 @@
 
 ## unreleased
 
-- add topics, tags, and categories as tags on pulled stories
+- push channel title as a topic
+- include tags in pushed stories
+- include topics and tags on pulled stories
 - correct keyword assignment on pull
 - correct authorized service check on pull
 
