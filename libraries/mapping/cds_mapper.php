@@ -63,6 +63,7 @@ class Cds_mapper
         }
 
         $cds_version = Npr_constants::NPR_CDS_VERSION;
+        $aggregations_added = false;
         $story = new stdClass;
 
         $story->title = $entry->title;
@@ -416,6 +417,18 @@ class Cds_mapper
         }
 
         $tags = $this->get_tags($entry, 'keywords', $this->settings['document_prefix']);
+        if (!$aggregations_added) {
+            $story->profiles[] = $this->add_aggregation_profile($cds_version);
+            if (!property_exists($story, 'items')) {
+                $story->items = [];
+            }
+
+            $aggregations_added = true;
+        }
+
+        foreach ($tags as $tag) {
+            $story->collections[] = $tag;
+        }
 
         $json = json_encode($story);
 
@@ -427,6 +440,13 @@ class Cds_mapper
         $prefix = $this->settings['document_prefix'];
         $cds_id = $prefix . '-' . $entry->entry_id;
         return $cds_id;
+    }
+
+    private function add_aggregation_profile(string $cds_version): stdClass
+    {
+        $profile = new stdClass();
+        $profile->href = $cds_version . '/profiles/aggregation';
+        return $profile;
     }
 
     private function apply_shortcodes(string $text): string
