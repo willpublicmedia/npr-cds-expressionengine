@@ -2,6 +2,7 @@
 
 ## unreleased
 
+- add topics, tags, and categories as tags on pulled stories
 - correct keyword assignment on pull
 - correct authorized service check on pull
 
