@@ -340,21 +340,21 @@ class Story_content_definitions
                                 'url_scheme_placeholder' => 'https://',
                             ),
                         ),
-                        // 'new_3' => array(
-                        //     'col_type' => 'text',
-                        //     'col_label' => 'Crop Height',
-                        //     'col_name' => 'crop_height',
-                        //     'col_instructions' => 'The height of the image in pixels.',
-                        //     'col_required' => 'n',
-                        //     'col_search' => 'n',
-                        //     'col_width' => '',
-                        //     'col_settings' => array(
-                        //         'field_maxl' => '',
-                        //         'field_fmt' => 'none',
-                        //         'field_text_direction' => 'ltr',
-                        //         'field_content_type' => 'integer'
-                        //     )
-                        // ),
+                        'new_3' => array(
+                            'col_type' => 'text',
+                            'col_label' => 'Crop Height',
+                            'col_name' => 'crop_height',
+                            'col_instructions' => 'The height of the image in pixels.',
+                            'col_required' => 'n',
+                            'col_search' => 'n',
+                            'col_width' => '',
+                            'col_settings' => array(
+                                'field_maxl' => '',
+                                'field_fmt' => 'none',
+                                'field_text_direction' => 'ltr',
+                                'field_content_type' => 'integer',
+                            ),
+                        ),
                         'new_4' => array(
                             'col_type' => 'text',
                             'col_label' => 'Crop Width',
