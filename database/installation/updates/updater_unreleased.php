@@ -3,6 +3,7 @@
 namespace IllinoisPublicMedia\NprCds\Database\Installation\Updates;
 
 require_once __DIR__ . '/../fields/story_content_definitions.php';
+require_once __DIR__ . '/../../../libraries/utilities/field_utils.php';
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Story_content_definitions;
 
 if (!defined('BASEPATH')) {
@@ -42,21 +43,37 @@ class Updater_unreleased
         $model->validate();
         $model->save();
 
-        $columns = ee('Model')->get('grid:GridColumn')->filter('field_id', $model->field_id)->all();
+        // add missing db column
+        $this->insert_height_column($model->field_id, $height_column->col_id);
 
-        foreach ($columns as $column) {
-            if ($column->col_order < $height_column->col_order) {
-                continue;
-            }
+        // reset column order
+        $this->reset_image_column_order($model->field_id);
+    }
 
-            if ($column->col_name == $height_column->col_name) {
-                continue;
-            }
+    private function insert_height_column(string | int $image_field_id, string | int $height_col_id): bool
+    {
+        $image_field_table = 'channel_grid_field_' . $image_field_id;
+        $height_col_name = 'col_id_' . $height_col_id;
 
-            $new_order = $column->col_order + 1;
-            $column->col_order = $new_order;
-            $column->save();
+        $query_result = ee()->db->query("SHOW COLUMNS FROM `exp_" . $image_field_table . "` LIKE '" . $height_col_name . "'")->result_array();
+        $height_column_exists = count($query_result) > 0;
+
+        if ($height_column_exists) {
+            return true;
         }
+
+        $column_def = [
+            $height_col_name => [
+                'type' => 'text',
+            ],
+        ];
+
+        ee()->load->dbforge();
+        ee()->dbforge->add_column($image_field_table, $column_def);
+
+        $this->log_message();
+
+        return true;
     }
 
     private function load_height_def(): array
@@ -77,5 +94,38 @@ class Updater_unreleased
         }
 
         return $height_col;
+    }
+
+    private function log_message()
+    {
+        ee('CP/Alert')->makeInline('npr-db-update')
+            ->asAttention()
+            ->withTitle("NPR Data Fields Updated")
+            ->addToBody("Added height column to NPR Images field.")
+            ->defer();
+    }
+
+    private function reset_image_column_order(string | int $field_id): void
+    {
+        $columns = ee('Model')->get('grid:GridColumn')->filter('field_id', $field_id)->all();
+        $height_column = $columns->filter('col_name', 'crop_height')->first();
+
+        $width_order = $columns->filter('col_name', 'crop_width')->first()->col_order;
+        $height_column->col_order = $width_order + 1;
+        $height_column->save();
+
+        foreach ($columns as $column) {
+            if ($column->col_order < $height_column->col_order) {
+                continue;
+            }
+
+            if ($column->col_name == $height_column->col_name) {
+                continue;
+            }
+
+            $new_order = $column->col_order + 1;
+            $column->col_order = $new_order;
+            $column->save();
+        }
     }
 }

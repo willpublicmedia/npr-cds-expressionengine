@@ -159,7 +159,6 @@ class Npr_cds_upd extends Installer
 
         parent::update($current);
 
-        return false;
         return true;
     }
 
