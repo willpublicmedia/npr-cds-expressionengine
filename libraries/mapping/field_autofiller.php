@@ -121,6 +121,11 @@ class Field_autofiller
             $dimensions['width'] :
             $item[$width_col];
 
+            $height_col = $column_names['crop_height'];
+            $item[$height_col] = empty($item[$height_col]) ?
+            $dimensions['height'] :
+            $item[$height_col];
+
             $image_data['rows'][$row] = $item;
         }
 
