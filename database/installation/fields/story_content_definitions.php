@@ -347,7 +347,8 @@ class Story_content_definitions
                             'col_instructions' => 'The height of the image in pixels.',
                             'col_required' => 'n',
                             'col_search' => 'n',
-                            'col_width' => '',
+                            'col_width' => 0,
+                            'content_type' => 'channel',
                             'col_settings' => array(
                                 'field_maxl' => '',
                                 'field_fmt' => 'none',
