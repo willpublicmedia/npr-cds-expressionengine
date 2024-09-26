@@ -320,7 +320,7 @@ class Cds_mapper
 
                 $enclosure->type = $image_meta->mime_type;
                 $enclosure->width = intval($crop['width']);
-                // $enclosure->height = intval($crop['height']);
+                $enclosure->height = intval($crop['height']);
 
                 $image_asset->enclosures[] = $enclosure;
             }
