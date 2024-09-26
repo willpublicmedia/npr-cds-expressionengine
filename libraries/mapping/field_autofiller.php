@@ -106,11 +106,6 @@ class Field_autofiller
             $format = $this->get_file_extension($item[$file_col]);
             $dimensions = $this->get_image_dimensions($file_model->file_hw_original);
 
-            $crop_col = $column_names['crop_type'];
-            $item[$crop_col] = empty($item[$crop_col]) ?
-            $this->select_crop_type($item, $crop_col) :
-            $item[$crop_col];
-
             $src_col = $column_names['crop_src'];
             $item[$src_col] = empty($item[$src_col]) ?
             $this->build_url($file_model->getAbsoluteUrl()) :
@@ -125,6 +120,11 @@ class Field_autofiller
             $item[$height_col] = empty($item[$height_col]) ?
             $dimensions['height'] :
             $item[$height_col];
+
+            $crop_col = $column_names['crop_type'];
+            $item[$crop_col] = empty($item[$crop_col]) ?
+            $this->select_crop_type($item[$width_col], $item[$height_col]) :
+            $item[$crop_col];
 
             $image_data['rows'][$row] = $item;
         }
@@ -249,8 +249,21 @@ class Field_autofiller
         return $data;
     }
 
-    private function select_crop_type(array $item, string $col_name): string
+    private function select_crop_type(string | int $width, string | int $height): string
     {
-        return 'default';
+        $type = '';
+        switch (true) {
+            case $width == $height:
+                $type = 'square';
+                break;
+            case $width < $height:
+                $type = 'portrait';
+                break;
+            default:
+                $type = 'default';
+                break;
+        }
+
+        return $type;
     }
 }
