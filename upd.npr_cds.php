@@ -153,7 +153,7 @@ class Npr_cds_upd extends Installer
             $this->update_0_4_0();
         }
 
-        if ($current) {
+        if ($current < '0.5.0') {
             $this->update_0_5_0();
         }
 

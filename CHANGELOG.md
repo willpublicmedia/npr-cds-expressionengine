@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+- correct updater selection
+
 ## 0.5.1
 
 - correct tag, topic formatting
