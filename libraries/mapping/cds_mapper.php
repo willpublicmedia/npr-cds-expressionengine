@@ -453,7 +453,7 @@ class Cds_mapper
         $channel_id = $entry->Channel->channel_id;
         $topic_title = $entry->Channel->channel_title;
         $topic_title = str_replace('+NPR', '', $topic_title);
-        $topic_title = url_title($topic_title, '-', true);
+        $topic_title = ee('Format')->make('Text', $topic_title)->urlSlug();
 
         $topic = new stdClass();
         $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-topic-' . $channel_id . '-' . $topic_title;
@@ -892,9 +892,9 @@ class Cds_mapper
         }
 
         foreach ($rows as $row) {
-            // /v1/documents/956356216
             $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-tag-';
-            $href = $tagger_installed ? $href . $row['tag_id'] . '-' . $row['tag_name'] : $href . $row;
+            $tag_name = $tagger_installed ? ee('Format')->make('Text', $row['tag_name'])->urlSlug() : ee('Format')->make('Text', $row)->urlSlug();
+            $href = $tagger_installed ? $href . $row['tag_id'] . '-' . $tag_name : $href . $tag_name;
             $tag = new stdClass();
             $tag->rels = ['category'];
             $tag->href = $href;

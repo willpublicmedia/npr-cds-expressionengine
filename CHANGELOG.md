@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- correct tag, topic formatting
+
 ## 0.5.0
 
 - add height to image field and corresponding db tables/rows
