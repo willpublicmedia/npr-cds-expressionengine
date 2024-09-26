@@ -108,7 +108,7 @@ class Field_autofiller
 
             $crop_col = $column_names['crop_type'];
             $item[$crop_col] = empty($item[$crop_col]) ?
-            'default' :
+            $this->select_crop_type($item, $crop_col) :
             $item[$crop_col];
 
             $src_col = $column_names['crop_src'];
@@ -247,5 +247,10 @@ class Field_autofiller
         }
 
         return $data;
+    }
+
+    private function select_crop_type(array $item, string $col_name): string
+    {
+        return 'default';
     }
 }
