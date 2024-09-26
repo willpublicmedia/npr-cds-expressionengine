@@ -1,5 +1,12 @@
 # Changelog
 
+## unreleased
+
+- add height to image field and corresponding db tables/rows
+- include image height when pushing or pulling stories
+- autofill image height on save
+- add square and portrait image type definitions to autofill
+
 ## 0.4.0
 
 - push channel title as a topic
