@@ -241,6 +241,7 @@ class Story_api_compatibility_mapper
                     $grid_column_names['crop_type'] => $crop['type'][0],
                     $grid_column_names['crop_src'] => $crop['src'],
                     $grid_column_names['crop_width'] => $crop['width'],
+                    $grid_column_names['crop_height'] => $crop['height'],
                     $grid_column_names['crop_primary'] => $primary,
                     $grid_column_names['crop_caption'] => $data['caption'],
                     $grid_column_names['crop_provider_url'] => $data['providerLink'],
