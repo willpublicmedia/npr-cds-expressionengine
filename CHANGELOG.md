@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.5.0
 
 - add height to image field and corresponding db tables/rows
 - include image height when pushing or pulling stories

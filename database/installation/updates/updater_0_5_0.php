@@ -10,7 +10,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
 
-class Updater_unreleased
+class Updater_0_5_0
 {
     public function update(): void
     {
