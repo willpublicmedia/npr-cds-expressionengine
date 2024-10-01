@@ -3,6 +3,7 @@
 ## unreleased
 
 - push collections before pushing story
+- check whether file extension in image name parts
 
 ## 0.5.2
 

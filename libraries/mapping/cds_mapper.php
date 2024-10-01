@@ -538,7 +538,12 @@ class Cds_mapper
         $image_url = parse_url($image_attach_url['filename']);
         $image_name_parts = pathinfo($image_url['path']);
 
-        $image_regex = "/" . $image_name_parts['filename'] . "\-[a-zA-Z0-9]*" . $image_name_parts['extension'] . "/";
+        $image_regex = "/" . $image_name_parts['filename'] . "\-[a-zA-Z0-9]*";
+        if (array_key_exists('extension', $image_name_parts)) {
+            $image_regex = $image_regex . $image_name_parts['extension'];
+        }
+        $image_regex = $image_regex . "/";
+
         $in_body = "";
         if (preg_match($image_regex, $content)) {
             if (str_contains($image_attach_url['filename'], '?')) {
