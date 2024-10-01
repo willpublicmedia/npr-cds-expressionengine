@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.5.3
 
 - push collections before pushing story
 - check whether file extension in image name parts
