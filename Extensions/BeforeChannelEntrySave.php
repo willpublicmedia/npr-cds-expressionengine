@@ -12,6 +12,7 @@ require_once __DIR__ . '/../libraries/mapping/cds_mapper.php';
 
 use ExpressionEngine\Model\Channel\ChannelEntry;
 use ExpressionEngine\Service\Addon\Controllers\Extension\AbstractRoute;
+use ExpressionEngine\Service\Alert\Alert;
 use ExpressionEngine\Service\Validation\Result as ValidationResult;
 use IllinoisPublicMedia\NprCds\Database\Installation\Fields\Field_installer;
 use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_request;
@@ -225,22 +226,8 @@ class BeforeChannelEntrySave extends AbstractRoute
         }
 
         $responses[] = $this->push_document($documents['story'], $entry->{$this->fields['npr_story_id']});
-        throw new \Exception('loop over responses');
 
-        $alert = ee('CP/Alert')->makeInline('story-push')
-            ->withTitle('NPR Stories');
-
-        if (is_null($response)) {
-            $alert->addToBody('Error pushing to NPR.')
-                ->asIssue();
-        } elseif (!str_starts_with($response->code, 2)) {
-            $alert->addToBody($response->messages[0])
-                ->asIssue();
-        } else {
-            $alert->addToBody('Story pushed to NPR.')
-                ->asSuccess();
-        }
-
+        $alert = $this->process_responses($responses);
         $alert->defer();
     }
 
@@ -340,6 +327,31 @@ class BeforeChannelEntrySave extends AbstractRoute
         $objects = $mapper->map($entry, $values, $story);
 
         return $objects;
+    }
+
+    private function process_responses(array $responses): Alert
+    {
+        $alert = ee('CP/Alert')->makeInline('story-push')->withTitle('NPR Stories');
+        $errors = [];
+        foreach ($responses as $response) {
+            if (is_null($response)) {
+                $errors[] = 'Error pushing to NPR.';
+            } elseif (!str_starts_with($response->code, 2)) {
+                $errors[] = $response->messages[0];
+            }
+        }
+        if (count($errors) === 0) {
+            $alert->addToBody('Story pushed to NPR.')->asSuccess();
+
+            return $alert;
+        }
+
+        $alert->addToBody('Not all story parts could be pushed to NPR.');
+        foreach ($errors as $error) {
+            $alert->addToBody($error);
+        }
+
+        return $alert->asIssue();
     }
 
     private function pull_npr_story($npr_story_id): ?Api_response
