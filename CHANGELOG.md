@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- push collections before pushing story
+
 ## 0.5.2
 
 - correct updater selection
