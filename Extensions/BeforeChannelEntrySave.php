@@ -199,9 +199,9 @@ class BeforeChannelEntrySave extends AbstractRoute
             return;
         }
 
-        $json = $this->create_json($entry, $values);
+        $documents = $this->create_json($entry, $values);
 
-        if ($json === false) {
+        if ($documents['story'] === false || $documents['collections'] === false) {
             ee('CP/Alert')->makeInline('story-json-encode')
                 ->asError()
                 ->withTitle('NPR Stories')
@@ -217,7 +217,15 @@ class BeforeChannelEntrySave extends AbstractRoute
             $entry->{$this->fields['npr_story_id']} = $npr_story_id;
         }
 
-        $response = $this->push_story($json, $entry->{$this->fields['npr_story_id']});
+        $responses = [];
+
+        foreach ($documents['collections'] as $collection) {
+            $doc = json_encode($collection);
+            $responses[] = $this->push_document($doc, $collection->id);
+        }
+
+        $responses[] = $this->push_document($documents['story'], $entry->{$this->fields['npr_story_id']});
+        throw new \Exception('loop over responses');
 
         $alert = ee('CP/Alert')->makeInline('story-push')
             ->withTitle('NPR Stories');
@@ -283,7 +291,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         return $is_mapped;
     }
 
-    private function create_json(ChannelEntry $entry, array $values)
+    private function create_json(ChannelEntry $entry, array $values): array
     {
         $parser = new Cds_mapper();
         $json = $parser->create_json($entry, $values, 'document');
@@ -351,14 +359,14 @@ class BeforeChannelEntrySave extends AbstractRoute
         return $response;
     }
 
-    private function push_story(string $json, string $npr_story_id): ?Api_response
+    private function push_document(string $json, string $doc_id): ?Api_response
     {
         $push_url = isset($this->settings['push_url']) ? $this->settings['push_url'] : null;
 
         $request = new Api_request();
         $request->base_url = $push_url;
         $request->data = $json;
-        $request->id = $npr_story_id;
+        $request->id = $doc_id;
         $request->params = [];
         $request->path = 'documents';
         $request->method = 'put';

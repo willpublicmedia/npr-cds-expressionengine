@@ -56,7 +56,7 @@ class Cds_mapper
         ee()->load->helper('url');
     }
 
-    public function create_json(ChannelEntry $entry, array $values, string $profile)
+    public function create_json(ChannelEntry $entry, array $values, string $profile): array
     {
         if ($profile !== 'document') {
             throw new \Exception('non-document profiles not supported');
@@ -426,19 +426,25 @@ class Cds_mapper
             $aggregations_added = true;
         }
 
-        foreach ($topics as $topic) {
+        foreach ($topics['topics'] as $topic) {
             $story->collections[] = $topic;
         }
 
         // we should always have an aggregation interface from the channel topic as long as topics run first.
         $tags = $this->get_tags($entry, 'keywords', $cds_version, $this->settings['document_prefix']);
-        foreach ($tags as $tag) {
+        foreach ($tags['tags'] as $tag) {
             $story->collections[] = $tag;
         }
 
+        $collection_documents = $this->prepare_collection_documents($tags['tag_data'], $topics['topic_data'], $cds_version);
         $json = json_encode($story);
 
-        return $json;
+        $documents = [
+            'collections' => $collection_documents,
+            'story' => $json,
+        ];
+
+        return $documents;
     }
 
     public function create_story_id(ChannelEntry $entry): string
@@ -448,19 +454,31 @@ class Cds_mapper
         return $cds_id;
     }
 
-    private function add_channel_as_topic(ChannelEntry $entry, string $cds_version, string $doc_prefix): stdClass
+    private function add_channel_as_topic(ChannelEntry $entry, string $cds_version, string $doc_prefix): array
     {
+        $data = [
+            'topic' => null,
+            'topic_data' => null,
+        ];
+
         $channel_id = $entry->Channel->channel_id;
-        $topic_title = $entry->Channel->channel_title;
-        $topic_title = str_replace('+NPR', '', $topic_title);
-        $topic_title = ee('Format')->make('Text', $topic_title)->urlSlug();
+        $channel_title = $entry->Channel->channel_title;
+        $channel_title = str_replace('+NPR', '', $channel_title);
+        $topic_title = (string) ee('Format')->make('Text', $channel_title)->urlSlug();
 
         $topic = new stdClass();
         $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-topic-' . $channel_id . '-' . $topic_title;
         $topic->href = $href;
         $topic->rels = ['topic'];
 
-        return $topic;
+        $data['topic'] = $topic;
+        $data['topic_data'] = [
+            'name' => $channel_title,
+            'href' => $href,
+            'type' => 'topic',
+        ];
+
+        return $data;
     }
 
     private function add_aggregation_profile(string $cds_version): stdClass
@@ -568,8 +586,14 @@ class Cds_mapper
 
     private function generate_topics(ChannelEntry $entry, string $cds_version, string $doc_prefix): array
     {
-        $topics = [];
-        $topics[] = $this->add_channel_as_topic($entry, $cds_version, $doc_prefix);
+        $topics = [
+            'topics' => [],
+            'topic_data' => [],
+        ];
+
+        $channel_data = $this->add_channel_as_topic($entry, $cds_version, $doc_prefix);
+        $topics['topics'][] = $channel_data['topic'];
+        $topics['topic_data'][] = $channel_data['topic_data'];
 
         return $topics;
     }
@@ -869,7 +893,10 @@ class Cds_mapper
 
     private function get_tags(ChannelEntry $entry, string $field_name, string $cds_version, string $doc_prefix): array
     {
-        $tags = [];
+        $tags = [
+            'tags' => [],
+            'tag_data' => [],
+        ];
         $field = $this->field_utils->get_field_name($field_name);
 
         if (empty($entry->{$field})) {
@@ -892,13 +919,19 @@ class Cds_mapper
         }
 
         foreach ($rows as $row) {
-            $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-tag-';
-            $tag_name = $tagger_installed ? ee('Format')->make('Text', $row['tag_name'])->urlSlug() : ee('Format')->make('Text', $row)->urlSlug();
-            $href = $tagger_installed ? $href . $row['tag_id'] . '-' . $tag_name : $href . $tag_name;
+            $href_base = '/' . $cds_version . '/documents/' . $doc_prefix . '-tag-';
+            $tag_name = $tagger_installed ? $row['tag_name'] : $row;
+            $slug = (string) ee('Format')->make('Text', $tag_name)->urlSlug();
+            $href = $tagger_installed ? $href_base . $row['tag_id'] . '-' . $slug : $href_base . $slug;
             $tag = new stdClass();
             $tag->rels = ['category'];
             $tag->href = $href;
-            $tags[] = $tag;
+            $tags['tags'][] = $tag;
+            $tags['tag_data'][] = [
+                'name' => $tag_name,
+                'href' => $href,
+                'type' => 'tag',
+            ];
         }
 
         return $tags;
@@ -973,6 +1006,39 @@ class Cds_mapper
         }
 
         return $values;
+    }
+
+    private function prepare_collection_documents(array $tags, array $topics, string $cds_version): array
+    {
+        $items = array_merge($tags, $topics);
+        $href_base = "/{$cds_version}/profiles/";
+
+        $agg = new stdClass();
+        $agg->href = $href_base . 'aggregation';
+        $doc = new stdClass();
+        $doc->href = $href_base . 'document';
+        $res = new stdClass();
+        $res->href = $href_base . 'resource-container';
+
+        $docs = [];
+        foreach ($items as $item) {
+            $parts = explode('/', $item['href']);
+            $id = end($parts);
+            $profile = new stdClass();
+            $profile->rels = ['type'];
+            $profile->href = $href_base . $item['type'];
+
+            $bld = new stdClass();
+            $bld->id = $id;
+            $bld->title = $item['name'];
+            $bld->profiles = [$profile, $agg, $doc, $res];
+            $bld->items = [];
+            $bld->layout = [];
+
+            $docs[] = $bld;
+        }
+
+        return $docs;
     }
 
     private function process_image_credits(array $image_data): array
