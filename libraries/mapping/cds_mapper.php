@@ -91,7 +91,7 @@ class Cds_mapper
         $story->profiles = $this->get_npr_cds_base_profiles($cds_version);
         $story->bylines = [];
 
-        $edit_date = date('c', $entry->edit_date);
+        $edit_date = is_int($entry->edit_date) ? date('c', $entry->edit_date) : date_format($entry->edit_date, 'c');
         $story->publishDateTime = $edit_date;
         $story->editorialLastModifiedDateTime = $edit_date;
 
@@ -879,18 +879,19 @@ class Cds_mapper
     private function get_post_expiry_datetime(ChannelEntry $entry): string
     {
         if (!empty($entry->expiration_date)) {
-            return date('c', $entry->expiration_date);
+            $expiry = is_int($entry->expiration_date) ? date('c', $entry->expiration_date) : date_format($entry->expiration_date, 'c');
+            return $expiry;
         }
 
         $audio_runby_field = $this->field_utils->get_field_name('audio_runby_date');
         $audio_runby_date = $entry->{$audio_runby_field};
 
         if (!empty($audio_runby_date)) {
-            return date('c', $audio_runby_date);
+            return is_int($audio_runby_date) ? date('c', $audio_runby_date) : date_format($audio_runby_date, 'c');
         }
 
         // return DateTime for the publish date plus seven days
-        $future = date('c', $entry->edit_date);
+        $future = is_int($entry->edit_date) ? date('c', $entry->edit_date) : date_format($entry->edit_date, 'c');
         $future = date_add(date_create($future), new DateInterval('P7D'));
 
         return $future->format(\DateTime::ATOM);
