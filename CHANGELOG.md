@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4
+
+- check date type before formatting
+
 ## 0.5.3
 
 - push collections before pushing story
