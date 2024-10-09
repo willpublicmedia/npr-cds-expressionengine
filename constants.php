@@ -22,5 +22,5 @@ class Constants
 
     const NAMESPACE  = 'IllinoisPublicMedia\NprCds';
 
-    const VERSION = '0.5.4';
+    const VERSION = '0.5.5';
 }

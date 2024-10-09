@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 0.5.5
 
 - load grid model before using
 
