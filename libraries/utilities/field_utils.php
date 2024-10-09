@@ -3,7 +3,7 @@
 namespace IllinoisPublicMedia\NprCds\Libraries\Utilities;
 
 if (!defined('BASEPATH')) {
-    exit ('No direct script access allowed.');
+    exit('No direct script access allowed.');
 }
 
 class Field_utils
@@ -23,7 +23,7 @@ class Field_utils
         $field = "field_id_$field_id";
 
         $cache = array(
-            'rows' => $data['values'][$entry_id]
+            'rows' => $data['values'][$entry_id],
         );
 
         // Expected:
@@ -65,7 +65,7 @@ class Field_utils
             ->fields('field_id')
             ->first()
             ->field_id;
-        
+
         return $field_id;
     }
 
@@ -75,24 +75,23 @@ class Field_utils
             ->filter('field_name', $name)
             ->first();
 
-        if ($field === NULL)
-        {
+        if ($field === null) {
             return '';
         }
 
         $field_id = $field->field_id;
         $field_name = "field_id_{$field_id}";
-        
+
         return $field_name;
     }
 
     public function get_grid_column_names($field_id)
     {
+        ee()->load->model('grid_model');
         $ids = ee()->grid_model->get_columns_for_field($field_id, 'channel');
 
         $columns = array();
-        foreach ($ids as $id => $data)
-        {
+        foreach ($ids as $id => $data) {
             $name = $data['col_name'];
             $columns[$name] = "col_id_$id";
         }
@@ -105,17 +104,16 @@ class Field_utils
         $content_type = 'channel';
         ee()->load->model('grid_model');
         $media_field_id = $this->get_field_id($field_name);
-        
+
         // map column names
         $columns = ee()->grid_model->get_columns_for_field($media_field_id, $content_type);
-		
+
         // get entry data
         $entry_data = ee()->grid_model->get_entry_rows($entry->entry_id, $media_field_id, $content_type, null);
-        
+
         // loop entry data rows
         $media = array();
-        foreach ($entry_data[$entry->entry_id] as $row)
-        {
+        foreach ($entry_data[$entry->entry_id] as $row) {
             $row_data = array();
 
             // return row, entry ids in case save is needed.
@@ -123,8 +121,7 @@ class Field_utils
             $row_data['entry_id'] = $row['entry_id'];
 
             // map column data to column names
-            foreach ($columns as $column_id => $column_details)
-            {
+            foreach ($columns as $column_id => $column_details) {
                 $column_name = $column_details['col_name'];
                 $row_column = "col_id_$column_id";
                 $row_col_data = $row[$row_column];
@@ -140,8 +137,7 @@ class Field_utils
     public function get_posted_grid_values($field_name): array
     {
         $values = ee()->input->post($field_name);
-        if (empty($values))
-        {
+        if (empty($values)) {
             $values = array();
         }
         return $values;
@@ -151,10 +147,9 @@ class Field_utils
     {
         $content_type = 'channel';
         $entry_id = $data['entry_id'];
-        $to_be_deleted = ee()->grid_model->save_field_data($data['values'][$entry_id], $data['field_id'], $content_type, $entry_id, $fluid_field_data_id = NULL);
+        $to_be_deleted = ee()->grid_model->save_field_data($data['values'][$entry_id], $data['field_id'], $content_type, $entry_id, $fluid_field_data_id = null);
 
-        if (!$cache)
-        {
+        if (!$cache) {
             return array();
         }
 
@@ -167,8 +162,7 @@ class Field_utils
     public function save_posted_grid_values(string $field_name, array $data): void
     {
         $post_backup = $_POST;
-        if (array_key_exists($field_name, $_POST))
-        {
+        if (array_key_exists($field_name, $_POST)) {
             $_POST[$field_name] = $data;
         }
     }

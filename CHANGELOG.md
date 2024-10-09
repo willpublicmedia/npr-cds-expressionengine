@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- load grid model before using
+
 ## 0.5.4
 
 - check date type before formatting
