@@ -19,6 +19,7 @@ require_once __DIR__ . '/database/installation/updates/updater_0_3_0.php';
 require_once __DIR__ . '/database/installation/updates/updater_0_3_1.php';
 require_once __DIR__ . '/database/installation/updates/updater_0_4_0.php';
 require_once __DIR__ . '/database/installation/updates/updater_0_5_0.php';
+require_once __DIR__ . '/database/installation/updates/updater_0_6_0.php';
 
 use ExpressionEngine\Service\Addon\Installer;
 use IllinoisPublicMedia\NprCds\Database\Installation\Channel_installer;
@@ -32,6 +33,7 @@ use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_3_0;
 use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_3_1;
 use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_4_0;
 use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_5_0;
+use IllinoisPublicMedia\NprCds\Database\Installation\Updates\Updater_0_6_0;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Field_group_migrator;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Legacy_extension_installer;
 use IllinoisPublicMedia\NprCds\Database\Migrations\StoryApi\Story_api_settings_migrator;
@@ -58,7 +60,7 @@ class Npr_cds_upd extends Installer
             // 'config_field_mappings',
         ],
         'story' => [
-            //     'pushed_stories',
+            'push_status',
         ],
     ];
 
@@ -86,6 +88,7 @@ class Npr_cds_upd extends Installer
 
         // create and/or migrate settings
         $this->create_tables($this->tables['config']);
+        $this->create_tables($this->tables['story']);
 
         $this->create_required_fields();
         $this->condition_fields();
@@ -118,6 +121,7 @@ class Npr_cds_upd extends Installer
     public function uninstall()
     {
         $this->delete_tables($this->tables['config']);
+        $this->delete_tables($this->tables['story']);
 
         parent::uninstall();
 
@@ -155,6 +159,10 @@ class Npr_cds_upd extends Installer
 
         if ($current < '0.5.0') {
             $this->update_0_5_0();
+        }
+
+        if ($current < '0.6.0') {
+            $this->update_0_6_0();
         }
 
         parent::update($current);
@@ -277,6 +285,12 @@ class Npr_cds_upd extends Installer
     private function update_0_5_0(): void
     {
         $updater = new Updater_0_5_0();
+        $updater->update();
+    }
+
+    private function update_0_6_0(): void
+    {
+        $updater = new Updater_0_6_0();
         $updater->update();
     }
 

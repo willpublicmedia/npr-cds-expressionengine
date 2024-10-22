@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- add push status table
+
 ## 0.5.5
 
 - load grid model before using
