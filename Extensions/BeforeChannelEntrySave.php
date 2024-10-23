@@ -225,7 +225,7 @@ class BeforeChannelEntrySave extends AbstractRoute
 
             $log_data = [
                 'type' => 'collection',
-                'entry_id' => null,
+                'entry_id' => '',
                 'doc_id' => $collection->id,
                 'response' => $this->push_document($doc, $collection->id),
             ];
