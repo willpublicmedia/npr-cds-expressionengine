@@ -225,7 +225,7 @@ class BeforeChannelEntrySave extends AbstractRoute
 
             $log_data = [
                 'type' => 'collection',
-                'entry_id' => '',
+                'entry_id' => $entry->entry_id,
                 'doc_id' => $collection->id,
                 'response' => $this->push_document($doc, $collection->id),
             ];
@@ -350,7 +350,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $errors = [];
 
         foreach ($responses as $response) {
-            Config_utils::log_push_results($response['entry_id'], $response['doc_id'], $response['response']);
+            Config_utils::log_push_results($response['type'], $response['entry_id'], $response['doc_id'], $response['response']);
 
             if (is_null($response)) {
                 $errors[] = 'Error pushing to NPR.';

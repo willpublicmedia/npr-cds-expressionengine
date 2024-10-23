@@ -28,6 +28,10 @@ class push_status_table extends Table
             'type' => 'text',
             'constraint' => 64,
         ],
+        'doc_type' => [
+            'type' => 'text',
+            'constraint' => 16
+        ],
         'last_push_date' => [
             'type' => 'int',
             'null' => true,

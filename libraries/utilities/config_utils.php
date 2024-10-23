@@ -29,13 +29,14 @@ class Config_utils
         return $settings;
     }
 
-    public static function log_push_results(int | string $entry_id, string $doc_id, Api_response $api_response): void
+    public static function log_push_results(string $doc_type, int | string $entry_id, string $doc_id, Api_response $api_response): void
     {
         $table_name = 'npr_cds_push_status';
         $timestamp = time();
         $data = [
             'entry_id' => (int) $entry_id,
             'doc_id' => $doc_id,
+            'doc_type' => $doc_type,
             'last_push_date' => $timestamp,
             'status_code' => (int) $api_response->code,
             'messages' => $api_response->messages,
