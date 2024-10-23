@@ -350,9 +350,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         $errors = [];
 
         foreach ($responses as $response) {
-            if ($response['type'] === 'entry') {
-                Config_utils::log_push_results($response['entry_id'], $response['doc_id'], $response['response']);
-            }
+            Config_utils::log_push_results($response['entry_id'], $response['doc_id'], $response['response']);
 
             if (is_null($response)) {
                 $errors[] = 'Error pushing to NPR.';
