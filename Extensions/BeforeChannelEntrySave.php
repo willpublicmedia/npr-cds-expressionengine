@@ -222,10 +222,25 @@ class BeforeChannelEntrySave extends AbstractRoute
 
         foreach ($documents['collections'] as $collection) {
             $doc = json_encode($collection);
-            $responses[] = $this->push_document($doc, $collection->id);
+
+            $log_data = [
+                'type' => 'collection',
+                'entry_id' => null,
+                'doc_id' => $collection->id,
+                'response' => $this->push_document($doc, $collection->id),
+            ];
+
+            $responses[] = $log_data;
         }
 
-        $responses[] = $this->push_document($documents['story'], $entry->{$this->fields['npr_story_id']});
+        $log_data = [
+            'type' => 'entry',
+            'entry_id' => $entry->entry_id,
+            'doc_id' => $entry->{$this->fields['npr_story_id']},
+            'response' => $this->push_document($documents['story'], $entry->{$this->fields['npr_story_id']}),
+        ];
+
+        $responses[] = $log_data;
 
         $alert = $this->process_responses($responses);
         $alert->defer();
@@ -333,7 +348,12 @@ class BeforeChannelEntrySave extends AbstractRoute
     {
         $alert = ee('CP/Alert')->makeInline('story-push')->withTitle('NPR Stories');
         $errors = [];
+
         foreach ($responses as $response) {
+            if ($response['type'] === 'entry') {
+                Config_utils::log_push_results($response['entry_id'], $response['doc_id'], $response['response']);
+            }
+
             if (is_null($response)) {
                 $errors[] = 'Error pushing to NPR.';
             } elseif (!str_starts_with($response->code, 2)) {
