@@ -58,6 +58,8 @@ class BeforeChannelEntryDelete extends AbstractRoute
         $story_id_field = $this->fields['npr_story_id'];
         $document_id = $entry->{$story_id_field};
 
+        Config_utils::log_push_results('entry', $entry->entry_id, $document_id, $response);
+
         $alert = ee('CP/Alert')->makeInline('npr-delete');
         if ($response->code === Npr_constants::NPR_CDS_DELETE_OK) {
             $alert = $alert->asSuccess()
