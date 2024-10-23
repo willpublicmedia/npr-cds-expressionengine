@@ -47,6 +47,7 @@ class BeforeChannelEntrySave extends AbstractRoute
         'mapped_channels' => '',
         // 'npr_permissions' => '',
         'npr_image_destination' => '',
+        'log_last_push_response' => false,
     ];
 
     public function __construct()
@@ -350,7 +351,9 @@ class BeforeChannelEntrySave extends AbstractRoute
         $errors = [];
 
         foreach ($responses as $response) {
-            Config_utils::log_push_results($response['type'], $response['entry_id'], $response['doc_id'], $response['response']);
+            if ($this->settings['log_last_push_response']) {
+                Config_utils::log_push_results($response['type'], $response['entry_id'], $response['doc_id'], $response['response']);
+            }
 
             if (is_null($response['response'])) {
                 $errors[] = 'Error pushing to NPR.';

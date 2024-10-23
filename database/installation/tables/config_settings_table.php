@@ -22,6 +22,7 @@ class config_settings_table extends Table
         'mapped_channels' => '',
         // 'npr_permissions' => '',
         'npr_image_destination' => '',
+        'log_last_push_response' => false,
     );
 
     protected $_fields = array(
@@ -65,6 +66,9 @@ class config_settings_table extends Table
             'constraint' => 128,
         ),
         'theme_uses_featured_image' => array(
+            'type' => 'tinyint',
+        ),
+        'log_last_push_response' => array(
             'type' => 'tinyint',
         ),
     );

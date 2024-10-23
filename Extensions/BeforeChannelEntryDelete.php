@@ -22,6 +22,7 @@ class BeforeChannelEntryDelete extends AbstractRoute
 
     private $settings = [
         'push_url' => '',
+        'log_last_push_response' => false,
     ];
 
     public function __construct()
@@ -58,7 +59,9 @@ class BeforeChannelEntryDelete extends AbstractRoute
         $story_id_field = $this->fields['npr_story_id'];
         $document_id = $entry->{$story_id_field};
 
-        Config_utils::log_push_results('entry', $entry->entry_id, $document_id, $response);
+        if ($this->settings['log_last_push_response']) {
+            Config_utils::log_push_results('entry', $entry->entry_id, $document_id, $response);
+        }
 
         $alert = ee('CP/Alert')->makeInline('npr-delete');
         if ($response->code === Npr_constants::NPR_CDS_DELETE_OK) {

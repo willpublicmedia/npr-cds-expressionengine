@@ -8,29 +8,47 @@ if (!defined('BASEPATH')) {
 
 require_once __DIR__ . '/../tables/table_loader.php';
 require_once __DIR__ . '/../tables/itable.php';
+require_once __DIR__ . '/../tables/config_settings_table.php';
 require_once __DIR__ . '/../../../libraries/installation/table_installer.php';
+
+use IllinoisPublicMedia\NprCds\Database\Installation\Tables\config_settings_table;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\ITable;
 use IllinoisPublicMedia\NprCds\Database\Installation\Tables\Table_loader;
 use IllinoisPublicMedia\NprCds\Libraries\Installation\Table_installer;
 
 class Updater_0_6_0
 {
-    private $table_name = 'push_status';
-
     public function update(): bool
     {
-        $table_exists = $this->check_table_exists($this->table_name);
+        $results = [];
+        $results[] = $this->add_push_status_config('npr_cds_settings', 'log_last_push_response');
+        $results[] = $this->create_push_status_table('push_status');
 
-        if ($table_exists) {
-            return true;
-        }
-
-        $success = $this->create_push_status_table($this->table_name);
+        $success = !in_array('false', $results, true);
         if ($success) {
             $this->log_message();
         }
 
         return $success;
+    }
+
+    private function add_push_status_config(string $table_name, string $col_name): bool
+    {
+        $query_result = ee()->db->query("SHOW COLUMNS FROM `exp_" . $table_name . "` LIKE '" . $col_name . "'")->result_array();
+        $column_exists = count($query_result) > 0;
+
+        if ($column_exists) {
+            return true;
+        }
+
+        $config = new config_settings_table();
+        $fields = $config->fields();
+        $column_def = [$col_name => $fields[$col_name]];
+
+        ee()->load->dbforge();
+        ee()->dbforge->add_column($table_name, $column_def);
+
+        return true;
     }
 
     private function check_table_exists(string $table_name): bool
@@ -41,6 +59,12 @@ class Updater_0_6_0
 
     private function create_push_status_table(string $table_name): bool
     {
+        $table_exists = $this->check_table_exists($table_name);
+
+        if ($table_exists) {
+            return true;
+        }
+
         $table_data['table_name'] = $this->load_table_config($table_name);
 
         $installer = new Table_installer();

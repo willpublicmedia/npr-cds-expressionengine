@@ -88,6 +88,15 @@ class Config_form_builder
                     ],
                 ],
             ],
+            [
+                'title' => 'Log most recent push response',
+                'desc' => 'Enable to log status codes and error messages for pushed stories.',
+                'fields' => [
+                    'log_last_push_response' => [
+                        'type' => 'toggle',
+                    ],
+                ],
+            ],
         ],
     ];
 
