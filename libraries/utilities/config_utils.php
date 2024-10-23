@@ -41,12 +41,12 @@ class Config_utils
             'messages' => $api_response->messages,
         ];
 
-        $record_exists = ee()->db->where('entry_id', $entry_id)->from($table_name)->count_all_results() > 0 ? true : false;
+        $record_exists = ee()->db->where('doc_id', $doc_id)->from($table_name)->count_all_results() > 0 ? true : false;
 
         if ($record_exists) {
-            ee()->db->where('entry_id', $entry_id)->update($table_name, $data);
+            ee()->db->where('doc_id', $doc_id)->update($table_name, $data);
         } else {
-            ee()->db->where('entry_id', $entry_id)->insert($table_name, $data);
+            ee()->db->where('doc_id', $doc_id)->insert($table_name, $data);
         }
     }
 }
