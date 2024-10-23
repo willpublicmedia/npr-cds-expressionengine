@@ -2,7 +2,8 @@
 
 ## 0.6.0
 
-- add push status table
+- log most recent document push status
+- add push status table and logging config
 
 ## 0.5.5
 
