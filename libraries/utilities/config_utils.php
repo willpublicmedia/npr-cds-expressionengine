@@ -2,6 +2,9 @@
 
 namespace IllinoisPublicMedia\NprCds\Libraries\Utilities;
 
+require_once __DIR__ . '/../dto/http/api_response.php';
+use IllinoisPublicMedia\NprCds\Libraries\Dto\Http\Api_response;
+
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed.');
 }
@@ -24,5 +27,25 @@ class Config_utils
         }
 
         return $settings;
+    }
+
+    public static function log_push_results(int | string $entry_id, Api_response $api_response): void
+    {
+        $table_name = 'npr_cds_push_status';
+        $timestamp = strtotime(0);
+        $data = [
+            'entry_id' => (int) $entry_id,
+            'last_push' => $timestamp,
+            'status_code' => (int) $api_response->code,
+            'response' => $api_response->messages,
+        ];
+
+        $record_exists = ee()->db->where('entry_id', $entry_id)->from($table_name)->count_all_results() > 0 ? true : false;
+
+        if ($record_exists) {
+            ee()->db->where('entry_id', $entry_id)->update($table_name, $data);
+        } else {
+            ee()->db->where('entry_id', $entry_id)->insert($table_name, $data);
+        }
     }
 }
