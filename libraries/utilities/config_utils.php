@@ -35,9 +35,10 @@ class Config_utils
         $timestamp = strtotime(0);
         $data = [
             'entry_id' => (int) $entry_id,
-            'last_push' => $timestamp,
+            'doc_id' => $doc_id,
+            'last_push_date' => $timestamp,
             'status_code' => (int) $api_response->code,
-            'response' => $api_response->messages,
+            'messages' => $api_response->messages,
         ];
 
         $record_exists = ee()->db->where('entry_id', $entry_id)->from($table_name)->count_all_results() > 0 ? true : false;

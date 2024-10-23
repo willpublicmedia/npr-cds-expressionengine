@@ -23,9 +23,12 @@ class push_status_table extends Table
         'entry_id' => [
             'type' => 'int',
             'unsigned' => true,
-            'null' => false,
         ],
-        'last_push' => [
+        'doc_id' => [
+            'type' => 'text',
+            'constraint' => 64,
+        ],
+        'last_push_date' => [
             'type' => 'int',
             'null' => true,
         ],
@@ -33,7 +36,7 @@ class push_status_table extends Table
             'type' => 'int',
             'unsigned' => true,
         ],
-        'response' => [
+        'messages' => [
             'type' => 'text',
         ],
     ];
