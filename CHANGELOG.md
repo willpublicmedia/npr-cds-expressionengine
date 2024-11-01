@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1
+
+- fix var structure typo
+
 ## 0.6.0
 
 - log most recent document push status

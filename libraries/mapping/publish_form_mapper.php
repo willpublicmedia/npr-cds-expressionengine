@@ -392,7 +392,7 @@ class Publish_form_mapper
                                             $v_image_asset = $story->assets->{$v_image_id};
                                             foreach ($v_image_asset->enclosures as $vma) {
                                                 $poster_image = $this->get_image_url($vma);
-                                                $poster = ' poster="' . $poster_image($vma)['url'] . '"';
+                                                $poster = ' poster="' . $poster_image['url'] . '"';
                                             }
                                         }
                                     }
