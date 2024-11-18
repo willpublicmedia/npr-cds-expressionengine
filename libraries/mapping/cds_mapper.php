@@ -30,7 +30,7 @@ class Cds_mapper
         'document_prefix' => '',
         'pull_url' => '',
         'push_url' => '',
-        'service_id' => null,
+        'service_id' => '',
         'theme_uses_featured_image' => false,
         // 'max_image_width' => 1200,
         // 'image_quality' => 75,
@@ -467,7 +467,7 @@ class Cds_mapper
         $topic_title = (string) ee('Format')->make('Text', $channel_title)->urlSlug();
 
         $topic = new stdClass();
-        $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-topic-' . $channel_id . '-' . $topic_title;
+        $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-topic-' . $topic_title;
         $topic->href = $href;
         $topic->rels = ['topic'];
 
@@ -928,7 +928,7 @@ class Cds_mapper
             $href_base = '/' . $cds_version . '/documents/' . $doc_prefix . '-tag-';
             $tag_name = $tagger_installed ? $row['tag_name'] : $row;
             $slug = (string) ee('Format')->make('Text', $tag_name)->urlSlug();
-            $href = $tagger_installed ? $href_base . $row['tag_id'] . '-' . $slug : $href_base . $slug;
+            $href = $href_base . $slug;
             $tag = new stdClass();
             $tag->rels = ['category'];
             $tag->href = $href;
