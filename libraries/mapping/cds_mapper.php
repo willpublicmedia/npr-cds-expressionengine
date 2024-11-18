@@ -30,7 +30,7 @@ class Cds_mapper
         'document_prefix' => '',
         'pull_url' => '',
         'push_url' => '',
-        'service_id' => '',
+        'service_id' => null,
         'theme_uses_featured_image' => false,
         // 'max_image_width' => 1200,
         // 'image_quality' => 75,
@@ -416,7 +416,7 @@ class Cds_mapper
             $cds_count++;
         }
 
-        $topics = $this->generate_topics($entry, $cds_version, $this->settings['service_id']);
+        $topics = $this->generate_topics($entry, $cds_version, $this->settings['document_prefix']);
         if (!$aggregations_added) {
             $story->profiles[] = $this->add_aggregation_profile($cds_version);
             if (!property_exists($story, 'items')) {
@@ -431,7 +431,7 @@ class Cds_mapper
         }
 
         // we should always have an aggregation interface from the channel topic as long as topics run first.
-        $tags = $this->get_tags($entry, 'keywords', $cds_version, $this->settings['service_id']);
+        $tags = $this->get_tags($entry, 'keywords', $cds_version, $this->settings['document_prefix']);
         foreach ($tags['tags'] as $tag) {
             $story->collections[] = $tag;
         }
@@ -461,12 +461,13 @@ class Cds_mapper
             'topic_data' => null,
         ];
 
+        $channel_id = $entry->Channel->channel_id;
         $channel_title = $entry->Channel->channel_title;
         $channel_title = str_replace('+NPR', '', $channel_title);
         $topic_title = (string) ee('Format')->make('Text', $channel_title)->urlSlug();
 
         $topic = new stdClass();
-        $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-topic-' . $topic_title;
+        $href = '/' . $cds_version . '/documents/' . $doc_prefix . '-topic-' . $channel_id . '-' . $topic_title;
         $topic->href = $href;
         $topic->rels = ['topic'];
 
@@ -927,7 +928,7 @@ class Cds_mapper
             $href_base = '/' . $cds_version . '/documents/' . $doc_prefix . '-tag-';
             $tag_name = $tagger_installed ? $row['tag_name'] : $row;
             $slug = (string) ee('Format')->make('Text', $tag_name)->urlSlug();
-            $href = $href_base . $slug;
+            $href = $tagger_installed ? $href_base . $row['tag_id'] . '-' . $slug : $href_base . $slug;
             $tag = new stdClass();
             $tag->rels = ['category'];
             $tag->href = $href;
