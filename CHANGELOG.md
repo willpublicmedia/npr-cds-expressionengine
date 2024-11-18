@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+
+- BREAKING: rework document_id generation for collections
+
 ## 0.6.1
 
 - fix var structure typo
