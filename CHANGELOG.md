@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- BREAKING: correct collection document prefix bug introduced in 1.0.0
+
 ## 1.0.0
 
 - BREAKING: rework document_id generation for collections
