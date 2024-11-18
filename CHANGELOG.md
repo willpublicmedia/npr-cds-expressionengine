@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## 1.0.0
 
 - BREAKING: rework document_id generation for collections
 
