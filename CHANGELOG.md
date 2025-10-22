@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+- correct version in package file
+
 ## 2.0.0
 
 - BREAKING: media autofill requires getID3 via composer
