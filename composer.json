@@ -11,5 +11,8 @@
     "minimum-stability": "dev",
     "require-dev": {
         "phpunit/phpunit": "^12"
+    },
+    "require": {
+        "james-heinrich/getid3": "^1"
     }
 }
