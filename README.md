@@ -20,16 +20,24 @@ The WordPress plugin was originally developed as an Open Source plugin by NPR an
 
 ## Installation & Configuration
 
-1. Copy addon files to `{system_dir}/user/addons/npr_cds/`.
-2. Activate plugin from control panel Addons screen.
-3. From the CDS settings screen, configure the following:
+### Dependencies
+
+- Composer: <https://getcomposer.org/>
+
+###
+
+1. Install Composer.
+2. Copy addon files to `{system_dir}/user/addons/npr_cds/`.
+3. Install required composer packages (`php composer.phar install`).
+4. Activate plugin from control panel Addons screen.
+5. From the CDS settings screen, configure the following:
     - CDS token as provided by NPR
     - document prefix as provided by NPR
     - org/service ID as provided by NPR
     - and your push and pull urls.
-4. Select "Theme uses featured image" if your page templates pull a hero image from the story's image field.
-5. Select a suitable file storage location for pulled images.
-6. Select channels that may be used by the CDS addon. See channel mapping rules below.
+6. Select "Theme uses featured image" if your page templates pull a hero image from the story's image field.
+7. Select a suitable file storage location for pulled images.
+8. Select channels that may be used by the CDS addon. See channel mapping rules below.
 
 ### Mapped Channels
 
