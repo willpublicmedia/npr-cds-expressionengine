@@ -38,7 +38,7 @@ class Field_autofiller
                 continue;
             }
 
-            $format = $this->get_file_extension($item[$file_col]);
+            $format = $this->get_file_format($file_model);
 
             if (array_key_exists('audio_duration', $column_names)) {
                 $duration_col        = $column_names['audio_duration'];
@@ -162,6 +162,20 @@ class Field_autofiller
         $segments  = explode('.', $filename);
         $extension = end($segments);
         return $extension;
+    }
+
+    private function get_file_format($model)
+    {
+        $path = $model->getAbsolutePath();
+        if (! $path) {
+            return null;
+        }
+
+        $getid3   = new getID3();
+        $info     = $getid3->analyze($path);
+        $format = $info['fileformat'];
+
+        return $format;
     }
 
     private function get_file_model($entry_filepath)

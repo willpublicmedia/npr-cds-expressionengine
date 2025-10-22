@@ -3,7 +3,8 @@
 ## 2.0.0
 
 - BREAKING: media autofill requires getID3 via composer
-- Update phpunit
+- read file format from encoding, not file extension
+- update phpunit
 
 ## 1.0.1
 
