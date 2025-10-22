@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0
+
+- BREAKING: media autofill requires getID3 via composer
+- Update phpunit
+
 ## 1.0.1
 
 - BREAKING: correct collection document prefix bug introduced in 1.0.0
