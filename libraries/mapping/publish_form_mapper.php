@@ -798,7 +798,7 @@ class Publish_form_mapper
                 case 'youtube-video':
                     $video = $this->get_video_youtube($asset_current);
                     break;
-                case str_contains($asset_profile, 'player-video');
+                case str_contains($asset_profile, 'player-video'):
                     $video = $this->get_video_streaming($asset_current, $asset_profile, $story);
                     break;
 
